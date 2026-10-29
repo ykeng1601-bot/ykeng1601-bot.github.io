@@ -236,6 +236,39 @@ h1, h2, h3 { text-wrap: balance; line-height: 1.3; margin: 0; }
 .photo figcaption b { color: var(--ok); font-size: 15px; }
 .photo .ai { font-size: 11.5px; color: var(--ink-2); }
 .photo ul { margin: 0; padding-left: 1.1em; display: grid; gap: 3px; font-size: 14.5px; }
+.namecard { margin-top: 18px; background: var(--surface); border: 2px solid var(--hazard); border-radius: 14px; padding: 16px; display: grid; gap: 10px; }
+.namecard h2 { font-size: 18px; font-weight: 800; }
+.namecard .notice { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.namecard form { display: flex; gap: 8px; }
+.namecard form .cta { flex: none; padding: 11px 16px; }
+.namecard input { flex: 1; min-width: 0; width: 0; font: inherit; font-size: 17px; padding: 11px 12px; border: 2px solid var(--line); border-radius: var(--r); background: var(--bg); color: var(--ink); }
+.namecard input:focus { border-color: var(--ink); outline: none; }
+.namecard .hint, .cert .hint { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+.namecard.on { border-color: var(--ok); gap: 8px; }
+.namecard.on b { font-size: 18px; }
+.namebtns { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.linkbtn { background: none; border: 0; padding: 4px 0; color: var(--ink-2); text-decoration: underline; font-size: 14px; }
+.cta.small { padding: 9px 14px; font-size: 14px; }
+.sync { font-size: 12px; color: var(--ink-2); }
+.cert { border: 3px solid var(--ok); border-radius: 16px; overflow: hidden; background: var(--surface); }
+.cert-top { background: var(--ok); color: #fff; font-weight: 800; font-size: 18px; padding: 14px 16px; }
+.cert dl { margin: 0; padding: 8px 16px; }
+.cert dl div { display: grid; grid-template-columns: 40% 1fr; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.cert dt { color: var(--ink-2); font-size: 14px; }
+.cert dd { margin: 0; font-size: 16px; font-variant-numeric: tabular-nums; }
+.cert dd b { font-family: var(--f-num); font-size: 26px; }
+.cert dd.nm { font-weight: 800; font-size: 20px; }
+.cert .track { margin: 6px 16px 10px; }
+.cert .hint { padding: 0 16px 14px; }
+.score { justify-items: center; }
+.howbtn { margin-top: 14px; border-color: var(--ink); color: var(--ink); }
+.ways { display: grid; gap: 10px; margin-top: 10px; }
+.way { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; position: relative; }
+.way h3 { font-size: 16px; font-weight: 800; }
+.way p { margin: 6px 0 0; font-size: 15px; }
+.way.mine { border: 2px solid var(--hazard); }
+.way .tag { position: absolute; top: -10px; right: 12px; background: var(--hazard); color: var(--hazard-ink); font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 99px; }
+.hint { font-size: 12.5px; color: var(--ink-2); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -253,6 +286,7 @@ h1, h2, h3 { text-wrap: balance; line-height: 1.3; margin: 0; }
   <button type="button" class="nx" id="nx"></button>
 </div></nav>
 
+<script src="config.js"></script>
 <script>
 // 직접 그린 단순 픽토그램 (viewBox 0 0 64 64, 선: currentColor, 강조: var(--hazard))
 const P = (x, y) => `<circle cx="${x}" cy="${y}" r="4.2" fill="currentColor" stroke="none"/>`; // 사람 머리
@@ -2182,6 +2216,100 @@ function scene(k) {
   }));
 })();
 
+// 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
+const UI2 = {
+  nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
+  notice: L(
+    "안전교육 이수 확인을 위해 이름과 학습 기록(읽은 단원, 퀴즈 점수)을 회사가 보관합니다.",
+    "Para kumpirmahin ang safety training, itatago ng kumpanya ang iyong pangalan at learning record (mga nabasang aralin, iskor sa quiz).",
+    "เพื่อยืนยันการผ่านการอบรมความปลอดภัย บริษัทจะเก็บชื่อและบันทึกการเรียน (บทที่อ่าน คะแนนแบบทดสอบ)",
+    "Để xác nhận hoàn thành huấn luyện an toàn, công ty lưu tên và lịch sử học (bài đã đọc, điểm câu đố) của bạn."),
+  hint: L(
+    "외국인 근로자는 외국인등록증에 적힌 영문 이름으로 입력하세요.",
+    "Isulat ang pangalan sa English gaya ng nasa Alien Registration Card.",
+    "กรอกชื่อภาษาอังกฤษตามบัตรประจำตัวคนต่างชาติ",
+    "Nhập tên tiếng Anh như trên thẻ đăng ký người nước ngoài."),
+  ph: L("이름", "Pangalan", "ชื่อ", "Tên"),
+  save: L("저장", "I-save", "บันทึก", "Lưu"),
+  hello: L("님, 오늘도 안전하게!", ", mag-ingat ngayong araw!", " ทำงานอย่างปลอดภัยนะ!", ", hôm nay làm việc an toàn nhé!"),
+  editName: L("이름 수정", "Palitan ang pangalan", "แก้ไขชื่อ", "Sửa tên"),
+  cert: L("이수 확인", "Kumpirmasyon", "ยืนยันการเรียน", "Xác nhận hoàn thành"),
+  certTitle: L("안전보건 교육 이수 확인", "Kumpirmasyon ng safety training", "ยืนยันการผ่านการอบรมความปลอดภัย", "Xác nhận hoàn thành huấn luyện an toàn"),
+  certName: L("이름", "Pangalan", "ชื่อ", "Tên"),
+  certLessons: L("읽은 단원", "Nabasang aralin", "บทที่อ่านแล้ว", "Bài đã đọc"),
+  certQuiz: L("퀴즈 최고점", "Pinakamataas na iskor", "คะแนนสูงสุด", "Điểm cao nhất"),
+  certDate: L("확인 일시", "Petsa", "วันเวลา", "Thời gian"),
+  certDev: L("기기 번호", "Device no.", "รหัสเครื่อง", "Mã thiết bị"),
+  certNote: L("이 화면을 관리자에게 보여 주거나 캡처해서 보내세요.", "Ipakita ang screen na ito sa supervisor o i-screenshot at ipadala.", "แสดงหน้าจอนี้ให้หัวหน้าดู หรือแคปหน้าจอส่งไป", "Cho quản lý xem màn hình này hoặc chụp màn hình gửi đi."),
+  notTaken: L("아직 안 풂", "Hindi pa sinasagot", "ยังไม่ได้ทำ", "Chưa làm"),
+  needName: L("이름을 먼저 등록하세요.", "Irehistro muna ang pangalan.", "กรุณาลงทะเบียนชื่อก่อน", "Hãy đăng ký tên trước."),
+  synced: L("기록 전송 완료", "Naipadala ang record", "ส่งบันทึกแล้ว", "Đã gửi dữ liệu"),
+  pending: L("기록 전송 대기 중 (인터넷 연결 시 자동 전송)", "Naghihintay ipadala (awtomatiko kapag may internet)", "รอส่งบันทึก (ส่งอัตโนมัติเมื่อมีอินเทอร์เน็ต)", "Đang chờ gửi (tự động khi có mạng)")
+};
+
+const TRACK = (() => {
+  const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+  const set = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  let dev = get("dev", null);
+  if (!dev) { dev = Math.random().toString(16).slice(2, 6).toUpperCase(); set("dev", dev); }
+  const url = () => (window.SAFETY_CONFIG && window.SAFETY_CONFIG.sheetUrl) || "";
+  let flushing = false;
+  async function flush() {
+    if (flushing || !url() || !navigator.onLine) return;
+    flushing = true;
+    let q = get("queue", []);
+    while (q.length) {
+      try {
+        await fetch(url(), { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(q[0]) });
+        q.shift(); set("queue", q);
+      } catch (e) { break; }
+    }
+    flushing = false;
+  }
+  window.addEventListener("online", flush);
+  setTimeout(flush, 1500);
+  return {
+    dev,
+    name: () => get("name", ""),
+    setName(n) { n = String(n || "").trim().slice(0, 40); set("name", n); if (n) this.send({ type: "register" }); },
+    best: () => get("best", null),
+    setBest(s) { const b = get("best", null); if (b == null || s > b) set("best", s); },
+    pending: () => get("queue", []).length,
+    enabled: () => !!url(),
+    send(ev) {
+      const n = get("name", "");
+      if (!n) return;
+      const q = get("queue", []);
+      q.push(Object.assign({ time: new Date().toISOString(), name: n, dev, lang: get("lang", "ko") }, ev));
+      set("queue", q.slice(-300));
+      flush();
+    }
+  };
+})();
+
+const UI3 = {
+  howTitle: L("앱 설치 방법", "Paano i-install ang app", "วิธีติดตั้งแอป", "Cách cài ứng dụng"),
+  howLead: L("설치 버튼이 안 보이면 내 휴대폰에 맞는 방법을 따라 하세요. 설치하지 않아도 이 주소로 언제든 볼 수 있습니다.",
+    "Kung walang install button, sundin ang paraan para sa iyong phone. Kahit hindi i-install, mabubuksan pa rin ito sa address na ito.",
+    "ถ้าไม่เห็นปุ่มติดตั้ง ให้ทำตามวิธีของมือถือคุณ แม้ไม่ติดตั้งก็เปิดดูจากที่อยู่นี้ได้เสมอ",
+    "Nếu không thấy nút cài, hãy làm theo cách phù hợp với điện thoại. Không cài vẫn xem được bằng địa chỉ này."),
+  installNow: L("지금 설치하기", "I-install ngayon", "ติดตั้งเลย", "Cài ngay"),
+  mine: L("내 휴대폰", "Ang phone mo", "มือถือของคุณ", "Điện thoại của bạn"),
+  done: L("설치가 끝나면 홈 화면의 '안전교육' 아이콘으로 여세요.", "Pagkatapos, buksan gamit ang '안전교육' icon sa home screen.", "ติดตั้งเสร็จแล้ว เปิดจากไอคอน 'อบรมความปลอดภัย' บนหน้าจอหลัก", "Cài xong, mở bằng biểu tượng '안전교육' trên màn hình chính."),
+  ways: [
+    { k: "inapp", t: L("카카오톡·네이버 앱 안에서 열었을 때", "Kung binuksan sa KakaoTalk o Naver app", "ถ้าเปิดในแอป KakaoTalk หรือ Naver", "Nếu mở trong KakaoTalk hoặc ứng dụng Naver"),
+      s: L("오른쪽 위 ⋮ 또는 ··· → '다른 브라우저로 열기' → Chrome(아이폰은 Safari) 선택 → 아래 방법으로 설치",
+        "Pindutin ang ⋮ o ··· sa kanang itaas → 'Open in other browser' → piliin ang Chrome (iPhone: Safari) → sundin ang paraan sa ibaba",
+        "แตะ ⋮ หรือ ··· มุมขวาบน → 'เปิดด้วยเบราว์เซอร์อื่น' → เลือก Chrome (iPhone: Safari) → ติดตั้งตามวิธีด้านล่าง",
+        "Nhấn ⋮ hoặc ··· góc trên phải → 'Mở bằng trình duyệt khác' → chọn Chrome (iPhone: Safari) → cài theo cách bên dưới") },
+    { k: "chrome", t: L("안드로이드 Chrome", "Android Chrome", "Android Chrome", "Android Chrome"),
+      s: L("오른쪽 위 ⋮ → '홈 화면에 추가' 또는 '앱 설치' → 설치", "⋮ sa kanang itaas → 'Add to Home screen' o 'Install app' → Install", "⋮ มุมขวาบน → 'เพิ่มไปยังหน้าจอหลัก' หรือ 'ติดตั้งแอป' → ติดตั้ง", "⋮ góc trên phải → 'Thêm vào màn hình chính' hoặc 'Cài đặt ứng dụng' → Cài đặt") },
+    { k: "samsung", t: L("삼성 인터넷", "Samsung Internet", "Samsung Internet", "Samsung Internet"),
+      s: L("아래쪽 ≡ 메뉴 → '현재 페이지 추가' → '홈 화면' → 추가", "≡ menu sa ibaba → 'Add page to' → 'Home screen' → Add", "เมนู ≡ ด้านล่าง → 'เพิ่มหน้าไปยัง' → 'หน้าจอหลัก' → เพิ่ม", "Menu ≡ phía dưới → 'Thêm trang vào' → 'Màn hình chính' → Thêm") },
+    { k: "ios", t: L("아이폰 Safari", "iPhone Safari", "iPhone Safari", "iPhone Safari"),
+      s: L("아래쪽 공유 버튼(□↑) → '홈 화면에 추가' → 추가", "Share button (□↑) sa ibaba → 'Add to Home Screen' → Add", "ปุ่มแชร์ (□↑) ด้านล่าง → 'เพิ่มไปยังหน้าจอโฮม' → เพิ่ม", "Nút Chia sẻ (□↑) phía dưới → 'Thêm vào MH chính' → Thêm") }
+  ]
+};
 
 </script>
 <script>
@@ -2261,7 +2389,7 @@ function scene(k) {
       <div class="prog"><div class="prog-top"><span>${T(UI.progress)}</span><b>${n} / ${ALL.length}</b></div>
       <div class="track"><span style="width:${(n / ALL.length) * 100}%"></span></div></div>
       <div><button class="cta" type="button" data-go="${firstOpen.lesson.id}">${T(n ? UI.cont : UI.start)} →</button></div>
-    </section>`;
+    </section>${nameCard()}`;
     PARTS.forEach(p => {
       h += `<section class="part"><div class="part-head"><div class="part-no"><small>PART</small>${p.no}</div><h2>${T(p.title)}</h2><p>${T(p.sub)}</p></div><ul class="rows">`;
       p.lessons.forEach((l, i) => {
@@ -2273,6 +2401,7 @@ function scene(k) {
       h += `</ul></section>`;
     });
     h += `<section class="quizcard"><h2>${T(UI.quizTitle)}</h2><p>${esc(tx(UI.quizSub).replace("11", QUIZ.length))}</p><button class="cta" type="button" data-go="quiz">${T(UI.quizStart)} →</button></section>`;
+    if (!(window.INSTALL_ENV && window.INSTALL_ENV.standalone)) h += `<button type="button" class="mark howbtn" data-go="install">📲 ${T(UI3.howTitle)}</button>`;
     h += `<p class="src">${T(UI.source)}<br>${T(UI.source4)}</p>`;
     app.innerHTML = h;
   }
@@ -2286,7 +2415,7 @@ function scene(k) {
       <div class="blocks">${l.blocks.map(block).join("")}${LSRC[l.id] ? block({ t: "src", items: LSRC[l.id] }) : ""}</div>
       <button type="button" class="mark" id="mark" aria-pressed="${!!done[l.id]}">${done[l.id] ? "✓ " + T(UI.doneOn) : T(UI.done)}</button>`;
     document.getElementById("mark").onclick = () => {
-      if (done[l.id]) delete done[l.id]; else done[l.id] = 1;
+      if (done[l.id]) delete done[l.id]; else { done[l.id] = 1; TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length }); }
       store.set("done", done);
       if (done[l.id] && ALL[k + 1]) go(ALL[k + 1].lesson.id); else lesson(id);
     };
@@ -2305,10 +2434,12 @@ function scene(k) {
     pager.hidden = true;
     if (qs.i >= QUIZ.length) {
       const pass = qs.score >= Math.ceil(QUIZ.length * 0.8);
+      if (!qs.sent) { qs.sent = 1; TRACK.setBest(qs.score); TRACK.send({ type: "quiz", score: qs.score, total: QUIZ.length, count: Object.keys(done).length }); }
       app.innerHTML = `<div class="score"><div class="eyebrow">${T(UI.score)}</div>
         <div class="big">${qs.score}<small> / ${QUIZ.length}</small></div>
         <p>${T(pass ? UI.pass : UI.fail)}</p>
-        <button type="button" class="cta" id="again">${T(UI.retry)}</button>
+        <button type="button" class="cta" data-go="cert">${T(UI2.cert)} →</button>
+        <button type="button" class="mark" id="again" style="border-color:var(--line);color:var(--ink)">${T(UI.retry)}</button>
         <button type="button" class="mark" id="toHome" style="border-color:var(--line);color:var(--ink)">${T(UI.home)}</button></div>`;
       document.getElementById("again").onclick = () => { qs = { i: 0, score: 0, picked: null }; quiz(); };
       document.getElementById("toHome").onclick = () => go("");
@@ -2332,6 +2463,63 @@ function scene(k) {
     if (qn) { qn.onclick = () => { qs.i++; qs.picked = null; quiz(); window.scrollTo(0, 0); }; qn.focus({ preventScroll: true }); }
   }
 
+  function nameCard() {
+    const nm = TRACK.name();
+    if (!nm || editing) return `<section class="namecard" id="namecard"><h2>${T(UI2.nameTitle)}</h2>
+      <p class="notice">${T(UI2.notice)}</p>
+      <form id="nameForm"><input id="nameInput" type="text" autocomplete="name" maxlength="40" placeholder="${T(UI2.ph)}" value="${esc(nm)}" required><button type="submit" class="cta">${T(UI2.save)}</button></form>
+      <p class="hint">${T(UI2.hint)}</p></section>`;
+    const pend = TRACK.pending();
+    return `<section class="namecard on"><div><b>${esc(nm)}</b>${T(UI2.hello)}</div>
+      <div class="namebtns"><button type="button" class="linkbtn" id="editName">${T(UI2.editName)}</button><button type="button" class="cta small" data-go="cert">${T(UI2.cert)}</button></div>
+      ${TRACK.enabled() ? `<small class="sync">${pend ? "⏳ " + T(UI2.pending) : "✓ " + T(UI2.synced)}</small>` : ""}</section>`;
+  }
+  let editing = false;
+  app.addEventListener("submit", e => {
+    if (e.target.id !== "nameForm") return;
+    e.preventDefault();
+    const v = document.getElementById("nameInput").value.trim();
+    if (!v) return;
+    TRACK.setName(v); editing = false; home();
+  });
+  app.addEventListener("click", e => { if (e.target.id === "editName") { editing = true; home(); setTimeout(() => document.getElementById("nameInput")?.focus(), 0); } });
+
+  function cert() {
+    pager.hidden = true;
+    const nm = TRACK.name();
+    if (!nm) { app.innerHTML = `<p class="lead">${T(UI2.needName)}</p>${nameCard()}`; return; }
+    const n = ALL.filter(a => done[a.lesson.id]).length, best = TRACK.best();
+    const d = new Date(), pad = x => String(x).padStart(2, "0");
+    const ds = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    app.innerHTML = `<section class="cert"><div class="cert-top">${T(UI2.certTitle)}</div>
+      <dl>
+        <div><dt>${T(UI2.certName)}</dt><dd class="nm">${esc(nm)}</dd></div>
+        <div><dt>${T(UI2.certLessons)}</dt><dd><b>${n}</b> / ${ALL.length}</dd></div>
+        <div><dt>${T(UI2.certQuiz)}</dt><dd>${best == null ? T(UI2.notTaken) : `<b>${best}</b> / ${QUIZ.length}`}</dd></div>
+        <div><dt>${T(UI2.certDate)}</dt><dd>${ds}</dd></div>
+        <div><dt>${T(UI2.certDev)}</dt><dd>${TRACK.dev}</dd></div>
+      </dl>
+      <div class="track"><span style="width:${(n / ALL.length) * 100}%"></span></div>
+      <p class="hint">${T(UI2.certNote)}</p></section>
+      <button type="button" class="mark" data-go="" style="border-color:var(--line);color:var(--ink)">${T(UI.home)}</button>`;
+  }
+
+  function install() {
+    pager.hidden = true;
+    const ib = document.getElementById("installBar"); if (ib) ib.hidden = true;
+    const env = window.INSTALL_ENV || {};
+    const mine = env.isInApp ? "inapp" : env.isIOS ? "ios" : env.isSamsung ? "samsung" : "chrome";
+    const dp = window.INSTALL_PROMPT && window.INSTALL_PROMPT();
+    app.innerHTML = `<h1 class="ltitle">${T(UI3.howTitle)}</h1><p class="lead">${T(UI3.howLead)}</p>
+      ${dp ? `<button type="button" class="cta" id="doInstall" style="width:100%;margin:6px 0 4px">${T(UI3.installNow)}</button>` : ""}
+      <div class="ways">${UI3.ways.map(w => `<section class="way ${w.k === mine ? "mine" : ""}">${w.k === mine ? `<span class="tag">${T(UI3.mine)}</span>` : ""}<h3>${T(w.t)}</h3><p>${T(w.s)}</p></section>`).join("")}</div>
+      <p class="hint" style="margin-top:14px">${T(UI3.done)}</p>
+      <p class="hint">${esc(location.origin + location.pathname)}</p>
+      <button type="button" class="mark" data-go="" style="border-color:var(--line);color:var(--ink)">${T(UI.home)}</button>`;
+    const d = document.getElementById("doInstall");
+    if (d) d.onclick = async () => { const p = window.INSTALL_PROMPT(); if (p) { p.prompt(); await p.userChoice; } go(""); };
+  }
+
   app.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
 
   function render() {
@@ -2339,7 +2527,7 @@ function scene(k) {
     langsEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
     document.getElementById("brandTxt").textContent = tx(UI.brand);
     const h = location.hash.slice(1);
-    if (!h) home(); else if (h === "quiz") quiz(); else lesson(h);
+    if (!h) home(); else if (h === "quiz") quiz(); else if (h === "cert") cert(); else if (h === "install") install(); else lesson(h);
   }
   render();
 })();
@@ -2354,27 +2542,58 @@ function scene(k) {
 <style>
 .installbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#15191F;color:#fff;display:flex;gap:10px;align-items:center;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));font-size:14px;border-top:4px solid #F5B800}
 .installbar span{flex:1;min-width:0}
-.installbar button{border:0;border-radius:8px;padding:9px 14px;font-weight:800;background:#F5B800;color:#15191F}
+.installbar button{border:0;border-radius:8px;padding:9px 14px;font-weight:800;background:#F5B800;color:#15191F;flex:none}
 .installbar #installX{background:transparent;color:#fff;padding:6px}
 </style>
 <script>
 (function(){
-  const T={ko:["홈 화면에 설치하면 앱처럼 쓸 수 있어요","설치","Safari 공유 버튼 → '홈 화면에 추가'"],
-    tl:["I-install sa home screen para magamit na parang app","I-install","Safari Share → 'Add to Home Screen'"],
-    th:["ติดตั้งบนหน้าจอหลักเพื่อใช้เหมือนแอป","ติดตั้ง","Safari ปุ่มแชร์ → 'เพิ่มไปยังหน้าจอโฮม'"],
-    vi:["Cài lên màn hình chính để dùng như ứng dụng","Cài đặt","Safari nút Chia sẻ → 'Thêm vào MH chính'"]};
-  const lang=()=>{try{return JSON.parse(localStorage.getItem("lang"))||"ko"}catch(e){return "ko"}};
-  const bar=document.getElementById("installBar"),btn=document.getElementById("installBtn"),txt=document.getElementById("installTxt");
-  const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
-  let dismissed=false;try{dismissed=localStorage.getItem("installX")==="1"}catch(e){}
-  let deferred=null;
-  function show(ios){const t=T[lang()]||T.ko;txt.textContent=ios?t[0]+" — "+t[2]:t[0];btn.textContent=t[1];btn.hidden=!!ios;bar.hidden=false;}
-  if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}
-  if(standalone||dismissed)return;
-  addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;show(false);});
-  if(/iphone|ipad|ipod/i.test(navigator.userAgent))setTimeout(()=>show(true),1500);
-  btn.onclick=async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;bar.hidden=true;};
-  document.getElementById("installX").onclick=()=>{bar.hidden=true;try{localStorage.setItem("installX","1")}catch(e){}};
+  const ua = navigator.userAgent;
+  const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isKakao = /KAKAOTALK/i.test(ua);
+  const isInApp = isKakao || /NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|wv\)/i.test(ua);
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  window.INSTALL_ENV = { isIOS, isInApp, isKakao, standalone, isSamsung: /SamsungBrowser/i.test(ua) };
+
+  // 카카오톡 인앱 브라우저 → 외부 브라우저로 자동 전환
+  if (isKakao && !sessionStorage.getItem("kakaoOut")) {
+    try { sessionStorage.setItem("kakaoOut", "1"); } catch (e) {}
+    location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(location.href);
+  }
+
+  const T = {
+    ko: ["홈 화면에 설치하면 앱처럼 쓸 수 있어요", "설치", "설치 방법", "이 화면에서는 설치가 안 됩니다. Chrome(아이폰은 Safari)으로 열어 주세요.", "주소 복사", "복사됨"],
+    tl: ["I-install sa home screen para magamit na parang app", "I-install", "Paano", "Hindi ma-install dito. Buksan sa Chrome (iPhone: Safari).", "Kopyahin", "Nakopya"],
+    th: ["ติดตั้งบนหน้าจอหลักเพื่อใช้เหมือนแอป", "ติดตั้ง", "วิธีติดตั้ง", "ติดตั้งในหน้านี้ไม่ได้ กรุณาเปิดด้วย Chrome (iPhone: Safari)", "คัดลอกลิงก์", "คัดลอกแล้ว"],
+    vi: ["Cài lên màn hình chính để dùng như ứng dụng", "Cài đặt", "Cách cài", "Không cài được ở đây. Hãy mở bằng Chrome (iPhone: Safari).", "Sao chép", "Đã chép"]
+  };
+  const lang = () => { try { return JSON.parse(localStorage.getItem("lang")) || "ko"; } catch (e) { return "ko"; } };
+  const bar = document.getElementById("installBar"), btn = document.getElementById("installBtn"), txt = document.getElementById("installTxt");
+  let deferred = null, mode = "";
+  window.INSTALL_PROMPT = () => deferred;
+  function show(m) {
+    const t = T[lang()] || T.ko; mode = m;
+    if (m === "prompt") { txt.textContent = t[0]; btn.textContent = t[1]; }
+    else if (m === "inapp") { txt.textContent = t[3]; btn.textContent = t[4]; }
+    else { txt.textContent = t[0]; btn.textContent = t[2]; }
+    bar.hidden = false;
+  }
+  if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  if (standalone) return;
+  let dismissed = false; try { dismissed = localStorage.getItem("installX") === "1"; } catch (e) {}
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; if (!dismissed) show("prompt"); });
+  addEventListener("appinstalled", () => { bar.hidden = true; deferred = null; });
+  if (isInApp) setTimeout(() => show("inapp"), 800);
+  else if (!dismissed) setTimeout(() => { if (!deferred) show("help"); }, 3500);
+  btn.onclick = async () => {
+    if (mode === "prompt" && deferred) { deferred.prompt(); await deferred.userChoice; deferred = null; bar.hidden = true; return; }
+    if (mode === "inapp") {
+      const t = T[lang()] || T.ko;
+      try { await navigator.clipboard.writeText(location.origin + location.pathname); btn.textContent = t[5]; } catch (e) { prompt && 0; }
+      return;
+    }
+    bar.hidden = true; location.hash = "install";
+  };
+  document.getElementById("installX").onclick = () => { bar.hidden = true; try { localStorage.setItem("installX", "1"); } catch (e) {} };
 })();
 </script>
 

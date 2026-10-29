@@ -1,7 +1,8 @@
-const CACHE = "safety-edu-v1";
+const CACHE = "safety-edu-v3";
 const FILES = [
 "./",
 "index.html",
+"config.js",
 "manifest.webmanifest",
 "icons/icon-192.png",
 "icons/icon-512.png",
@@ -46,7 +47,7 @@ self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Pr
 self.addEventListener("fetch", e => {
   const req = e.request; if (req.method !== "GET") return;
   const url = new URL(req.url);
-  if (url.origin === location.origin && (req.mode === "navigate" || url.pathname.endsWith(".html"))) {
+  if (url.origin === location.origin && (req.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname.endsWith("config.js"))) {
     // 페이지는 최신본 우선, 오프라인이면 캐시
     e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(CACHE).then(x => x.put(req, c)); return r; }).catch(() => caches.match(req).then(r => r || caches.match("index.html"))));
     return;
