@@ -2238,6 +2238,8 @@ const UI2 = {
   certName: L("이름", "Pangalan", "ชื่อ", "Tên"),
   certLessons: L("읽은 단원", "Nabasang aralin", "บทที่อ่านแล้ว", "Bài đã đọc"),
   certQuiz: L("퀴즈 최고점", "Pinakamataas na iskor", "คะแนนสูงสุด", "Điểm cao nhất"),
+  certTime: L("학습 시간", "Oras ng pag-aaral", "เวลาเรียน", "Thời gian học"),
+  minUnit: L("분", " min", " นาที", " phút"),
   certDate: L("확인 일시", "Petsa", "วันเวลา", "Thời gian"),
   certDev: L("기기 번호", "Device no.", "รหัสเครื่อง", "Mã thiết bị"),
   certNote: L("이 화면을 관리자에게 보여 주거나 캡처해서 보내세요.", "Ipakita ang screen na ito sa supervisor o i-screenshot at ipadala.", "แสดงหน้าจอนี้ให้หัวหน้าดู หรือแคปหน้าจอส่งไป", "Cho quản lý xem màn hình này hoặc chụp màn hình gửi đi."),
@@ -2253,6 +2255,8 @@ const TRACK = (() => {
   let dev = get("dev", null);
   if (!dev) { dev = Math.random().toString(16).slice(2, 6).toUpperCase(); set("dev", dev); }
   const url = () => (window.SAFETY_CONFIG && window.SAFETY_CONFIG.sheetUrl) || "";
+
+  // ---- 전송 대기열 ----
   let flushing = false;
   async function flush() {
     if (flushing || !url() || !navigator.onLine) return;
@@ -2266,24 +2270,48 @@ const TRACK = (() => {
     }
     flushing = false;
   }
-  window.addEventListener("online", flush);
+  addEventListener("online", flush);
   setTimeout(flush, 1500);
+  function send(ev) {
+    const n = get("name", "");
+    if (!n) return;
+    const q = get("queue", []);
+    q.push(Object.assign({ time: new Date().toISOString(), name: n, dev, lang: get("lang", "ko") }, ev));
+    set("queue", q.slice(-300));
+    flush();
+  }
+
+  // ---- 학습 시간: 화면이 보이고 최근 90초 안에 조작이 있을 때만 15초씩 더함 ----
+  const TICK = 15, IDLE = 90;
+  let cur = null, curTitle = "", lastAct = Date.now();
+  ["scroll", "touchstart", "pointerdown", "keydown", "wheel"].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));
+  const secs = () => get("secs", {});
+  setInterval(() => {
+    if (!cur || document.hidden || Date.now() - lastAct > IDLE * 1000) return;
+    const s = secs(); s[cur] = (s[cur] || 0) + TICK; set("secs", s);
+  }, TICK * 1000);
+  const lessonMin = id => Math.round((secs()[id] || 0) / 60);
+  const totalMin = () => Math.round(Object.values(secs()).reduce((a, b) => a + b, 0) / 60);
+  function markSent(id) { const sent = get("sentSecs", {}); sent[id] = secs()[id] || 0; set("sentSecs", sent); }
+  function leave(id, title) {
+    // 단원을 떠날 때 아직 안 보낸 시간이 1분 이상이면 '학습' 기록으로 보냄
+    if (!id || id === "quiz") return;
+    const sent = get("sentSecs", {}), s = secs()[id] || 0;
+    if (s - (sent[id] || 0) >= 60) { markSent(id); send({ type: "time", id, title, min: Math.round(s / 60), totalMin: totalMin() }); }
+  }
+  addEventListener("visibilitychange", () => { if (document.hidden) leave(cur, curTitle); });
+
   return {
     dev,
     name: () => get("name", ""),
-    setName(n) { n = String(n || "").trim().slice(0, 40); set("name", n); if (n) this.send({ type: "register" }); },
+    setName(n) { n = String(n || "").trim().slice(0, 40); set("name", n); if (n) send({ type: "register", totalMin: totalMin() }); },
     best: () => get("best", null),
     setBest(s) { const b = get("best", null); if (b == null || s > b) set("best", s); },
     pending: () => get("queue", []).length,
     enabled: () => !!url(),
-    send(ev) {
-      const n = get("name", "");
-      if (!n) return;
-      const q = get("queue", []);
-      q.push(Object.assign({ time: new Date().toISOString(), name: n, dev, lang: get("lang", "ko") }, ev));
-      set("queue", q.slice(-300));
-      flush();
-    }
+    send,
+    setCurrent(id, title) { if (cur && cur !== id) leave(cur, curTitle); cur = id; curTitle = title || ""; lastAct = Date.now(); },
+    lessonMin, totalMin, markSent
   };
 })();
 
@@ -2415,7 +2443,7 @@ const UI3 = {
       <div class="blocks">${l.blocks.map(block).join("")}${LSRC[l.id] ? block({ t: "src", items: LSRC[l.id] }) : ""}</div>
       <button type="button" class="mark" id="mark" aria-pressed="${!!done[l.id]}">${done[l.id] ? "✓ " + T(UI.doneOn) : T(UI.done)}</button>`;
     document.getElementById("mark").onclick = () => {
-      if (done[l.id]) delete done[l.id]; else { done[l.id] = 1; TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length }); }
+      if (done[l.id]) delete done[l.id]; else { done[l.id] = 1; TRACK.markSent(l.id); TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length, min: TRACK.lessonMin(l.id), totalMin: TRACK.totalMin() }); }
       store.set("done", done);
       if (done[l.id] && ALL[k + 1]) go(ALL[k + 1].lesson.id); else lesson(id);
     };
@@ -2434,7 +2462,7 @@ const UI3 = {
     pager.hidden = true;
     if (qs.i >= QUIZ.length) {
       const pass = qs.score >= Math.ceil(QUIZ.length * 0.8);
-      if (!qs.sent) { qs.sent = 1; TRACK.setBest(qs.score); TRACK.send({ type: "quiz", score: qs.score, total: QUIZ.length, count: Object.keys(done).length }); }
+      if (!qs.sent) { qs.sent = 1; TRACK.setBest(qs.score); TRACK.send({ type: "quiz", score: qs.score, total: QUIZ.length, count: Object.keys(done).length, min: TRACK.lessonMin("quiz"), totalMin: TRACK.totalMin() }); }
       app.innerHTML = `<div class="score"><div class="eyebrow">${T(UI.score)}</div>
         <div class="big">${qs.score}<small> / ${QUIZ.length}</small></div>
         <p>${T(pass ? UI.pass : UI.fail)}</p>
@@ -2495,6 +2523,7 @@ const UI3 = {
       <dl>
         <div><dt>${T(UI2.certName)}</dt><dd class="nm">${esc(nm)}</dd></div>
         <div><dt>${T(UI2.certLessons)}</dt><dd><b>${n}</b> / ${ALL.length}</dd></div>
+        <div><dt>${T(UI2.certTime)}</dt><dd><b>${TRACK.totalMin()}</b>${T(UI2.minUnit)}</dd></div>
         <div><dt>${T(UI2.certQuiz)}</dt><dd>${best == null ? T(UI2.notTaken) : `<b>${best}</b> / ${QUIZ.length}`}</dd></div>
         <div><dt>${T(UI2.certDate)}</dt><dd>${ds}</dd></div>
         <div><dt>${T(UI2.certDev)}</dt><dd>${TRACK.dev}</dd></div>
@@ -2527,6 +2556,8 @@ const UI3 = {
     langsEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
     document.getElementById("brandTxt").textContent = tx(UI.brand);
     const h = location.hash.slice(1);
+    const cl = ALL.find(x => x.lesson.id === h);
+    TRACK.setCurrent(cl ? h : h === "quiz" ? "quiz" : null, cl ? cl.lesson.title.ko : "퀴즈");
     if (!h) home(); else if (h === "quiz") quiz(); else if (h === "cert") cert(); else if (h === "install") install(); else lesson(h);
   }
   render();
