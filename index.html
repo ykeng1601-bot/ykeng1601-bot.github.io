@@ -2414,6 +2414,66 @@ function scene(k) {
     ol.items = ol.items.filter(i => { const k = i.ko.replace(/체인·풀리 등 /, "벨트·체인 등 "); if (seen.has(k)) return false; seen.add(k); return true; });
     addSrc(w3, [BOOK]);
   }
+  // ---------- 9. TBM 확장 ----------
+  const tb = find("a-tbm");
+  if (tb) {
+    const photo = tb.blocks.filter(b => b.t === "photo");
+    const tidy = tb.blocks.find(b => b.t === "ol" && b.tone === "do");
+    tidy.items = tidy.items.concat([
+      L("쓴 공구는 정해진 자리에 돌려놓습니다.", "Ibalik ang gamit sa tamang lugar pagkatapos gamitin.", "ใช้เครื่องมือเสร็จแล้วเก็บเข้าที่", "Dùng xong dụng cụ thì để lại đúng chỗ."),
+      L("비상구·소화기·비상정지 버튼 앞에는 아무것도 두지 않습니다.", "Huwag harangan ang emergency exit, fire extinguisher at emergency stop button.", "ห้ามวางของหน้าทางออกฉุกเฉิน ถังดับเพลิง และปุ่มหยุดฉุกเฉิน", "Không để đồ trước lối thoát hiểm, bình chữa cháy, nút dừng khẩn cấp.")
+    ]);
+    tb.blocks = photo.concat([
+      { t: "lead", x: L(
+        "TBM은 작업 시작 전 5~10분 동안 작업 현장에서 오늘 할 일과 위험, 지킬 점을 함께 확인하는 짧은 회의입니다. 사고는 '오늘은 괜찮겠지' 하는 순간에 납니다.",
+        "Ang TBM ay maikling pulong (5–10 minuto) sa lugar ng trabaho bago magsimula, para pag-usapan ang gagawin, mga panganib at dapat sundin. Nangyayari ang aksidente kapag inisip mong 'okay lang ngayon'.",
+        "TBM คือการประชุมสั้น 5–10 นาทีที่หน้างานก่อนเริ่มงาน เพื่อทบทวนงานวันนี้ อันตราย และสิ่งที่ต้องปฏิบัติ อุบัติเหตุเกิดตอนที่คิดว่า 'วันนี้คงไม่เป็นไร'",
+        "TBM là cuộc họp ngắn 5–10 phút tại hiện trường trước giờ làm để cùng xác nhận việc hôm nay, mối nguy và điều cần tuân thủ. Tai nạn xảy ra đúng lúc nghĩ 'hôm nay chắc không sao'.") },
+      { t: "def",
+        k: L("TBM (Tool Box Meeting)", "TBM (Tool Box Meeting)", "TBM (Tool Box Meeting)", "TBM (Tool Box Meeting)"),
+        v: L("공구함(Tool Box) 옆에 모여 하는 회의라는 뜻입니다. 회사가 한 위험성평가 결과를 근로자에게 매일 알려 주는 가장 기본적인 방법입니다.",
+          "Ibig sabihin ay pulong sa tabi ng tool box. Ito ang pinakasimpleng paraan para araw-araw na ipaalam sa manggagawa ang resulta ng risk assessment ng kumpanya.",
+          "หมายถึงการประชุมข้างกล่องเครื่องมือ (Tool Box) เป็นวิธีพื้นฐานที่สุดในการแจ้งผลการประเมินความเสี่ยงของบริษัทให้คนงานรู้ทุกวัน",
+          "Nghĩa là cuộc họp bên cạnh hộp dụng cụ. Đây là cách cơ bản nhất để hằng ngày thông báo kết quả đánh giá rủi ro của công ty cho người lao động.") },
+      { t: "kv", rows: [
+        [L("언제", "Kailan", "เมื่อไร", "Khi nào"), L("매일 작업 시작 전. 작업이 바뀌거나 점심 뒤 다시 시작할 때도", "Araw-araw bago magsimula; pati kapag nagbago ang trabaho o pagkatapos ng tanghalian", "ทุกวันก่อนเริ่มงาน และเมื่อเปลี่ยนงานหรือเริ่มใหม่หลังพักกลางวัน", "Hằng ngày trước giờ làm; cả khi đổi việc hoặc bắt đầu lại sau giờ nghỉ trưa")],
+        [L("어디서", "Saan", "ที่ไหน", "Ở đâu"), L("실제 작업하는 기계·현장 가까이", "Malapit sa makina o lugar ng trabaho", "ใกล้เครื่องจักรหรือหน้างานจริง", "Gần máy, hiện trường làm việc thực tế")],
+        [L("누가", "Sino", "ใคร", "Ai"), L("관리감독자(반장)가 진행하고, 그 작업을 하는 모든 사람이 참여", "Pinamumunuan ng supervisor (team leader); kasali ang lahat ng gagawa ng trabaho", "หัวหน้างานเป็นผู้นำ ทุกคนที่ทำงานนั้นเข้าร่วม", "Quản lý giám sát (tổ trưởng) chủ trì; mọi người làm việc đó đều tham gia")],
+        [L("얼마나", "Gaano katagal", "นานเท่าไร", "Bao lâu"), L("5~10분, 짧고 쉽게. 외국인 동료도 알아듣게 그림·몸짓·통역 활용", "5–10 minuto, maikli at simple. Gumamit ng larawan, kilos o interpreter para maintindihan ng dayuhang kasama", "5–10 นาที สั้นและเข้าใจง่าย ใช้ภาพ ท่าทาง หรือล่าม ให้เพื่อนต่างชาติเข้าใจ", "5–10 phút, ngắn gọn dễ hiểu. Dùng hình, cử chỉ, phiên dịch để đồng nghiệp nước ngoài hiểu")]
+      ]},
+      { t: "h", x: L("TBM 진행 5단계", "5 hakbang ng TBM", "5 ขั้นตอนของ TBM", "5 bước tiến hành TBM") },
+      { t: "ol", items: [
+        L("인사와 몸 상태 확인 — 아픈 곳, 피로, 전날 음주. 몸이 안 좋으면 솔직히 말합니다.", "Pagbati at tanong sa kalusugan — sakit, pagod, nakainom kahapon. Sabihin nang tapat kung masama ang pakiramdam.", "ทักทายและตรวจสภาพร่างกาย — เจ็บ เหนื่อย ดื่มเหล้าเมื่อวาน ถ้าไม่สบายให้บอกตรง ๆ", "Chào hỏi, kiểm tra sức khỏe — đau, mệt, uống rượu hôm trước. Không khỏe thì nói thật."),
+        L("보호구·장비 점검 — 옆 사람과 서로 안전모 턱끈, 보안경, 안전화를 확인합니다.", "Suriin ang PPE at gamit — suriin ng magkatabi ang chin strap ng helmet, goggles at safety shoes ng isa't isa.", "ตรวจอุปกรณ์ป้องกันและเครื่องมือ — ตรวจสายรัดคางหมวก แว่นตา รองเท้านิรภัยให้กันกับคนข้าง ๆ", "Kiểm tra bảo hộ, thiết bị — kiểm tra chéo quai mũ, kính, giày bảo hộ với người bên cạnh."),
+        L("오늘 작업과 위험 알리기 — 위험성평가 결과, 어제 있었던 아차사고를 공유합니다.", "Ipaalam ang trabaho at panganib ngayon — ibahagi ang resulta ng risk assessment at ang muntikang aksidente kahapon.", "แจ้งงานและอันตรายวันนี้ — แบ่งปันผลประเมินความเสี่ยงและเหตุการณ์เกือบเกิดอุบัติเหตุเมื่อวาน", "Thông báo công việc, mối nguy hôm nay — chia sẻ kết quả đánh giá rủi ro, sự cố suýt xảy ra hôm qua."),
+        L("대책과 역할 정하기 — 누가 무엇을 하는지, 2인 작업·크레인 신호는 누가 하는지 정합니다.", "Itakda ang hakbang at tungkulin — sino ang gagawa ng ano, sino ang magbibigay ng senyas sa 2-taong trabaho at crane.", "กำหนดมาตรการและหน้าที่ — ใครทำอะไร ใครให้สัญญาณงาน 2 คนและเครน", "Định biện pháp, vai trò — ai làm gì, ai ra tín hiệu khi làm 2 người và cẩu."),
+        L("지적확인 — 위험한 곳을 손가락으로 가리키며 '○○ 좋아!'를 함께 외치고 시작합니다.", "Point and call — ituro ang delikadong lugar at sabay-sabay na sumigaw ng '○○, okay!' bago magsimula.", "ชี้และขานยืนยัน — ชี้จุดอันตรายแล้วขานพร้อมกันว่า '○○ โอเค!' ก่อนเริ่มงาน", "Chỉ tay gọi tên — chỉ vào chỗ nguy hiểm, cùng hô '○○ tốt!' rồi bắt đầu.")
+      ]},
+      { t: "h", x: L("판금 현장 TBM 예시", "Halimbawa ng TBM sa sheet metal", "ตัวอย่าง TBM ในโรงงานแผ่นโลหะ", "Ví dụ TBM ở xưởng tấm kim loại") },
+      { t: "kv", rows: [
+        [L("레이저", "Laser", "เลเซอร์", "Laser"), L("\"문 닫고 가동! 알루미늄 자를 때 불 조심, 소화기는 기계 왼쪽.\"", "\"Isara ang pinto bago paandarin! Ingat sa sunog sa aluminum; nasa kaliwa ng makina ang extinguisher.\"", "\"ปิดประตูแล้วค่อยเดินเครื่อง! ตัดอะลูมิเนียมระวังไฟ ถังดับเพลิงอยู่ซ้ายเครื่อง\"", "\"Đóng cửa rồi mới chạy! Cắt nhôm cẩn thận cháy, bình chữa cháy bên trái máy.\"")],
+        [L("절곡", "Bending", "พับ", "Chấn"), L("\"긴 판재는 2인 1조. 페달은 ○○ 한 사람만, '좋아' 신호 후 밟기.\"", "\"Dalawang tao sa mahabang sheet. Si ○○ lang ang tatapak sa pedal, pagkatapos ng senyas na 'okay'.\"", "\"แผ่นยาวทำ 2 คน เหยียบแป้นได้คนเดียวคือ ○○ หลังสัญญาณ 'โอเค'\"", "\"Tấm dài làm 2 người. Chỉ ○○ đạp bàn đạp, sau tín hiệu 'được'.\"")],
+        [L("크레인", "Crane", "เครน", "Cẩu"), L("\"오늘 판재 묶음 이동. 두 줄걸이, 인양물 아래 절대 금지, 신호는 ○○.\"", "\"Ililipat ang bundle ng sheet ngayon. Dalawang sling, bawal sa ilalim ng karga, si ○○ ang signal.\"", "\"วันนี้ย้ายมัดแผ่นโลหะ ผูกสองจุด ห้ามอยู่ใต้ของที่ยกเด็ดขาด ผู้ให้สัญญาณคือ ○○\"", "\"Hôm nay chuyển bó tấm. Buộc hai dây, cấm đứng dưới vật cẩu, ○○ xi nhan.\"")],
+        [L("용접", "Welding", "เชื่อม", "Hàn"), L("\"불티 방지포 깔고, 주변 기름 치우기. 환기팬 켜고 시작.\"", "\"Maglatag ng fire blanket at alisin ang langis sa paligid. I-on ang bentilador bago magsimula.\"", "\"ปูผ้ากันไฟ เก็บน้ำมันรอบ ๆ เปิดพัดลมระบายอากาศก่อนเริ่ม\"", "\"Trải bạt chống cháy, dọn dầu xung quanh. Bật quạt thông gió rồi bắt đầu.\"")],
+        [L("지게차", "Forklift", "รถยก", "Xe nâng"), L("\"오후 2시 출하. 그 시간 출하장 통로는 걸어 다니지 않기.\"", "\"2 PM ang labas ng produkto. Huwag dumaan sa daanan ng shipping area sa oras na iyon.\"", "\"บ่ายสองโมงส่งของ ช่วงนั้นห้ามเดินทางลานส่งของ\"", "\"2 giờ chiều xuất hàng. Giờ đó không đi bộ qua lối khu xuất hàng.\"")]
+      ]},
+      { t: "h", x: L("내가 할 일", "Ang dapat kong gawin", "สิ่งที่ฉันต้องทำ", "Việc tôi cần làm"), tone: "do" },
+      { t: "ol", tone: "do", items: [
+        L("끝까지 듣고, 모르는 말은 바로 묻습니다. 통역이나 다시 설명을 부탁해도 됩니다.", "Makinig hanggang dulo at magtanong agad kung may hindi naiintindihan. Puwedeng humingi ng interpreter o ulit na paliwanag.", "ฟังจนจบ ไม่เข้าใจให้ถามทันที ขอล่ามหรือให้อธิบายซ้ำได้", "Nghe đến hết, chỗ nào không hiểu thì hỏi ngay. Có thể nhờ phiên dịch hoặc giải thích lại."),
+        L("위험한 것을 봤거나 어제 다칠 뻔했으면 말합니다. 그 이야기가 다음 사고를 막습니다.", "Sabihin kung may nakita kang panganib o muntik kang masaktan kahapon. Iyan ang pipigil sa susunod na aksidente.", "ถ้าเห็นอันตรายหรือเมื่อวานเกือบบาดเจ็บให้บอก เรื่องนั้นจะป้องกันอุบัติเหตุครั้งต่อไป", "Thấy nguy hiểm hoặc hôm qua suýt bị thương thì nói ra. Điều đó ngăn tai nạn tiếp theo."),
+        L("TBM에서 정한 순서와 신호를 그대로 지킵니다.", "Sundin ang pagkakasunod at senyas na napagkasunduan sa TBM.", "ปฏิบัติตามขั้นตอนและสัญญาณที่ตกลงใน TBM", "Tuân thủ đúng trình tự và tín hiệu đã thống nhất trong TBM."),
+        L("작업이 계획과 달라지면 멈추고 다시 이야기합니다.", "Kapag iba na ang trabaho sa plano, huminto at mag-usap muli.", "ถ้างานไม่เป็นไปตามแผน ให้หยุดและคุยกันใหม่", "Nếu công việc khác với kế hoạch, dừng lại và bàn lại.")
+      ]},
+      { t: "note", x: L(
+        "TBM 내용은 일지·서명·사진으로 남겨 둡니다. 참석하지 못했다면 작업 전에 반장에게 따로 들어야 합니다.",
+        "Itinatala ang TBM sa log, pirma o litrato. Kung hindi ka nakadalo, makinig muna sa team leader bago magtrabaho.",
+        "บันทึก TBM ไว้ในสมุด ลายเซ็น หรือรูปภาพ ถ้าไม่ได้เข้าร่วมต้องฟังจากหัวหน้าก่อนเริ่มงาน",
+        "Nội dung TBM được lưu bằng sổ, chữ ký, ảnh. Nếu không dự được, phải nghe tổ trưởng nói riêng trước khi làm.") },
+      { t: "h", x: L("정리정돈으로 넘어짐 막기", "Pag-iwas sa pagkadulas sa pamamagitan ng kaayusan", "จัดระเบียบเพื่อป้องกันการลื่นล้ม", "Sắp xếp gọn gàng để chống trượt ngã"), tone: "do" },
+      tidy,
+      { t: "src", items: ["고용노동부고시 「사업장 위험성평가에 관한 지침」 제13조(위험성평가 결과의 공유: 작업 전 안전점검회의 등)", "고용노동부 「작업 전 안전점검회의(TBM) 가이드」", "산업안전보건기준에 관한 규칙 제3조(전도의 방지), 제22조(통로의 설치)", BOOK + " (위험성평가 4단계: TBM 등으로 상시 공유)"] }
+    ]);
+  }
 })();
 
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
