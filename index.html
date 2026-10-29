@@ -2476,6 +2476,601 @@ function scene(k) {
   }
 })();
 
+// 2분 분량 보강 (1·2주차) — 직접 작성. 교재 내용은 참고만 하고 문장·그림은 새로 씀
+(() => {
+  const find = id => { for (const p of window.NEW_PARTS) for (const l of p.lessons) if (l.id === id) return l; return null; };
+  const add = (id, blocks, srcItems) => {
+    const l = find(id); if (!l) return;
+    const si = l.blocks.findIndex(b => b.t === "src");
+    if (si >= 0) l.blocks.splice(si, 0, ...blocks); else l.blocks.push(...blocks);
+    if (srcItems) { const s = l.blocks.find(b => b.t === "src"); if (s) s.items = s.items.concat(srcItems); else l.blocks.push({ t: "src", items: srcItems }); }
+  };
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+  window.ADD_MORE = add;
+
+  // ===== 1주차 =====
+  add("p1-1", [
+    H("큰 사고 뒤에는 작은 신호가 있습니다", "May maliliit na babala bago ang malaking aksidente", "ก่อนอุบัติเหตุใหญ่มักมีสัญญาณเล็ก ๆ", "Trước tai nạn lớn luôn có dấu hiệu nhỏ"),
+    { t: "stat", n: "1 : 29 : 300", x: L(
+      "큰 사고 1건이 나기 전에 작은 사고가 29번, 다칠 뻔한 일(아차사고)이 300번 있었다는 연구가 있습니다(하인리히 법칙). 아차사고를 그냥 넘기지 않는 것이 큰 사고를 막는 길입니다.",
+      "Ayon sa pag-aaral, bago ang 1 malaking aksidente, may 29 maliit na aksidente at 300 muntikang aksidente (Heinrich's Law). Huwag balewalain ang muntikang aksidente.",
+      "มีงานวิจัยว่าก่อนอุบัติเหตุใหญ่ 1 ครั้ง มีอุบัติเหตุเล็ก 29 ครั้ง และเหตุการณ์เกือบเกิดอุบัติเหตุ 300 ครั้ง (กฎของไฮน์ริช) อย่ามองข้ามเหตุเกือบเกิด",
+      "Nghiên cứu cho thấy trước 1 tai nạn lớn có 29 tai nạn nhỏ và 300 sự cố suýt xảy ra (Định luật Heinrich). Đừng bỏ qua sự cố suýt xảy ra.") },
+    { t: "p", x: L(
+      "판금 공장의 사고는 한 번에 손가락이나 손을 잃는 경우가 많습니다. 다친 몸은 돌아오지 않고, 일을 못 하게 되면 가족의 생활도 흔들립니다. 그래서 안전은 회사를 위한 규칙이기 전에 나와 가족을 지키는 일입니다.",
+      "Sa sheet metal factory, madalas mawalan agad ng daliri o kamay sa isang aksidente. Hindi na bumabalik ang nasirang katawan, at kapag hindi ka makapagtrabaho, apektado ang pamilya. Kaya ang kaligtasan ay para sa iyo at sa pamilya mo.",
+      "อุบัติเหตุในโรงงานแผ่นโลหะมักทำให้เสียนิ้วหรือมือในครั้งเดียว ร่างกายที่เสียไปไม่กลับมา และถ้าทำงานไม่ได้ ครอบครัวก็เดือดร้อน ความปลอดภัยจึงเป็นการปกป้องตัวเองและครอบครัว",
+      "Tai nạn ở xưởng tấm kim loại thường làm mất ngón tay hoặc bàn tay chỉ trong một lần. Cơ thể bị tổn thương không thể phục hồi, không làm việc được thì gia đình cũng khó khăn. Vì vậy an toàn là để bảo vệ bản thân và gia đình.") },
+    H("오늘부터 내가 할 수 있는 것", "Ang magagawa ko simula ngayon", "สิ่งที่ฉันทำได้ตั้งแต่วันนี้", "Việc tôi có thể làm từ hôm nay", "do"),
+    { t: "ol", tone: "do", items: [
+      L("다칠 뻔한 일이 있으면 반장에게 말합니다. 혼나는 일이 아니라 사고를 막는 일입니다.", "Kapag muntik kang masaktan, sabihin sa team leader. Hindi ka mapapagalitan—pinipigilan mo ang aksidente.", "ถ้าเกือบบาดเจ็บให้บอกหัวหน้า ไม่ใช่เรื่องที่จะโดนดุ แต่เป็นการป้องกันอุบัติเหตุ", "Suýt bị thương thì báo tổ trưởng. Không phải để bị mắng mà để ngăn tai nạn."),
+      L("위험한 곳을 보면 그냥 지나치지 않고 알리거나 직접 치웁니다.", "Kapag may nakitang panganib, ipaalam o ayusin—huwag lampasan.", "เห็นจุดอันตรายอย่าเดินผ่าน ให้แจ้งหรือเก็บเอง", "Thấy chỗ nguy hiểm thì đừng bỏ qua, hãy báo hoặc tự dọn."),
+      L("모르는 기계는 만지지 않고, 배운 방법대로만 작업합니다.", "Huwag galawin ang makinang hindi mo alam; gawin lang ang trabaho ayon sa itinuro.", "ไม่แตะเครื่องที่ไม่รู้จัก และทำงานตามวิธีที่ได้เรียนเท่านั้น", "Không đụng vào máy không biết; chỉ làm đúng cách đã được học."),
+      L("이 앱에서 매주 6단원을 읽고, 배운 것을 현장에서 한 가지씩 지킵니다.", "Basahin ang 6 na aralin bawat linggo sa app na ito at sundin ang isa sa trabaho.", "อ่าน 6 บทต่อสัปดาห์ในแอปนี้ และนำไปทำที่หน้างานทีละข้อ", "Mỗi tuần đọc 6 bài trong ứng dụng này và làm theo từng điều tại hiện trường.")
+    ]}
+  ], ["H.W. Heinrich, 「Industrial Accident Prevention」(1931) — 1:29:300 법칙"]);
+
+  add("p1-2", [
+    H("근로자의 권리도 알아 두세요", "Alamin din ang karapatan mo", "รู้สิทธิของคนงานด้วย", "Hãy biết cả quyền của người lao động"),
+    { t: "kv", rows: [
+      [L("작업중지", "Huminto sa trabaho", "หยุดงาน", "Dừng việc"), L("급박한 위험이 있으면 작업을 멈추고 대피할 수 있습니다.", "Puwedeng huminto at lumikas kapag may agarang panganib.", "ถ้ามีอันตรายเร่งด่วน หยุดงานและหลบได้", "Có nguy hiểm cấp bách thì được dừng việc và lánh nạn.")],
+      [L("교육", "Pagsasanay", "การอบรม", "Đào tạo"), L("일을 시작할 때와 작업이 바뀔 때 안전교육을 받을 수 있습니다. 교육 시간도 근로시간입니다.", "May safety training sa pagsisimula at kapag nagbago ang trabaho. Oras ng trabaho rin ang training.", "ได้รับการอบรมความปลอดภัยเมื่อเริ่มงานและเมื่อเปลี่ยนงาน เวลาอบรมนับเป็นเวลาทำงาน", "Được đào tạo an toàn khi bắt đầu làm và khi đổi việc. Thời gian đào tạo là thời gian làm việc.")],
+      [L("건강진단", "Health check", "ตรวจสุขภาพ", "Khám sức khỏe"), L("건강진단을 받고, 그 결과를 설명 들을 수 있습니다.", "Magpa-check-up at alamin ang resulta.", "ได้ตรวจสุขภาพและได้รับคำอธิบายผล", "Được khám sức khỏe và được giải thích kết quả.")],
+      [L("산재보험", "Insurance sa aksidente", "ประกันอุบัติเหตุจากงาน", "Bảo hiểm tai nạn lao động"), L("일하다 다치면 치료비와, 일을 못 한 기간 동안 평균임금의 70%를 받습니다. 외국인 근로자도 똑같이 적용됩니다.", "Kapag nasaktan sa trabaho, sagot ang gamot at 70% ng average na sahod habang hindi makapagtrabaho. Pareho rin para sa dayuhang manggagawa.", "บาดเจ็บจากงานได้ค่ารักษา และได้ 70% ของค่าจ้างเฉลี่ยช่วงที่ทำงานไม่ได้ คนงานต่างชาติได้เหมือนกัน", "Bị thương khi làm việc được chi trả chữa trị và 70% lương bình quân trong thời gian nghỉ. Lao động nước ngoài cũng được như vậy.")]
+    ]},
+    H("이런 행동은 안 됩니다", "Bawal ang mga ito", "ห้ามทำสิ่งเหล่านี้", "Không được làm những việc này", "bad"),
+    { t: "ol", tone: "bad", items: [
+      L("덥다고, 귀찮다고 보호구를 벗고 일하기", "Paghubad ng PPE dahil mainit o abala", "ถอดอุปกรณ์ป้องกันเพราะร้อนหรือรำคาญ", "Cởi đồ bảo hộ vì nóng hoặc phiền"),
+      L("빨리 하려고 방호장치를 끄거나 떼기", "Pagpatay o pagtanggal ng safety device para bumilis", "ปิดหรือถอดอุปกรณ์ป้องกันเพื่อให้เร็วขึ้น", "Tắt hoặc tháo thiết bị bảo vệ để làm nhanh hơn"),
+      L("다친 것을 숨기거나 보고하지 않기", "Pagtatago o hindi pag-uulat ng pinsala", "ปิดบังหรือไม่รายงานการบาดเจ็บ", "Giấu hoặc không báo cáo bị thương")
+    ]},
+    { t: "note", x: L("근로자도 법에서 정한 안전수칙을 어기면 과태료를 받을 수 있습니다. 회사는 산업재해를 숨기면 안 되고, 다친 사람은 산재보험을 신청할 수 있습니다.",
+      "Puwedeng pagmultahin ang manggagawa na lumabag sa batas pangkaligtasan. Hindi puwedeng itago ng kumpanya ang aksidente, at puwedeng mag-apply ng insurance ang nasaktan.",
+      "คนงานที่ฝ่าฝืนกฎความปลอดภัยตามกฎหมายอาจถูกปรับ บริษัทห้ามปิดบังอุบัติเหตุ และผู้บาดเจ็บยื่นขอประกันได้",
+      "Người lao động vi phạm quy định an toàn theo luật có thể bị phạt hành chính. Công ty không được che giấu tai nạn, người bị thương được nộp đơn bảo hiểm.") }
+  ], ["산업안전보건법 제40조(근로자의 안전조치 및 보건조치 준수), 제52조(근로자의 작업중지), 제57조(산업재해 발생 은폐 금지)", "산업재해보상보험법 제52조(휴업급여: 평균임금의 100분의 70)"]);
+
+  add("a-stop", [
+    H("이럴 때 멈추세요 (판금 현장 예)", "Huminto sa mga ganitong sitwasyon", "หยุดงานเมื่อเจอแบบนี้", "Hãy dừng lại khi gặp những trường hợp này"),
+    { t: "kv", rows: [
+      [L("크레인", "Crane", "เครน", "Cẩu"), L("와이어로프가 풀리거나 끊어지려 하고, 훅 해지장치가 없을 때", "Kapag nag-uunat o malapit nang maputol ang wire rope, o walang safety latch ang hook", "ลวดสลิงคลายหรือใกล้ขาด หรือตะขอไม่มีสลักกันหลุด", "Cáp bị tưa hoặc sắp đứt, móc không có chốt an toàn")],
+      [L("절곡·프레스", "Bending/press", "พับ/เพรส", "Chấn/dập"), L("광선식 안전장치가 고장 나 손을 넣어도 멈추지 않을 때", "Kapag sira ang light guard at hindi humihinto kahit may kamay", "ม่านแสงเสีย ยื่นมือเข้าไปแล้วเครื่องไม่หยุด", "Rèm quang hỏng, đưa tay vào máy vẫn không dừng")],
+      [L("가스", "Gas", "ก๊าซ", "Khí"), L("가스 냄새가 나거나 용접 호스에서 새는 소리가 날 때", "Kapag may amoy ng gas o may tunog ng tagas sa hose", "ได้กลิ่นก๊าซหรือได้ยินเสียงรั่วจากสายเชื่อม", "Ngửi thấy mùi khí hoặc nghe tiếng rò ở ống hàn")],
+      [L("밀폐공간", "Confined space", "ที่อับอากาศ", "Không gian kín"), L("산소를 재지 않고 탱크·배관 안에 들어가라고 할 때", "Kapag pinapapasok ka sa tangke o tubo nang hindi nasusukat ang oxygen", "ถูกสั่งให้เข้าถังหรือท่อโดยไม่วัดออกซิเจน", "Bị bảo vào bồn, ống mà chưa đo oxy")],
+      [L("전기", "Kuryente", "ไฟฟ้า", "Điện"), L("물에 젖은 바닥에 전선이 벗겨져 있을 때", "Kapag may balat na natanggal na kable sa basang sahig", "สายไฟฉนวนลอกบนพื้นเปียก", "Dây điện bong vỏ trên sàn ướt")]
+    ]},
+    H("멈춘 다음에는", "Pagkatapos huminto", "หลังจากหยุดแล้ว", "Sau khi dừng lại", "do"),
+    { t: "ol", tone: "do", items: [
+      L("주변 동료에게도 큰 소리로 알리고 함께 물러납니다.", "Sabihan nang malakas ang mga kasama at sabay na lumayo.", "ตะโกนบอกเพื่อนรอบ ๆ และถอยออกมาด้วยกัน", "Báo to cho đồng nghiệp xung quanh và cùng lùi ra."),
+      L("무엇이 위험한지 반장에게 구체적으로 말합니다. 사진을 찍어 보여 줘도 좋습니다.", "Sabihin sa team leader nang detalyado kung ano ang delikado. Puwede ring kunan ng litrato.", "บอกหัวหน้าให้ชัดว่าอันตรายอะไร ถ่ายรูปให้ดูก็ได้", "Nói cụ thể với tổ trưởng điều gì nguy hiểm. Có thể chụp ảnh cho xem."),
+      L("위험이 없어졌다고 확인받은 뒤에 작업을 다시 시작합니다.", "Magsimula muli kapag nakumpirma nang wala na ang panganib.", "เริ่มงานใหม่หลังได้รับการยืนยันว่าอันตรายหมดแล้ว", "Chỉ làm lại sau khi được xác nhận đã hết nguy hiểm.")
+    ]},
+    { t: "warn", x: L("'괜히 멈췄다가 혼나면 어떡하지?' 걱정하지 마세요. 법이 작업을 멈춘 근로자를 보호합니다. 멈추지 않아서 생기는 사고가 훨씬 무섭습니다.",
+      "Huwag mag-alala na mapagalitan. Pinoprotektahan ng batas ang manggagawang huminto. Mas nakakatakot ang aksidente kapag hindi ka huminto.",
+      "ไม่ต้องกลัวว่าจะโดนดุ กฎหมายคุ้มครองคนงานที่หยุดงาน อุบัติเหตุจากการไม่หยุดน่ากลัวกว่ามาก",
+      "Đừng lo bị mắng. Luật bảo vệ người lao động đã dừng việc. Tai nạn do không dừng lại đáng sợ hơn nhiều.") }
+  ], ["산업안전보건법 제52조(근로자의 작업중지)"]);
+
+  add("p1-6", [
+    H("보호구, 바르게 써야 지켜 줍니다", "Tama ang pagsuot para gumana ang PPE", "ต้องสวมให้ถูกจึงจะปกป้องได้", "Phải đeo đúng cách mới bảo vệ được", "do"),
+    { t: "ol", tone: "do", items: [
+      L("안전모: 턱끈을 손가락 하나 들어갈 정도로 조입니다. 큰 충격을 받은 안전모는 겉이 멀쩡해도 바꿉니다.", "Helmet: higpitan ang chin strap na kasya ang isang daliri. Palitan ang helmet na tinamaan nang malakas kahit mukhang maayos.", "หมวกนิรภัย: รัดสายรัดคางให้สอดนิ้วได้หนึ่งนิ้ว หมวกที่ถูกกระแทกแรงต้องเปลี่ยนแม้ภายนอกดูปกติ", "Mũ bảo hộ: cài quai vừa lọt một ngón tay. Mũ bị va đập mạnh phải thay dù bên ngoài trông bình thường."),
+      L("안전화: 뒤꿈치를 꺾어 신지 않고 끈을 묶습니다. 앞부분이 찌그러지면 바꿉니다.", "Safety shoes: huwag tapakan ang likod at itali ang sintas. Palitan kapag nayupi ang harap.", "รองเท้านิรภัย: ไม่เหยียบส้น ผูกเชือกให้แน่น ถ้าหัวรองเท้าบุบให้เปลี่ยน", "Giày bảo hộ: không giẫm gót, buộc dây. Mũi giày bị móp thì thay."),
+      L("귀마개: 손으로 가늘게 말아서 귀를 살짝 위로 당기고 깊이 넣은 뒤 10초 누릅니다.", "Ear plug: i-roll nang manipis, hilahin pataas nang bahagya ang tainga, ipasok nang malalim, at diinan ng 10 segundo.", "ที่อุดหู: คลึงให้เรียว ดึงใบหูขึ้นเล็กน้อย ใส่ลึก ๆ แล้วกดค้าง 10 วินาที", "Nút tai: vê nhỏ, kéo nhẹ vành tai lên, nhét sâu rồi giữ 10 giây."),
+      L("보안경·보안면: 그라인더·용접은 보안경을 쓰고 그 위에 보안면을 씁니다.", "Goggles at face shield: sa grinder at welding, goggles muna saka face shield sa ibabaw.", "แว่นตาและกระบังหน้า: งานเจียรและเชื่อม สวมแว่นตาแล้วสวมกระบังหน้าทับ", "Kính và mặt nạ: khi mài và hàn, đeo kính rồi đeo mặt nạ bên ngoài."),
+      L("마스크: 쓰고 나서 손으로 덮고 숨을 내쉬어 옆으로 새지 않는지 확인합니다.", "Mask: takpan ng kamay at huminga palabas para tiyaking walang tagas sa gilid.", "หน้ากาก: สวมแล้วใช้มือปิดและหายใจออก ตรวจว่าไม่รั่วด้านข้าง", "Khẩu trang: đeo xong lấy tay che và thở ra, kiểm tra không bị hở bên cạnh."),
+      L("장갑: 판재는 베임방지 장갑. 드릴·선반 같은 회전체 앞에서는 면장갑을 끼지 않습니다.", "Gloves: cut-resistant para sa sheet. Walang cotton gloves sa harap ng umiikot na makina tulad ng drill.", "ถุงมือ: แผ่นโลหะใช้ถุงมือกันบาด หน้าเครื่องหมุนเช่นสว่าน ห้ามใส่ถุงมือผ้า", "Găng tay: tấm kim loại dùng găng chống cắt. Trước máy quay như khoan, không đeo găng vải.")
+    ]},
+    { t: "note", x: L("보호구는 회사가 지급합니다. 망가지거나 몸에 맞지 않으면 참지 말고 바꿔 달라고 하세요.",
+      "Ang kumpanya ang nagbibigay ng PPE. Kapag sira o hindi kasya, humingi ng kapalit.",
+      "บริษัทเป็นผู้จัดหาอุปกรณ์ป้องกัน ถ้าชำรุดหรือไม่พอดีให้ขอเปลี่ยน",
+      "Công ty cấp đồ bảo hộ. Hỏng hoặc không vừa thì đừng chịu đựng, hãy xin đổi.") }
+  ]);
+
+  add("p1-5", [
+    H("색만 보고도 알 수 있어요", "Malalaman sa kulay pa lang", "ดูแค่สีก็รู้", "Chỉ nhìn màu là biết"),
+    { t: "kv", rows: [
+      [L("빨간색", "Pula", "สีแดง", "Màu đỏ"), L("금지 — 하면 안 됩니다. 소화기·비상정지 버튼도 빨간색입니다.", "Bawal — huwag gawin. Pula rin ang extinguisher at emergency stop.", "ห้าม — ห้ามทำ ถังดับเพลิงและปุ่มหยุดฉุกเฉินก็เป็นสีแดง", "Cấm — không được làm. Bình chữa cháy và nút dừng khẩn cấp cũng màu đỏ.")],
+      [L("노란색", "Dilaw", "สีเหลือง", "Màu vàng"), L("경고 — 위험이 있으니 조심하세요. 바닥의 노란 선 안은 기계·지게차 구역입니다.", "Babala — mag-ingat. Ang loob ng dilaw na linya sa sahig ay lugar ng makina o forklift.", "เตือน — มีอันตราย ระวัง เส้นเหลืองบนพื้นคือเขตเครื่องจักรหรือรถยก", "Cảnh báo — có nguy hiểm, hãy cẩn thận. Trong vạch vàng trên sàn là khu máy hoặc xe nâng.")],
+      [L("파란색", "Asul", "สีน้ำเงิน", "Màu xanh dương"), L("지시 — 반드시 해야 합니다 (보호구 착용 등).", "Utos — dapat gawin (hal. magsuot ng PPE).", "บังคับ — ต้องทำ (เช่นสวมอุปกรณ์ป้องกัน)", "Bắt buộc — phải làm (như đeo đồ bảo hộ).")],
+      [L("초록색", "Berde", "สีเขียว", "Màu xanh lá"), L("안내 — 비상구, 구급함, 대피 방향을 알려 줍니다.", "Gabay — emergency exit, first aid at direksyon ng paglikas.", "แนะนำ — ทางออกฉุกเฉิน ชุดปฐมพยาบาล ทิศทางหนีภัย", "Chỉ dẫn — lối thoát hiểm, hộp sơ cứu, hướng sơ tán.")]
+    ]},
+    H("우리 공장에서 표지 찾아보기", "Hanapin ang mga karatula sa pabrika natin", "ลองหาป้ายในโรงงานของเรา", "Tìm biển báo trong xưởng mình", "do"),
+    { t: "ol", tone: "do", items: [
+      L("출근할 때 작업장 입구의 지시표지(귀마개·안전화)를 보고 그대로 착용합니다.", "Pagpasok, tingnan ang karatula sa pasukan (ear plug, safety shoes) at sundin.", "ตอนเข้างาน ดูป้ายบังคับหน้าทางเข้า (ที่อุดหู รองเท้านิรภัย) แล้วสวมตาม", "Khi vào ca, xem biển bắt buộc ở cửa (nút tai, giày bảo hộ) và đeo theo."),
+      L("내 자리에서 가장 가까운 비상구와 소화기 위치를 알아 둡니다.", "Alamin ang pinakamalapit na emergency exit at extinguisher sa puwesto mo.", "รู้ตำแหน่งทางออกฉุกเฉินและถังดับเพลิงที่ใกล้ที่สุด", "Biết vị trí lối thoát hiểm và bình chữa cháy gần chỗ mình nhất."),
+      L("크레인 아래 '매달린 물체 경고', 레이저 옆 '레이저광선 경고'를 보면 한 걸음 더 조심합니다.", "Kapag nakita ang 'Nakabitin na bagay' sa ilalim ng crane o 'Laser' sa tabi ng laser, mag-ingat pa.", "เห็นป้าย 'ของแขวน' ใต้เครน หรือ 'แสงเลเซอร์' ข้างเครื่อง ให้ระวังเพิ่ม", "Thấy biển 'Vật treo' dưới cẩu hay 'Tia laser' cạnh máy thì càng cẩn thận."),
+      L("찢어지거나 가려진 표지가 있으면 반장에게 알립니다.", "Ipaalam sa team leader kapag punit o natatakpan ang karatula.", "ถ้าป้ายขาดหรือถูกบังให้แจ้งหัวหน้า", "Biển bị rách hoặc bị che thì báo tổ trưởng.")
+    ]}
+  ], ["산업안전보건법 시행규칙 별표 8(안전보건표지의 색도기준 및 용도)"]);
+
+  // ===== 2주차 =====
+  add("p1-7", [
+    H("방호장치를 떼면 무슨 일이 생길까요", "Ano ang mangyayari kapag tinanggal ang safety device", "ถ้าถอดอุปกรณ์ป้องกันจะเกิดอะไร", "Tháo thiết bị bảo vệ thì chuyện gì xảy ra"),
+    { t: "p", x: L(
+      "작업이 조금 느리다고 광선식 안전장치를 끄거나 덮개를 떼는 순간, 기계는 사람 손과 금속판을 구별하지 못합니다. 실제 끼임 사망사고의 상당수가 '잠깐만' 하고 방호장치를 끈 상태에서 일어났습니다.",
+      "Kapag pinatay ang light guard o tinanggal ang takip dahil mabagal, hindi na makikilala ng makina ang kamay at ang metal. Marami sa namatay sa pagkaipit ay nangyari dahil 'sandali lang' na pinatay ang safety device.",
+      "ทันทีที่ปิดม่านแสงหรือถอดฝาครอบเพราะงานช้า เครื่องจะแยกมือคนกับแผ่นโลหะไม่ออก อุบัติเหตุถูกหนีบถึงตายจำนวนมากเกิดตอนที่ปิดอุปกรณ์ป้องกัน 'แค่แป๊บเดียว'",
+      "Khi tắt rèm quang hoặc tháo nắp che vì thấy chậm, máy không phân biệt được tay người với tấm kim loại. Nhiều ca tử vong do bị kẹp xảy ra khi tắt thiết bị bảo vệ 'chỉ một chút'.") },
+    H("매일 확인하세요", "Suriin araw-araw", "ตรวจทุกวัน", "Kiểm tra hằng ngày"),
+    { t: "chk", items: [
+      L("방호장치 램프·표시등이 정상으로 켜져 있는지", "Normal ang ilaw ng safety device", "ไฟแสดงสถานะอุปกรณ์ป้องกันติดปกติ", "Đèn báo thiết bị bảo vệ sáng bình thường"),
+      L("덮개가 제자리에 볼트로 고정되어 있는지", "Nakakabit ang takip sa lugar nito gamit ang bolt", "ฝาครอบยึดด้วยน็อตอยู่ที่เดิม", "Nắp che được bắt bu lông đúng vị trí"),
+      L("비상정지 버튼을 눌렀을 때 바로 멈추는지 (반장과 함께)", "Huminto agad kapag pinindot ang emergency stop (kasama ang team leader)", "กดปุ่มหยุดฉุกเฉินแล้วหยุดทันที (ทำกับหัวหน้า)", "Nhấn nút dừng khẩn cấp thì dừng ngay (cùng tổ trưởng)"),
+      L("안전검사 합격 표시가 붙어 있고 유효기간이 지나지 않았는지", "May label na pumasa sa safety inspection at hindi pa expired", "มีป้ายผ่านการตรวจความปลอดภัยและยังไม่หมดอายุ", "Có tem đạt kiểm định an toàn và còn hạn")
+    ]},
+    { t: "note", x: L("방호장치가 이상하면 '고장' 표시를 하고 사용하지 않은 채 바로 알립니다. 고쳐질 때까지 다른 방법으로 일하지 않습니다.",
+      "Kapag may problema ang safety device, lagyan ng 'Sira', huwag gamitin, at ipaalam agad. Huwag maghanap ng ibang paraan habang hindi pa naaayos.",
+      "ถ้าอุปกรณ์ป้องกันผิดปกติ ให้ติดป้าย 'เสีย' ไม่ใช้ และแจ้งทันที อย่าหาวิธีอื่นทำงานจนกว่าจะซ่อมเสร็จ",
+      "Thiết bị bảo vệ bất thường thì treo biển 'Hỏng', không dùng và báo ngay. Không tìm cách khác để làm cho đến khi sửa xong.") }
+  ], ["산업안전보건기준에 관한 규칙 별표 3(작업시작 전 점검사항)", "산업안전보건법 시행규칙 제126조(안전검사의 주기와 합격표시)"]);
+
+  add("p1-9", [
+    H("그림문자의 뜻", "Kahulugan ng mga larawan", "ความหมายของรูปสัญลักษณ์", "Ý nghĩa hình cảnh báo"),
+    { t: "kv", rows: [
+      [L("🔥 불꽃", "🔥 Apoy", "🔥 เปลวไฟ", "🔥 Ngọn lửa"), L("불이 잘 붙음 — 시너, 세척제, 스프레이", "Madaling masunog — thinner, panlinis, spray", "ติดไฟง่าย — ทินเนอร์ น้ำยาล้าง สเปรย์", "Dễ cháy — thinner, chất tẩy rửa, bình xịt")],
+      [L("☠ 해골", "☠ Bungo", "☠ หัวกะโหลก", "☠ Đầu lâu"), L("적은 양으로도 심한 중독", "Malubhang lason kahit kaunti", "เป็นพิษรุนแรงแม้ปริมาณน้อย", "Ngộ độc nặng dù lượng ít")],
+      [L("부식", "Kaagnasan", "การกัดกร่อน", "Ăn mòn"), L("피부·눈·금속을 상하게 함 — 녹 제거제, 산 세척액", "Sinisira ang balat, mata at metal — pang-alis kalawang, acid", "ทำลายผิว ตา โลหะ — น้ำยาขจัดสนิม กรด", "Làm hại da, mắt, kim loại — chất tẩy gỉ, axit")],
+      [L("사람 가슴", "Dibdib ng tao", "รูปหน้าอกคน", "Hình ngực người"), L("오래 마시면 몸속 장기를 해침 (암 등)", "Pinsala sa loob ng katawan kapag matagal na nalanghap (hal. kanser)", "สูดนานทำลายอวัยวะภายใน (เช่นมะเร็ง)", "Hít lâu gây hại nội tạng (như ung thư)")],
+      [L("! 느낌표", "! Tandang padamdam", "! เครื่องหมายตกใจ", "! Dấu chấm than"), L("피부·눈 자극, 어지러움", "Pangangati ng balat at mata, pagkahilo", "ระคายเคืองผิว ตา เวียนหัว", "Kích ứng da, mắt, chóng mặt")]
+    ]},
+    H("판금 현장에서 쓰는 화학물질", "Mga kemikal sa sheet metal", "สารเคมีที่ใช้ในโรงงานแผ่นโลหะ", "Hóa chất dùng ở xưởng tấm kim loại"),
+    { t: "ul", items: [
+      L("절삭유·방청유 — 피부에 오래 닿으면 피부염", "Cutting oil at rust-preventive oil — dermatitis kapag matagal na nakadikit", "น้ำมันตัด น้ำมันกันสนิม — สัมผัสนานเป็นผิวหนังอักเสบ", "Dầu cắt, dầu chống gỉ — tiếp xúc lâu gây viêm da"),
+      L("시너·탈지제 — 불이 잘 붙고, 마시면 어지러움", "Thinner at degreaser — madaling masunog, nakakahilo kapag nalanghap", "ทินเนอร์ น้ำยาล้างไขมัน — ติดไฟง่าย สูดแล้วเวียนหัว", "Thinner, chất tẩy dầu — dễ cháy, hít vào chóng mặt"),
+      L("용접 흄·레이저 절단 흄 — 특히 아연도금·스테인리스는 집진과 마스크 필수", "Usok ng welding at laser — lalo na sa galvanized at stainless, kailangan ng dust collector at mask", "ควันเชื่อมและตัดเลเซอร์ — โดยเฉพาะเหล็กชุบสังกะสีและสแตนเลส ต้องดูดควันและใส่หน้ากาก", "Khói hàn, khói cắt laser — đặc biệt thép mạ kẽm, inox phải hút khói và đeo khẩu trang")
+    ]},
+    { t: "warn", x: L("화학물질을 음료수 병에 옮겨 담지 마세요. 다른 사람이 마시는 사고가 실제로 일어납니다.",
+      "Huwag ilipat ang kemikal sa bote ng inumin. Totoong may nakainom nito.",
+      "ห้ามเทสารเคมีใส่ขวดน้ำดื่ม มีคนดื่มผิดจริง ๆ",
+      "Không chiết hóa chất vào chai nước uống. Đã thật sự có người uống nhầm.") }
+  ], ["고용노동부고시 「화학물질의 분류·표시 및 물질안전보건자료에 관한 기준」(그림문자)"]);
+
+  add("w-0", [
+    H("판금 공장의 하루로 보면", "Isang araw sa sheet metal factory", "ดูจากหนึ่งวันในโรงงานแผ่นโลหะ", "Nhìn qua một ngày ở xưởng tấm kim loại"),
+    { t: "kv", rows: [
+      [L("아침 · 자재 입고", "Umaga · Dating ng materyales", "เช้า · รับวัสดุ", "Sáng · Nhập vật liệu"), L("지게차로 판재를 내림 → ⑤ 부딪힘, ② 깔림", "Ibinaba ang sheet gamit ang forklift → ⑤ Nabangga, ② Nadaganan", "ใช้รถยกลงแผ่นโลหะ → ⑤ ชน ② ทับ", "Dùng xe nâng hạ tấm → ⑤ Va chạm, ② Bị đè")],
+      [L("오전 · 레이저", "Umaga · Laser", "สาย · เลเซอร์", "Sáng · Laser"), L("반사재 절단, 집진기 분진 → ④ 화재", "Pagputol ng makintab na materyal, alikabok sa dust collector → ④ Sunog", "ตัดวัสดุสะท้อนแสง ฝุ่นในเครื่องดูด → ④ ไฟไหม้", "Cắt vật liệu phản xạ, bụi máy hút → ④ Cháy")],
+      [L("오후 · 절곡", "Hapon · Bending", "บ่าย · พับ", "Chiều · Chấn"), L("금형 사이 손, 금형 교체 → ① 끼임", "Kamay sa pagitan ng die, pagpapalit ng die → ① Naipit", "มือระหว่างแม่พิมพ์ เปลี่ยนแม่พิมพ์ → ① ถูกหนีบ", "Tay giữa khuôn, thay khuôn → ① Bị kẹp")],
+      [L("오후 · 크레인·용접", "Hapon · Crane at welding", "บ่าย · เครนและเชื่อม", "Chiều · Cẩu, hàn"), L("판재 묶음 인양 → ② 맞음 / 불티 → ④ 화재", "Pag-angat ng bundle → ② Tinamaan / Spark → ④ Sunog", "ยกมัดแผ่น → ② ถูกกระแทก / ประกายไฟ → ④ ไฟไหม้", "Cẩu bó tấm → ② Bị đập / Tia lửa → ④ Cháy")],
+      [L("저녁 · 출하", "Gabi · Paglabas ng produkto", "เย็น · ส่งของ", "Tối · Xuất hàng"), L("트럭 적재함 위 작업 → ③ 떨어짐", "Trabaho sa ibabaw ng trak → ③ Nahulog", "ทำงานบนกระบะรถ → ③ ตก", "Làm trên thùng xe → ③ Ngã")]
+    ]},
+    { t: "p", x: L("다섯 가지 위험은 하루 종일 우리 곁에 있습니다. 내가 지금 하는 일이 다섯 가지 중 어디에 해당하는지 떠올리는 습관만으로도 사고가 줄어듭니다.",
+      "Kasama natin ang limang panganib buong araw. Ang ugaling isipin kung saan kabilang ang ginagawa mo ngayon ay nakakabawas na ng aksidente.",
+      "อันตรายทั้ง 5 อยู่รอบตัวเราทั้งวัน แค่ฝึกนึกว่างานที่ทำอยู่ตอนนี้เข้ากับข้อไหน ก็ช่วยลดอุบัติเหตุได้",
+      "Năm mối nguy ở bên ta suốt cả ngày. Chỉ cần tập thói quen nghĩ việc mình đang làm thuộc loại nào cũng giúp giảm tai nạn.") }
+  ]);
+
+  add("w-laser", [
+    { t: "def",
+      k: L("판금용 레이저는 가장 위험한 4등급", "Class 4 ang laser sa sheet metal — pinakadelikado", "เลเซอร์ตัดโลหะเป็นระดับ 4 อันตรายที่สุด", "Laser cắt kim loại thuộc cấp 4 — nguy hiểm nhất"),
+      v: L("판금을 자르는 레이저는 직접 빛은 물론 반사된 빛만으로도 눈과 피부를 다치게 하고, 물건에 불을 붙일 수 있는 4등급입니다. 문과 덮개의 보호창은 이 빛을 막도록 만든 것이니 깨지거나 긁히면 바로 알립니다.",
+        "Ang laser na pumuputol ng metal ay Class 4: kayang saktan ang mata at balat kahit sa naaninag na liwanag at kayang magsimula ng sunog. Ginawa ang bintana ng pinto at takip para harangan ito—ipaalam agad kapag basag o gasgas.",
+        "เลเซอร์ตัดโลหะเป็นระดับ 4 ไม่ใช่แค่แสงตรง แสงสะท้อนก็ทำร้ายตาและผิว และจุดไฟได้ กระจกที่ประตูและฝาครอบทำไว้กันแสงนี้ ถ้าแตกหรือเป็นรอยให้แจ้งทันที",
+        "Laser cắt kim loại là cấp 4: cả tia trực tiếp lẫn tia phản xạ đều làm hại mắt, da và có thể gây cháy. Kính bảo vệ ở cửa và nắp được làm để chặn tia này — nứt hoặc xước thì báo ngay.") },
+    H("불이 났을 때", "Kapag nagkasunog", "เมื่อเกิดไฟไหม้", "Khi xảy ra cháy", "do"),
+    { t: "ol", tone: "do", items: [
+      L("비상정지 버튼을 눌러 레이저와 가공을 멈춥니다.", "Pindutin ang emergency stop para patigilin ang laser.", "กดปุ่มหยุดฉุกเฉินเพื่อหยุดเลเซอร์และการตัด", "Nhấn nút dừng khẩn cấp để dừng laser và gia công."),
+      L("보조가스(산소) 밸브를 잠급니다. 산소는 불을 더 키웁니다.", "Isara ang valve ng assist gas (oxygen). Pinalalakas ng oxygen ang apoy.", "ปิดวาล์วก๊าซช่วยตัด (ออกซิเจน) ออกซิเจนทำให้ไฟลุกแรงขึ้น", "Khóa van khí hỗ trợ (oxy). Oxy làm lửa to hơn."),
+      L("작은 불은 가까운 소화기로 끄고, 커지면 바로 대피하며 119와 반장에게 알립니다.", "Patayin ang maliit na apoy gamit ang extinguisher; kapag lumaki, lumikas at tumawag sa 119 at sa team leader.", "ไฟเล็กใช้ถังดับเพลิงดับ ถ้าลุกลามให้อพยพทันที และแจ้ง 119 กับหัวหน้า", "Lửa nhỏ dập bằng bình chữa cháy gần đó; lửa to thì sơ tán ngay, báo 119 và tổ trưởng.")
+    ]},
+    { t: "note", x: L("무인 운전(야간·점심시간)을 할 때도 집진기와 슬래그 통을 비워 두고, 주변에 종이·기름걸레를 두지 않습니다.",
+      "Kahit walang nagbabantay (gabi o tanghalian), alisan ng laman ang dust collector at slag box, at huwag mag-iwan ng papel o basahang may langis.",
+      "แม้เดินเครื่องอัตโนมัติ (กลางคืน พักเที่ยง) ก็ต้องเทฝุ่นและถังตะกรันให้ว่าง และไม่วางกระดาษหรือผ้าเปื้อนน้ำมันไว้ใกล้ ๆ",
+      "Kể cả khi chạy không người (ban đêm, giờ nghỉ trưa) cũng phải đổ sạch bụi và thùng xỉ, không để giấy, giẻ dính dầu xung quanh.") }
+  ], ["KS C IEC 60825-1(레이저 제품의 안전 — 등급 분류)"]);
+
+  add("w-bend", [
+    { t: "def",
+      k: L("광선식 안전장치가 잠깐 꺼지는 순간", "Ang sandaling namamatay ang light guard", "ช่วงที่ม่านแสงปิดชั่วคราว", "Lúc rèm quang tạm tắt"),
+      v: L("절곡기는 펀치가 판재에 거의 닿으면 일부러 광선 감지를 끄고 천천히 누릅니다(뮤팅). 그래서 이 순간에는 손이 들어가도 멈추지 않을 수 있습니다. 펀치가 내려오기 시작하면 손은 판재 끝만 잡고 절대 금형 쪽으로 넣지 않습니다.",
+        "Kapag halos nakadikit na ang punch sa sheet, sadyang pinapatay ng makina ang light detection at dahan-dahang pumipindot (muting). Kaya sa sandaling ito, puwedeng hindi huminto kahit may kamay. Kapag bumababa na ang punch, hawakan lang ang dulo ng sheet—huwag kailanman ipasok ang kamay sa die.",
+        "เมื่อพันช์เกือบถึงแผ่นโลหะ เครื่องพับจะปิดการตรวจจับแสงโดยตั้งใจและกดลงช้า ๆ (มิวติ้ง) ช่วงนี้ถึงมือเข้าไปเครื่องอาจไม่หยุด เมื่อพันช์เริ่มลง ให้จับเฉพาะปลายแผ่น ห้ามยื่นมือไปทางแม่พิมพ์เด็ดขาด",
+        "Khi chày gần chạm tấm, máy chấn cố ý tắt cảm biến quang và ép chậm (muting). Lúc này dù tay lọt vào máy có thể không dừng. Khi chày bắt đầu hạ, chỉ giữ mép tấm, tuyệt đối không đưa tay về phía khuôn.") },
+    H("이런 습관이 사고를 부릅니다", "Mga ugaling nagdudulot ng aksidente", "นิสัยที่ทำให้เกิดอุบัติเหตุ", "Những thói quen gây tai nạn", "bad"),
+    { t: "ol", tone: "bad", items: [
+      L("작은 부품을 손가락으로 금형 위에 받쳐 들고 굽힘", "Pagbaluktot ng maliit na piyesa habang hawak ng daliri sa ibabaw ng die", "ใช้นิ้วจับชิ้นงานเล็กบนแม่พิมพ์แล้วพับ", "Dùng ngón tay giữ chi tiết nhỏ trên khuôn rồi chấn"),
+      L("다음 판재를 준비하면서 발은 페달에 올려 둠", "Nakapatong ang paa sa pedal habang naghahanda ng susunod na sheet", "วางเท้าบนแป้นขณะเตรียมแผ่นถัดไป", "Để chân trên bàn đạp khi chuẩn bị tấm tiếp theo"),
+      L("굽힌 판재가 튀어 오르는 방향에 얼굴을 둠", "Nakatapat ang mukha sa direksyong tatalbog ang sheet", "หน้าอยู่ในทิศที่แผ่นจะดีดขึ้น", "Để mặt ở hướng tấm bật lên")
+    ]},
+    { t: "note", x: L("작은 부품은 자석 홀더나 전용 지그를 쓰고, 무겁거나 긴 판재는 서포트 암(받침대)을 내려 받칩니다.",
+      "Para sa maliit na piyesa, gumamit ng magnetic holder o jig; sa mabigat o mahabang sheet, gamitin ang support arm.",
+      "ชิ้นงานเล็กใช้ที่จับแม่เหล็กหรือจิ๊กเฉพาะ แผ่นหนักหรือยาวใช้แขนรองรับ",
+      "Chi tiết nhỏ dùng kẹp nam châm hoặc đồ gá; tấm nặng hoặc dài thì hạ tay đỡ để đỡ.") }
+  ]);
+})();
+
+// 2분 분량 보강 (3~5주차)
+(() => {
+  const add = window.ADD_MORE;
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+
+  add("w-2", [
+    H("금형 교체는 이 순서로", "Ganito ang pagpapalit ng die", "เปลี่ยนแม่พิมพ์ตามลำดับนี้", "Thay khuôn theo thứ tự này", "do"),
+    { t: "ol", tone: "do", items: [
+      L("슬라이드(램)를 가장 아래로 내리거나 안전블록을 끼웁니다.", "Ibaba nang husto ang slide (ram) o maglagay ng safety block.", "ลดสไลด์ (แรม) ลงต่ำสุดหรือใส่บล็อกนิรภัย", "Hạ đầu trượt (ram) xuống thấp nhất hoặc chèn khối an toàn."),
+      L("전원을 끄고 조작반에 내 자물쇠와 '점검 중' 표지를 겁니다.", "Patayin at i-lock ang control panel gamit ang sarili mong kandado at karatulang 'May inaayos'.", "ตัดไฟ แล้วล็อกแผงควบคุมด้วยกุญแจของตัวเองพร้อมป้าย 'กำลังซ่อม'", "Ngắt điện, khóa bảng điều khiển bằng ổ khóa của mình và treo thẻ 'Đang sửa'."),
+      L("무거운 금형은 크레인·금형교환장치로 옮기고 손으로 받치지 않습니다.", "Ilipat ang mabigat na die gamit ang crane o die changer; huwag itukod ng kamay.", "แม่พิมพ์หนักใช้เครนหรืออุปกรณ์เปลี่ยนแม่พิมพ์ ห้ามใช้มือรอง", "Khuôn nặng dùng cẩu hoặc thiết bị thay khuôn, không đỡ bằng tay."),
+      L("고정한 뒤에는 '촌동(인칭)'으로 한 번씩 천천히 움직여 맞는지 봅니다.", "Pagkatapos ikabit, subukan nang dahan-dahan gamit ang inching mode.", "ยึดแล้วใช้โหมดเดินทีละน้อย (อินชิ่ง) ทดสอบช้า ๆ", "Kẹp xong, chạy nhích (inching) từng chút để kiểm tra."),
+      L("방호장치를 다시 켜고 작동을 확인한 뒤에 생산을 시작합니다.", "I-on muli at suriin ang safety device bago magsimula ng produksyon.", "เปิดอุปกรณ์ป้องกันอีกครั้งและตรวจการทำงานก่อนเริ่มผลิต", "Bật lại thiết bị bảo vệ và kiểm tra hoạt động rồi mới sản xuất.")
+    ]},
+    { t: "def",
+      k: L("양수조작식 안전장치", "Two-hand control", "อุปกรณ์ควบคุมสองมือ", "Thiết bị điều khiển hai tay"),
+      v: L("두 손으로 버튼 두 개를 동시에 눌러야 기계가 움직이게 하는 장치입니다. 버튼 하나를 테이프나 물건으로 눌러 놓으면 장치가 의미가 없어집니다. 절대 그렇게 하지 않습니다.",
+        "Kailangang sabay na pindutin ng dalawang kamay ang dalawang button para gumalaw ang makina. Kapag tinapalan o dinaganan ang isang button, nawawalan ng silbi. Huwag kailanman gawin.",
+        "ต้องกดปุ่มสองปุ่มพร้อมกันด้วยสองมือ เครื่องจึงจะทำงาน ถ้าเอาเทปหรือของกดปุ่มหนึ่งค้างไว้ อุปกรณ์ก็ไร้ประโยชน์ ห้ามทำเด็ดขาด",
+        "Phải dùng hai tay nhấn đồng thời hai nút thì máy mới chạy. Dán băng keo hoặc đè vật lên một nút thì thiết bị vô tác dụng. Tuyệt đối không làm vậy.") }
+  ], ["산업안전보건기준에 관한 규칙 제104조(금형조정작업의 위험 방지)"]);
+
+  add("w-crush", [
+    H("자주 찍히는 순간", "Mga sandaling madalas maipit o mabagsakan", "ช่วงที่มักถูกทับหรือหนีบ", "Những lúc hay bị dập", "bad"),
+    { t: "ol", tone: "bad", items: [
+      L("금형 랙에서 금형을 꺼내다 옆 금형까지 같이 미끄러짐", "Habang inilalabas ang die sa rack, dumulas pati ang katabing die", "ดึงแม่พิมพ์ออกจากชั้น แม่พิมพ์ข้าง ๆ ลื่นตามมา", "Lấy khuôn từ giá, khuôn bên cạnh trượt theo"),
+      L("대차를 당기다 바퀴에 발이 밀려 들어감", "Napasok ang paa sa gulong habang hinihila ang kariton", "ดึงรถเข็นแล้วเท้าถูกล้อทับ", "Kéo xe đẩy, chân bị bánh xe cán"),
+      L("판재 더미 위에서 한 장을 빼다 위의 판재가 쏟아짐", "Habang hinihila ang isang sheet sa salansan, bumagsak ang nasa itaas", "ดึงแผ่นหนึ่งออกจากกอง แผ่นด้านบนไหลลงมา", "Rút một tấm từ chồng, các tấm phía trên đổ xuống")
+    ]},
+    H("이렇게 하면 막을 수 있어요", "Ganito ito maiiwasan", "ทำแบบนี้ป้องกันได้", "Làm thế này để phòng tránh", "do"),
+    { t: "ol", tone: "do", items: [
+      L("대차는 당기지 말고 손잡이를 잡고 밉니다.", "Itulak ang kariton gamit ang hawakan; huwag hilahin.", "เข็นรถด้วยที่จับ ไม่ดึง", "Đẩy xe bằng tay cầm, không kéo."),
+      L("판재는 위에서부터 한 장씩 들어 올려 꺼내고, 더미 높이를 정해진 선 아래로 유지합니다.", "Kunin ang sheet isa-isa mula sa itaas, at panatilihin ang taas ng salansan sa ilalim ng itinakdang linya.", "ยกแผ่นออกทีละแผ่นจากด้านบน และรักษาความสูงของกองให้ต่ำกว่าเส้นที่กำหนด", "Nhấc từng tấm từ trên xuống, giữ chiều cao chồng dưới vạch quy định."),
+      L("금형 랙은 무거운 것을 아래 칸에 두고, 칸마다 이름표를 붙입니다.", "Ilagay sa ibabang patong ng rack ang mabigat na die, at lagyan ng label ang bawat patong.", "ชั้นวางแม่พิมพ์ วางของหนักไว้ชั้นล่าง และติดป้ายชื่อทุกช่อง", "Giá khuôn: khuôn nặng để tầng dưới, dán nhãn từng ngăn.")
+    ]},
+    { t: "note", x: L("안전화 앞부분에는 발가락을 지키는 단단한 덧대가 들어 있습니다. 운동화로는 판재 한 장에도 발가락뼈가 부러질 수 있습니다.",
+      "May matigas na proteksyon sa harap ng safety shoes para sa daliri. Sa rubber shoes, puwedeng mabali ang buto ng daliri kahit isang sheet lang.",
+      "หัวรองเท้านิรภัยมีแผ่นแข็งปกป้องนิ้วเท้า ถ้าใส่รองเท้าผ้าใบ แผ่นโลหะแผ่นเดียวก็ทำให้นิ้วเท้าหักได้",
+      "Mũi giày bảo hộ có lớp cứng bảo vệ ngón chân. Đi giày thể thao thì một tấm kim loại cũng có thể làm gãy xương ngón chân.") }
+  ]);
+
+  add("w-cut", [
+    { t: "def",
+      k: L("버(거스러미)란?", "Ano ang burr?", "ครีบ (เบอร์) คืออะไร", "Ba via là gì?"),
+      v: L("레이저·펀칭·시어링으로 자른 면에 남는 아주 얇고 날카로운 금속 조각입니다. 눈에 잘 안 보여서 맨손으로 만졌다가 베이는 경우가 가장 많습니다.",
+        "Napakanipis at matalas na piraso ng metal na naiiwan sa gilid na pinutol ng laser, punching o shearing. Mahirap makita kaya madalas mahiwa kapag hinawakan nang walang gloves.",
+        "เศษโลหะบางและคมที่เหลือบนขอบที่ตัดด้วยเลเซอร์ เจาะ หรือเฉือน มองเห็นยาก จึงมักถูกบาดเมื่อจับด้วยมือเปล่า",
+        "Là mảnh kim loại rất mỏng và sắc còn lại trên mép cắt bằng laser, đột hoặc cắt tôn. Khó nhìn thấy nên hay bị cắt khi cầm tay không.") },
+    H("베였을 때 응급처치", "Pangunang lunas kapag nahiwa", "ปฐมพยาบาลเมื่อถูกบาด", "Sơ cứu khi bị cắt", "do"),
+    { t: "ol", tone: "do", items: [
+      L("작업을 멈추고 상처를 깨끗한 거즈나 천으로 5분 이상 세게 누릅니다.", "Huminto at diinan nang malakas ang sugat gamit ang malinis na gasa nang hindi bababa sa 5 minuto.", "หยุดงาน แล้วกดแผลแรง ๆ ด้วยผ้าก๊อซสะอาดอย่างน้อย 5 นาที", "Dừng việc, ấn mạnh vết thương bằng gạc sạch ít nhất 5 phút."),
+      L("다친 곳을 심장보다 높이 듭니다.", "Itaas ang sugatang bahagi nang mas mataas sa puso.", "ยกส่วนที่บาดเจ็บให้สูงกว่าหัวใจ", "Nâng chỗ bị thương cao hơn tim."),
+      L("피가 멈추면 흐르는 물로 씻고 소독한 뒤 반창고를 붙입니다.", "Kapag huminto ang dugo, hugasan sa umaagos na tubig, disimpektahan at lagyan ng band-aid.", "เลือดหยุดแล้วล้างด้วยน้ำไหล ฆ่าเชื้อ แล้วปิดพลาสเตอร์", "Máu ngừng thì rửa dưới vòi nước, sát trùng rồi dán băng."),
+      L("녹슨 쇠에 깊이 베였다면 파상풍 위험이 있으니 병원에서 진료를 받습니다.", "Kapag malalim ang hiwa ng kalawanging bakal, may panganib ng tetano—magpatingin sa ospital.", "ถ้าถูกเหล็กเป็นสนิมบาดลึก เสี่ยงบาดทะยัก ให้ไปพบแพทย์", "Bị sắt gỉ cắt sâu có nguy cơ uốn ván, hãy đi khám bệnh.")
+    ]}
+  ]);
+
+  add("w-3", [
+    H("우리 공장의 회전하는 기계", "Mga umiikot na makina sa pabrika natin", "เครื่องจักรที่หมุนในโรงงานเรา", "Máy quay trong xưởng mình"),
+    { t: "kv", rows: [
+      [L("드릴·탭핑기", "Drill at tapping machine", "สว่าน เครื่องต๊าป", "Máy khoan, máy ta rô"), L("장갑·소매가 드릴날에 감겨 손목이 꺾임", "Naipulupot ang gloves o manggas sa drill at napilipit ang pulso", "ถุงมือหรือแขนเสื้อพันกับดอกสว่าน ข้อมือบิด", "Găng, tay áo bị cuốn vào mũi khoan làm gãy cổ tay")],
+      [L("벨트 그라인더", "Belt grinder", "เครื่องขัดสายพาน", "Máy mài đai"), L("작은 부품을 손으로 잡고 갈다 손가락이 벨트에 닿음", "Tumama ang daliri sa belt habang hawak ng kamay ang maliit na piyesa", "จับชิ้นเล็กด้วยมือขัด นิ้วโดนสายพาน", "Cầm chi tiết nhỏ bằng tay mài, ngón tay chạm đai")],
+      [L("롤 벤딩기", "Roll bending machine", "เครื่องม้วนโลหะ", "Máy lốc tôn"), L("판재를 밀어 넣다 손이 롤 사이로 끌려 들어감", "Nahila ang kamay sa pagitan ng roller habang itinutulak ang sheet", "ดันแผ่นเข้าไปแล้วมือถูกดึงเข้าระหว่างลูกกลิ้ง", "Đẩy tấm vào, tay bị cuốn vào giữa các trục")],
+      [L("컨베이어", "Conveyor", "สายพานลำเลียง", "Băng tải"), L("떨어진 부품을 줍다 풀리·체인에 끼임", "Naipit sa pulley o chain habang pumupulot ng nahulog na piyesa", "เก็บชิ้นงานที่ตกแล้วถูกหนีบที่ลูกรอกหรือโซ่", "Nhặt chi tiết rơi, bị kẹp vào puly, xích")]
+    ]},
+    { t: "note", x: L("회전하는 기계 앞에서는 긴 머리를 묶어 모자 안에 넣고, 목걸이·반지·시계를 빼고, 상의는 바지 안에 넣습니다.",
+      "Sa harap ng umiikot na makina, itali at ipasok ang mahabang buhok sa sumbrero, tanggalin ang kuwintas, singsing at relo, at isuksok ang damit sa pantalon.",
+      "หน้าเครื่องจักรที่หมุน รวบผมยาวใส่หมวก ถอดสร้อย แหวน นาฬิกา และเหน็บเสื้อในกางเกง",
+      "Trước máy quay, buộc tóc dài cho vào mũ, tháo dây chuyền, nhẫn, đồng hồ, sơ vin áo vào quần.") }
+  ]);
+
+  add("w-lift", [
+    H("판재 한 장의 무게", "Bigat ng isang sheet", "น้ำหนักแผ่นโลหะหนึ่งแผ่น", "Trọng lượng một tấm"),
+    { t: "kv", rows: [
+      [L("1.2m×2.4m · 1mm", "1.2m×2.4m · 1mm", "1.2ม.×2.4ม. · 1มม.", "1,2m×2,4m · 1mm"), L("약 23kg", "mga 23kg", "ประมาณ 23 กก.", "khoảng 23kg")],
+      [L("1.2m×2.4m · 2mm", "1.2m×2.4m · 2mm", "1.2ม.×2.4ม. · 2มม.", "1,2m×2,4m · 2mm"), L("약 47kg — 혼자 들지 않습니다", "mga 47kg — huwag buhating mag-isa", "ประมาณ 47 กก. — ห้ามยกคนเดียว", "khoảng 47kg — không nâng một mình")],
+      [L("1.2m×2.4m · 3mm", "1.2m×2.4m · 3mm", "1.2ม.×2.4ม. · 3มม.", "1,2m×2,4m · 3mm"), L("약 70kg — 리프터·크레인 사용", "mga 70kg — gumamit ng lifter o crane", "ประมาณ 70 กก. — ใช้ที่ยกหรือเครน", "khoảng 70kg — dùng bộ nâng hoặc cẩu")]
+    ]},
+    { t: "p", x: L("25kg 이상인 물건을 하루 10번 넘게 드는 일은 법에서 정한 '근골격계 부담작업'입니다. 이런 작업은 회사가 3년마다 유해요인을 조사하고 줄일 방법을 찾아야 합니다.",
+      "Ang pagbubuhat ng 25kg pataas nang higit 10 beses sa isang araw ay 'trabahong mabigat sa kalamnan at buto' ayon sa batas. Kailangang suriin ito ng kumpanya bawat 3 taon at bawasan ang panganib.",
+      "การยกของ 25 กก. ขึ้นไปเกินวันละ 10 ครั้ง เป็น 'งานที่เป็นภาระต่อกล้ามเนื้อและกระดูก' ตามกฎหมาย บริษัทต้องสำรวจปัจจัยเสี่ยงทุก 3 ปีและหาทางลด",
+      "Nâng vật từ 25kg trở lên quá 10 lần mỗi ngày là 'công việc gây gánh nặng cơ xương' theo luật. Công ty phải khảo sát yếu tố có hại 3 năm một lần và tìm cách giảm.") },
+    H("작업 전 1분 스트레칭", "1 minutong stretching bago magtrabaho", "ยืดเส้น 1 นาทีก่อนทำงาน", "Giãn cơ 1 phút trước khi làm", "do"),
+    { t: "ol", tone: "do", items: [
+      L("두 손을 허리에 대고 상체를 천천히 뒤로 젖혀 5초 버팁니다.", "Ilagay ang kamay sa baywang, dahan-dahang ihilig pabalik ang katawan, at manatili ng 5 segundo.", "วางมือที่เอว เอนตัวไปข้างหลังช้า ๆ ค้าง 5 วินาที", "Hai tay chống hông, từ từ ngả người ra sau, giữ 5 giây."),
+      L("어깨를 앞뒤로 10번씩 크게 돌립니다.", "Iikot nang malaki ang balikat pasulong at paatras nang tig-10 beses.", "หมุนไหล่ไปหน้าและหลังอย่างละ 10 ครั้ง", "Xoay vai ra trước, ra sau mỗi chiều 10 lần."),
+      L("손목을 손등·손바닥 쪽으로 각각 10초씩 당겨 줍니다.", "Hilahin ang pulso pataas at pababa nang tig-10 segundo.", "ดึงข้อมือไปทางหลังมือและฝ่ามืออย่างละ 10 วินาที", "Kéo cổ tay về phía mu bàn tay và lòng bàn tay mỗi bên 10 giây.")
+    ]}
+  ], ["산업안전보건기준에 관한 규칙 제656조~제666조(근골격계부담작업으로 인한 건강장해의 예방)", "고용노동부고시 「근골격계부담작업의 범위 및 유해요인조사 방법에 관한 고시」"]);
+
+  add("w-7", [
+    H("판금 현장의 전기 위험", "Panganib ng kuryente sa sheet metal", "อันตรายจากไฟฟ้าในโรงงานแผ่นโลหะ", "Nguy hiểm điện ở xưởng tấm kim loại"),
+    { t: "kv", rows: [
+      [L("용접기 케이블", "Kable ng welding machine", "สายเครื่องเชื่อม", "Cáp máy hàn"), L("피복이 벗겨진 채 철판 위에 놓여 있음", "Natanggal ang balat at nakalapag sa bakal", "ฉนวนลอกและวางอยู่บนแผ่นเหล็ก", "Bong vỏ và nằm trên tấm sắt")],
+      [L("연장선·멀티탭", "Extension cord", "สายพ่วง ปลั๊กพ่วง", "Dây nối, ổ cắm kéo dài"), L("물·기름이 있는 바닥, 지게차가 지나가는 통로", "Sa sahig na may tubig o langis, sa daanan ng forklift", "บนพื้นที่มีน้ำหรือน้ำมัน ทางที่รถยกวิ่ง", "Trên sàn có nước, dầu, lối xe nâng chạy")],
+      [L("분전반·제어반", "Distribution/control panel", "ตู้ไฟ ตู้ควบคุม", "Tủ điện, tủ điều khiển"), L("문이 열려 있거나 앞에 물건이 쌓여 있음", "Bukas ang pinto o may nakasalansan sa harap", "ประตูเปิดอยู่หรือมีของกองหน้าตู้", "Cửa mở hoặc có đồ chất phía trước")]
+    ]},
+    H("이것만은 지키세요", "Sundin ito", "ทำตามข้อนี้ให้ได้", "Ít nhất hãy làm điều này", "do"),
+    { t: "ol", tone: "do", items: [
+      L("분전반과 기계 전기함은 자격이 있는 전기 담당자만 엽니다.", "Ang may kwalipikasyong electrician lang ang magbubukas ng panel.", "ตู้ไฟและกล่องไฟฟ้าของเครื่อง ให้ช่างไฟที่มีคุณสมบัติเปิดเท่านั้น", "Chỉ thợ điện có chứng chỉ mới được mở tủ điện."),
+      L("젖은 손으로 플러그·스위치를 만지지 않습니다.", "Huwag hawakan ang plug o switch nang basa ang kamay.", "ห้ามจับปลั๊กหรือสวิตช์ด้วยมือเปียก", "Không chạm phích cắm, công tắc khi tay ướt."),
+      L("누전차단기의 시험 버튼을 한 달에 한 번 눌러 바로 꺼지는지 확인합니다 (담당자).", "Pindutin buwan-buwan ang test button ng breaker para tiyaking agad itong pumapatay (nakatalagang tao).", "กดปุ่มทดสอบเบรกเกอร์กันไฟรั่วเดือนละครั้ง ตรวจว่าตัดทันที (ผู้รับผิดชอบ)", "Mỗi tháng nhấn nút thử của aptomat chống giật một lần để kiểm tra ngắt ngay (người phụ trách).")
+    ]},
+    { t: "warn", x: L("감전된 사람을 맨손으로 잡아당기지 마세요. 먼저 전원을 끄거나, 마른 나무·플라스틱으로 떼어 낸 뒤 119에 신고합니다. 숨을 쉬지 않으면 가슴압박을 시작합니다.",
+      "Huwag hilahin ng hubad na kamay ang nakuryente. Patayin muna ang kuryente o ihiwalay gamit ang tuyong kahoy o plastik, saka tumawag sa 119. Kung hindi humihinga, simulan ang chest compression.",
+      "ห้ามใช้มือเปล่าดึงคนที่ถูกไฟดูด ให้ตัดไฟก่อน หรือใช้ไม้แห้ง พลาสติกแยกออก แล้วโทร 119 ถ้าไม่หายใจให้เริ่มกดหน้าอก",
+      "Không dùng tay không kéo người bị điện giật. Ngắt điện trước hoặc tách ra bằng gỗ khô, nhựa rồi gọi 119. Nếu không thở, bắt đầu ép tim.") }
+  ], ["산업안전보건기준에 관한 규칙 제301조~제304조(전기 기계·기구 등의 충전부 방호, 누전차단기)"]);
+
+  add("w-8", [
+    { t: "def",
+      k: L("불이 나려면 세 가지가 필요합니다", "Tatlong bagay ang kailangan para magkaapoy", "ไฟจะเกิดต้องมี 3 อย่าง", "Muốn cháy cần đủ 3 yếu tố"),
+      v: L("탈 것(기름걸레·종이·시너), 산소(공기·산소용기), 불씨(용접 불티·그라인더 불꽃·전기 합선). 셋 중 하나만 없애도 불은 나지 않습니다. 용접·그라인더 작업 전에 반경 11m 안의 탈 것을 치우는 이유입니다.",
+        "Panggatong (basahang may langis, papel, thinner), oxygen (hangin, oxygen tank), at sindi (spark ng welding, grinder, short circuit). Alisin ang isa at walang sunog. Kaya inaalis ang madaling masunog sa loob ng 11m bago mag-weld o mag-grind.",
+        "เชื้อเพลิง (ผ้าเปื้อนน้ำมัน กระดาษ ทินเนอร์) ออกซิเจน (อากาศ ถังออกซิเจน) และประกายไฟ (เชื่อม เจียร ไฟช็อต) ขาดข้อใดข้อหนึ่งไฟก็ไม่เกิด จึงต้องเก็บเชื้อเพลิงในรัศมี 11 ม. ก่อนเชื่อมหรือเจียร",
+        "Chất cháy (giẻ dầu, giấy, thinner), oxy (không khí, bình oxy) và nguồn lửa (tia hàn, tia mài, chập điện). Bỏ một trong ba là không cháy. Vì vậy phải dọn chất cháy trong bán kính 11m trước khi hàn, mài.") },
+    H("가스 용기 다루기", "Paghawak ng gas cylinder", "การจัดการถังก๊าซ", "Xử lý bình khí", "do"),
+    { t: "ol", tone: "do", items: [
+      L("산소·LPG·아세틸렌 용기는 세워서 체인으로 고정하고, 햇빛과 열을 피해 40℃ 이하에 둡니다.", "Itayo at ikadena ang oxygen, LPG at acetylene cylinder; ilayo sa araw at init, hindi hihigit sa 40℃.", "ถังออกซิเจน LPG อะเซทิลีน ตั้งตรงและล่ามโซ่ เก็บให้พ้นแดดและความร้อน ไม่เกิน 40℃", "Bình oxy, LPG, axetylen để đứng, cố định bằng xích, tránh nắng và nhiệt, dưới 40℃."),
+      L("호스 연결부는 비눗물을 발라 거품이 나는지 봐서 새는 곳을 찾습니다. 불로 확인하지 않습니다.", "Hanapin ang tagas sa koneksyon ng hose gamit ang tubig na may sabon. Huwag gumamit ng apoy.", "หารอยรั่วที่ข้อต่อสายด้วยน้ำสบู่ดูฟอง ห้ามใช้ไฟทดสอบ", "Tìm chỗ rò ở đầu nối ống bằng nước xà phòng xem có bọt không. Không thử bằng lửa."),
+      L("토치에는 역화방지기를 달고, 작업이 끝나면 용기 밸브를 잠급니다.", "Lagyan ng flashback arrestor ang torch, at isara ang valve pagkatapos.", "ติดอุปกรณ์กันไฟย้อนที่หัวเชื่อม เสร็จงานปิดวาล์วถัง", "Lắp van chống cháy ngược cho mỏ hàn, xong việc khóa van bình.")
+    ]}
+  ], ["산업안전보건기준에 관한 규칙 제234조(가스등의 용기), 제241조의2(화재감시자: 반경 11m)"]);
+
+  add("p1-3", [
+    H("응급처치 기본", "Pangunahing first aid", "ปฐมพยาบาลเบื้องต้น", "Sơ cứu cơ bản", "do"),
+    { t: "kv", rows: [
+      [L("피가 많이 날 때", "Malakas na pagdurugo", "เลือดออกมาก", "Chảy máu nhiều"), L("깨끗한 천으로 상처를 세게 누르고 놓지 않습니다.", "Diinan nang malakas ang sugat gamit ang malinis na tela at huwag bitawan.", "ใช้ผ้าสะอาดกดแผลแรง ๆ และไม่ปล่อย", "Dùng vải sạch ấn mạnh vào vết thương, không buông.")],
+      [L("손가락이 잘렸을 때", "Naputol ang daliri", "นิ้วขาด", "Đứt ngón tay"), L("잘린 부분을 깨끗한 거즈로 싸서 비닐에 넣고, 그 비닐을 얼음물에 담가 병원에 함께 가져갑니다. 얼음에 직접 닿게 하지 않습니다.", "Balutin ng malinis na gasa, ilagay sa plastik, ilubog ang plastik sa tubig na may yelo, at dalhin sa ospital. Huwag direktang idikit sa yelo.", "ห่อส่วนที่ขาดด้วยผ้าก๊อซสะอาด ใส่ถุงพลาสติก แช่ถุงในน้ำแข็งผสมน้ำ แล้วนำไปโรงพยาบาลด้วย ห้ามให้โดนน้ำแข็งโดยตรง", "Bọc phần bị đứt bằng gạc sạch, cho vào túi nilon, ngâm túi vào nước đá rồi mang theo đến bệnh viện. Không để chạm trực tiếp vào đá.")],
+      [L("데었을 때", "Napaso", "ถูกความร้อนลวก", "Bị bỏng"), L("흐르는 찬물에 15분 이상 식힙니다. 물집은 터뜨리지 않습니다.", "Palamigin sa umaagos na malamig na tubig nang 15 minuto o higit. Huwag putukin ang paltos.", "ใช้น้ำเย็นไหลผ่าน 15 นาทีขึ้นไป อย่าเจาะตุ่มพอง", "Làm mát dưới vòi nước lạnh từ 15 phút. Không chọc vỡ bọng nước.")],
+      [L("눈에 들어갔을 때", "Napasok sa mata", "เข้าตา", "Vào mắt"), L("비비지 말고 흐르는 물로 15분 이상 씻습니다. 쇳가루가 박혔으면 바로 병원에 갑니다.", "Huwag kuskusin; hugasan sa umaagos na tubig nang 15 minuto. Kapag may bakal na nakabaon, pumunta agad sa ospital.", "ห้ามขยี้ ล้างด้วยน้ำไหล 15 นาทีขึ้นไป ถ้ามีผงเหล็กฝังให้ไปโรงพยาบาลทันที", "Không dụi, rửa dưới vòi nước từ 15 phút. Mạt sắt găm vào thì đi viện ngay.")],
+      [L("쓰러져 숨을 안 쉴 때", "Nakahandusay at hindi humihinga", "ล้มและไม่หายใจ", "Ngã và không thở"), L("119에 신고하고, 가슴 한가운데를 1분에 100~120번, 5cm 깊이로 세게 누릅니다. 자동심장충격기(AED)가 있으면 씁니다.", "Tumawag sa 119 at diinan ang gitna ng dibdib nang 100–120 beses kada minuto, 5cm ang lalim. Gamitin ang AED kung mayroon.", "โทร 119 แล้วกดกลางหน้าอกนาทีละ 100–120 ครั้ง ลึก 5 ซม. ถ้ามีเครื่อง AED ให้ใช้", "Gọi 119 và ấn mạnh giữa ngực 100–120 lần/phút, sâu 5cm. Có máy AED thì dùng.")]
+    ]}
+  ], ["질병관리청·대한심폐소생협회 「한국 심폐소생술 가이드라인」"]);
+
+  add("c-fire", [
+    H("불의 종류에 따라 다르게", "Iba-iba depende sa uri ng apoy", "ต่างกันตามชนิดของไฟ", "Khác nhau theo loại đám cháy"),
+    { t: "kv", rows: [
+      [L("기름·시너 불", "Apoy ng langis o thinner", "ไฟจากน้ำมัน ทินเนอร์", "Cháy dầu, thinner"), L("물을 뿌리면 불이 튀어 더 커집니다. 소화기를 씁니다.", "Lalaki ang apoy kapag binuhusan ng tubig. Gumamit ng extinguisher.", "ฉีดน้ำแล้วไฟจะกระเด็นลุกลาม ให้ใช้ถังดับเพลิง", "Phun nước làm lửa bắn ra to hơn. Dùng bình chữa cháy.")],
+      [L("전기 불", "Apoy sa kuryente", "ไฟจากไฟฟ้า", "Cháy điện"), L("물을 쓰지 말고, 가능하면 전원을 끈 뒤 분말·CO2 소화기를 씁니다.", "Huwag gumamit ng tubig; patayin muna ang kuryente kung kaya, saka gumamit ng powder o CO₂ extinguisher.", "ห้ามใช้น้ำ ถ้าทำได้ให้ตัดไฟก่อน แล้วใช้ถังผงเคมีหรือ CO₂", "Không dùng nước; nếu được thì ngắt điện rồi dùng bình bột hoặc CO₂.")],
+      [L("옷에 불이 붙으면", "Kapag nasunog ang damit", "ไฟติดเสื้อผ้า", "Lửa bén vào quần áo"), L("뛰지 말고 멈춰서 바닥에 엎드려 구르세요 (멈추고·엎드리고·구르기).", "Huwag tumakbo—huminto, dumapa at gumulong (Stop, Drop, Roll).", "อย่าวิ่ง หยุด นอนคว่ำ แล้วกลิ้ง", "Đừng chạy — dừng lại, nằm xuống và lăn.")]
+    ]},
+    H("대피한 다음에는", "Pagkatapos lumikas", "หลังอพยพแล้ว", "Sau khi sơ tán", "do"),
+    { t: "ol", tone: "do", items: [
+      L("정해진 집결 장소에 모여 반장이 인원을 확인합니다. 없는 사람이 있으면 바로 소방관에게 알립니다.", "Magtipon sa itinakdang lugar at bibilangin ng team leader. Kapag may kulang, sabihin agad sa bumbero.", "รวมตัวที่จุดรวมพลที่กำหนด หัวหน้าตรวจนับ ถ้ามีคนหายให้แจ้งเจ้าหน้าที่ดับเพลิงทันที", "Tập trung ở điểm tập kết, tổ trưởng điểm danh. Thiếu người thì báo ngay cho lính cứu hỏa."),
+      L("물건을 가지러 다시 들어가지 않습니다.", "Huwag nang bumalik sa loob para kumuha ng gamit.", "ห้ามกลับเข้าไปเอาของ", "Không quay lại lấy đồ.")
+    ]},
+    { t: "note", x: L("소화기의 압력계 바늘이 초록색 칸에 있는지 가끔 확인하세요. 빨간 칸이면 바꿔야 합니다.",
+      "Paminsan-minsan, tingnan kung nasa berde ang karayom ng pressure gauge ng extinguisher. Palitan kapag nasa pula.",
+      "ตรวจเป็นครั้งคราวว่าเข็มเกจความดันของถังดับเพลิงอยู่ในช่องสีเขียว ถ้าอยู่ช่องแดงต้องเปลี่ยน",
+      "Thỉnh thoảng kiểm tra kim đồng hồ áp suất bình chữa cháy nằm ở vạch xanh. Nằm ở vạch đỏ thì phải thay.") }
+  ]);
+
+  add("p1-10", [
+    H("판금 공장 위험성평가 예시", "Halimbawa ng risk assessment", "ตัวอย่างการประเมินความเสี่ยง", "Ví dụ đánh giá rủi ro"),
+    { t: "kv", rows: [
+      [L("절곡 · 긴 판재", "Bending · mahabang sheet", "พับ · แผ่นยาว", "Chấn · tấm dài"), L("위험: 판재가 튀어 올라 얼굴을 침 → 대책: 서포트 암 사용, 2인 1조, 서는 위치 표시", "Panganib: tatalbog ang sheet sa mukha → Hakbang: support arm, 2 tao, marka ng puwesto", "อันตราย: แผ่นดีดใส่หน้า → มาตรการ: ใช้แขนรองรับ ทำ 2 คน ทำเครื่องหมายจุดยืน", "Nguy cơ: tấm bật vào mặt → Biện pháp: tay đỡ, 2 người, đánh dấu chỗ đứng")],
+      [L("레이저 · 반사재", "Laser · makintab na materyal", "เลเซอร์ · วัสดุสะท้อนแสง", "Laser · vật liệu phản xạ"), L("위험: 화재 → 대책: 절단 조건 표준화, 소화기 비치, 무인 운전 순찰", "Panganib: sunog → Hakbang: standard na setting, extinguisher, pagroronda", "อันตราย: ไฟไหม้ → มาตรการ: กำหนดเงื่อนไขตัดมาตรฐาน วางถังดับเพลิง ตรวจระหว่างเดินเครื่องอัตโนมัติ", "Nguy cơ: cháy → Biện pháp: chuẩn hóa điều kiện cắt, đặt bình chữa cháy, tuần tra khi chạy tự động")],
+      [L("출하 · 트럭", "Shipping · trak", "ส่งของ · รถบรรทุก", "Xuất hàng · xe tải"), L("위험: 적재함에서 떨어짐 → 대책: 같은 높이 상하차장, 안전모", "Panganib: mahulog sa trak → Hakbang: kapantay na loading dock, helmet", "อันตราย: ตกจากกระบะ → มาตรการ: ลานขึ้นลงสูงเท่ากระบะ หมวกนิรภัย", "Nguy cơ: ngã từ thùng xe → Biện pháp: bến bốc xếp cao bằng thùng, mũ bảo hộ")]
+    ]},
+    { t: "p", x: L("위험을 줄이는 방법에도 순서가 있습니다. 먼저 위험 자체를 없애고(제거), 덜 위험한 것으로 바꾸고(대체), 덮개·장치로 막고(공학적 대책), 작업 방법을 정하고(관리적 대책), 마지막으로 보호구를 씁니다.",
+      "May pagkakasunod din ang pagbawas ng panganib: alisin ang panganib, palitan ng mas ligtas, harangan ng takip o device, ayusin ang paraan ng trabaho, at sa huli, PPE.",
+      "การลดความเสี่ยงก็มีลำดับ: ขจัดอันตรายก่อน เปลี่ยนเป็นสิ่งที่อันตรายน้อยกว่า ป้องกันด้วยฝาครอบหรืออุปกรณ์ กำหนดวิธีทำงาน และสุดท้ายคืออุปกรณ์ป้องกันส่วนบุคคล",
+      "Giảm rủi ro cũng có thứ tự: loại bỏ mối nguy, thay bằng thứ ít nguy hiểm hơn, che chắn bằng nắp, thiết bị, quy định cách làm, cuối cùng mới là đồ bảo hộ.") },
+    { t: "note", x: L("아차사고나 불편한 점을 반장에게 말하면 그것이 위험성평가의 출발점이 됩니다.", "Kapag sinabi mo sa team leader ang muntikang aksidente o abala, iyon ang simula ng risk assessment.", "การบอกหัวหน้าเรื่องเหตุเกือบเกิดหรือความไม่สะดวก คือจุดเริ่มต้นของการประเมินความเสี่ยง", "Báo tổ trưởng sự cố suýt xảy ra hay điều bất tiện chính là điểm khởi đầu của đánh giá rủi ro.") }
+  ]);
+
+  add("p1-4", [
+    H("교육에서 배우는 것", "Ang natututunan sa training", "สิ่งที่เรียนในการอบรม", "Những gì học trong đào tạo"),
+    { t: "ul", items: [
+      L("내가 하는 작업의 위험과 안전한 작업 방법", "Panganib ng trabaho ko at ligtas na paraan", "อันตรายของงานที่ทำและวิธีทำงานอย่างปลอดภัย", "Mối nguy trong công việc của tôi và cách làm an toàn"),
+      L("기계·보호구 바르게 쓰는 법", "Tamang paggamit ng makina at PPE", "วิธีใช้เครื่องจักรและอุปกรณ์ป้องกันอย่างถูกต้อง", "Cách dùng đúng máy móc và đồ bảo hộ"),
+      L("사고가 났을 때 대처와 응급처치", "Ano ang gagawin at first aid kapag may aksidente", "การรับมือและปฐมพยาบาลเมื่อเกิดอุบัติเหตุ", "Cách xử lý và sơ cứu khi có tai nạn"),
+      L("건강관리, 직장 내 괴롭힘 예방, 산재보상", "Kalusugan, pag-iwas sa panliligalig, at kompensasyon", "การดูแลสุขภาพ การป้องกันการกลั่นแกล้ง และค่าชดเชย", "Chăm sóc sức khỏe, phòng chống quấy rối, bồi thường tai nạn")
+    ]},
+    { t: "p", x: L("외국인 근로자는 알아듣는 언어로 교육을 받아야 합니다. 이해하지 못했으면 그냥 서명하지 말고, 다시 설명해 달라고 하세요.",
+      "Dapat sanayin ang dayuhang manggagawa sa wikang naiintindihan niya. Kapag hindi naintindihan, huwag basta pumirma—humingi ng ulit na paliwanag.",
+      "คนงานต่างชาติต้องได้รับการอบรมเป็นภาษาที่เข้าใจ ถ้าไม่เข้าใจอย่าเพิ่งเซ็นชื่อ ให้ขออธิบายอีกครั้ง",
+      "Lao động nước ngoài phải được đào tạo bằng ngôn ngữ mình hiểu. Không hiểu thì đừng ký, hãy xin giải thích lại.") },
+    { t: "note", x: L("이 앱의 학습 기록은 회사가 교육을 확인하는 데 참고합니다. 법정 교육시간으로 얼마나 인정할지는 회사가 정합니다.",
+      "Ginagamit ng kumpanya ang record ng app na ito bilang sanggunian. Ang kumpanya ang magpapasya kung ilang oras ang ibibilang sa legal na training.",
+      "บันทึกการเรียนในแอปนี้บริษัทใช้เป็นข้อมูลประกอบ ส่วนจะนับเป็นชั่วโมงอบรมตามกฎหมายเท่าใด บริษัทเป็นผู้กำหนด",
+      "Lịch sử học trong ứng dụng này công ty dùng để tham khảo. Công nhận bao nhiêu giờ đào tạo theo luật do công ty quyết định.") }
+  ]);
+
+  add("p1-8", [
+    H("판금 근로자의 특수건강진단", "Espesyal na check-up para sa sheet metal", "การตรวจสุขภาพพิเศษของคนงานแผ่นโลหะ", "Khám sức khỏe đặc biệt cho thợ tấm kim loại"),
+    { t: "kv", rows: [
+      [L("소음", "Ingay", "เสียงดัง", "Tiếng ồn"), L("프레스·절곡·그라인더 — 청력검사", "Press, bending, grinder — hearing test", "เพรส พับ เจียร — ตรวจการได้ยิน", "Dập, chấn, mài — đo thính lực")],
+      [L("용접 흄", "Usok ng welding", "ควันเชื่อม", "Khói hàn"), L("산화철·망간 — 폐 기능, 신경 검사", "Iron oxide, manganese — lung at nerve test", "เหล็กออกไซด์ แมงกานีส — ตรวจปอดและระบบประสาท", "Oxit sắt, mangan — chức năng phổi, thần kinh")],
+      [L("금속가공유", "Metalworking fluid", "น้ำมันงานโลหะ", "Dầu gia công kim loại"), L("피부·호흡기 검사", "Balat at baga", "ตรวจผิวหนังและทางเดินหายใจ", "Da và đường hô hấp")],
+      [L("야간작업", "Night shift", "ทำงานกลางคืน", "Làm đêm"), L("심장·혈압·수면 상태", "Puso, presyon ng dugo, tulog", "หัวใจ ความดัน การนอน", "Tim, huyết áp, giấc ngủ")]
+    ]},
+    { t: "p", x: L("결과표에 'C1(요관찰자)'이 나오면 직업병이 생기지 않도록 주의해서 지켜봐야 한다는 뜻이고, 'D1(유소견자)'은 직업병 소견이 있어 사후관리가 필요하다는 뜻입니다. 회사는 결과에 따라 작업 전환이나 근로시간 단축 같은 조치를 해야 합니다.",
+      "Ang 'C1' sa resulta ay kailangang bantayan para hindi magkasakit sa trabaho; ang 'D1' ay may palatandaan ng sakit sa trabaho at kailangan ng follow-up. Dapat kumilos ang kumpanya, tulad ng paglipat ng trabaho o pagbawas ng oras.",
+      "ผล 'C1' หมายถึงต้องเฝ้าระวังไม่ให้เกิดโรคจากการทำงาน 'D1' หมายถึงพบสัญญาณโรคจากการทำงานต้องติดตามดูแล บริษัทต้องดำเนินการตามผล เช่น ย้ายงานหรือลดชั่วโมงทำงาน",
+      "Kết quả 'C1' nghĩa là cần theo dõi để không mắc bệnh nghề nghiệp; 'D1' là có dấu hiệu bệnh nghề nghiệp, cần quản lý sau khám. Công ty phải có biện pháp theo kết quả như chuyển việc, giảm giờ làm.") },
+    { t: "note", x: L("작업환경측정 결과는 작업장에 게시됩니다. 근로자 대표는 측정할 때 함께 볼 수 있습니다.", "Ipinapaskil sa trabaho ang resulta ng pagsukat ng kapaligiran. Puwedeng sumama ang kinatawan ng manggagawa sa pagsukat.", "ผลการตรวจวัดสภาพแวดล้อมจะติดประกาศในที่ทำงาน ตัวแทนคนงานเข้าร่วมดูตอนวัดได้", "Kết quả đo môi trường lao động được niêm yết tại xưởng. Đại diện người lao động được chứng kiến khi đo.") }
+  ], ["산업안전보건법 시행규칙 별표 22(특수건강진단 대상 유해인자)", "고용노동부고시 「근로자 건강진단 실시기준」(건강관리 구분)", "산업안전보건법 제125조(작업환경측정: 결과 게시, 근로자대표 입회)"]);
+})();
+
+// 2분 분량 보강 (6·7주차 + 일부 작업 단원)
+(() => {
+  const add = window.ADD_MORE;
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+
+  add("c-noise", [
+    H("소리가 클수록 버틸 수 있는 시간이 줄어듭니다", "Habang lumalakas ang ingay, umiikli ang ligtas na oras", "ยิ่งเสียงดัง เวลาที่ทนได้ยิ่งสั้น", "Càng ồn, thời gian chịu được càng ngắn"),
+    { t: "kv", rows: [
+      [L("90dB", "90dB", "90dB", "90dB"), L("하루 8시간 (큰 프레스 옆)", "8 oras kada araw (tabi ng malaking press)", "วันละ 8 ชั่วโมง (ข้างเครื่องเพรสใหญ่)", "8 giờ/ngày (cạnh máy dập lớn)")],
+      [L("95dB", "95dB", "95dB", "95dB"), L("하루 4시간", "4 oras kada araw", "วันละ 4 ชั่วโมง", "4 giờ/ngày")],
+      [L("100dB", "100dB", "100dB", "100dB"), L("하루 2시간 (그라인더·망치질)", "2 oras kada araw (grinder, pagmamartilyo)", "วันละ 2 ชั่วโมง (เจียร ตอกค้อน)", "2 giờ/ngày (máy mài, gõ búa)")]
+    ]},
+    { t: "p", x: L("위 시간은 보호구 없이 들을 때의 한계입니다. 판금 공장은 그라인더·해머·프레스 소리가 겹쳐서 쉽게 이 수준을 넘습니다. 그래서 귀마개를 처음부터 끝까지 착용해야 합니다.",
+      "Ito ang limitasyon kapag walang proteksyon. Sa sheet metal factory, nagsasama ang ingay ng grinder, martilyo at press kaya madaling lumampas. Kaya isuot ang ear plug mula simula hanggang dulo.",
+      "เวลาข้างต้นคือขีดจำกัดเมื่อไม่ใส่อุปกรณ์ป้องกัน ในโรงงานแผ่นโลหะ เสียงเจียร ค้อน เพรสรวมกันจึงเกินระดับนี้ได้ง่าย ต้องใส่ที่อุดหูตั้งแต่ต้นจนจบ",
+      "Thời gian trên là giới hạn khi không đeo bảo hộ. Ở xưởng tấm kim loại, tiếng mài, búa, dập cộng lại nên dễ vượt mức này. Vì vậy phải đeo nút tai từ đầu đến cuối.") },
+    H("난청의 첫 신호", "Unang palatandaan ng pagkabingi", "สัญญาณแรกของหูตึง", "Dấu hiệu đầu tiên của nghe kém", "bad"),
+    { t: "ol", tone: "bad", items: [
+      L("퇴근 후에도 귀에서 '삐-' 소리가 남", "May 'beep' sa tainga kahit nakauwi na", "เลิกงานแล้วยังมีเสียง 'วี้' ในหู", "Tan ca rồi tai vẫn kêu 'o o'"),
+      L("TV 소리를 점점 크게 틀게 됨", "Palakas nang palakas ang TV", "เปิดทีวีดังขึ้นเรื่อย ๆ", "Ngày càng vặn TV to hơn"),
+      L("시끄러운 곳에서 말을 자꾸 되물음", "Madalas magpaulit sa maingay na lugar", "ที่เสียงดังต้องถามซ้ำบ่อย", "Ở nơi ồn hay phải hỏi lại")
+    ]}
+  ], ["고용노동부고시 「화학물질 및 물리적 인자의 노출기준」(소음: 90dB 8시간, 5dB 증가 시 노출시간 반감)"]);
+
+  add("c-heat", [
+    H("온열질환의 종류", "Mga uri ng sakit sa init", "ชนิดของโรคจากความร้อน", "Các loại bệnh do nóng"),
+    { t: "kv", rows: [
+      [L("열경련", "Heat cramps", "ตะคริวจากความร้อน", "Chuột rút do nóng"), L("팔다리·배 근육이 쥐가 나듯 아픔 → 그늘에서 쉬고 물·이온음료를 마십니다.", "Pulikat sa braso, binti o tiyan → magpahinga sa lilim at uminom ng tubig o sports drink.", "กล้ามเนื้อแขนขา ท้อง เป็นตะคริว → พักในที่ร่มและดื่มน้ำหรือเครื่องดื่มเกลือแร่", "Cơ tay chân, bụng bị chuột rút → nghỉ chỗ mát, uống nước hoặc nước điện giải.")],
+      [L("열탈진", "Heat exhaustion", "เพลียแดด", "Kiệt sức do nóng"), L("땀이 많이 나고 어지럽고 힘이 없음 → 시원한 곳에 눕히고 옷을 느슨하게, 물을 마시게 합니다.", "Pawis na pawis, nahihilo, nanghihina → ihiga sa malamig na lugar, luwagan ang damit, painumin ng tubig.", "เหงื่อออกมาก เวียนหัว ไม่มีแรง → ให้นอนในที่เย็น คลายเสื้อผ้า ให้ดื่มน้ำ", "Ra nhiều mồ hôi, chóng mặt, mệt lả → cho nằm chỗ mát, nới lỏng quần áo, cho uống nước.")],
+      [L("열사병 (응급)", "Heat stroke (emergency)", "ลมแดด (ฉุกเฉิน)", "Say nắng (cấp cứu)"), L("체온 40℃ 이상, 땀이 안 나고 헛소리·의식 저하 → 바로 119, 몸에 물을 뿌리고 부채질합니다. 의식이 없으면 물을 먹이지 않습니다.", "40℃ pataas ang temperatura, walang pawis, nalilito → tumawag agad sa 119, basain ang katawan at paypayan. Huwag painumin kung walang malay.", "ตัวร้อน 40℃ ขึ้นไป ไม่มีเหงื่อ พูดเพ้อ ซึม → โทร 119 ทันที ราดน้ำและพัดลม ถ้าหมดสติห้ามให้ดื่มน้ำ", "Thân nhiệt từ 40℃, không ra mồ hôi, nói lảm nhảm, lơ mơ → gọi 119 ngay, tưới nước lên người và quạt. Bất tỉnh thì không cho uống.")]
+    ]},
+    { t: "note", x: L("용접·레이저 주변과 철판 지붕 아래는 바깥보다 훨씬 덥습니다. 동료의 얼굴색과 말투가 이상하면 먼저 말을 걸어 주세요.",
+      "Mas mainit sa paligid ng welding, laser at sa ilalim ng bubong na bakal. Kapag kakaiba ang itsura o pananalita ng kasama, kausapin siya.",
+      "รอบงานเชื่อม เลเซอร์ และใต้หลังคาเหล็กร้อนกว่าข้างนอกมาก ถ้าสีหน้าหรือคำพูดของเพื่อนผิดปกติ ให้ทักก่อน",
+      "Quanh khu hàn, laser và dưới mái tôn nóng hơn bên ngoài nhiều. Thấy sắc mặt, giọng nói đồng nghiệp lạ thì hãy hỏi han trước.") }
+  ], ["질병관리청 「온열질환 예방 가이드」"]);
+
+  add("c-chem", [
+    H("손과 몸을 지키는 습관", "Mga ugaling nagpoprotekta sa kamay at katawan", "นิสัยที่ปกป้องมือและร่างกาย", "Thói quen bảo vệ tay và cơ thể", "do"),
+    { t: "ol", tone: "do", items: [
+      L("기름·시너를 만질 때는 면장갑이 아니라 니트릴 같은 화학물질용 장갑을 낍니다. 면장갑은 물질이 스며듭니다.", "Sa langis at thinner, gumamit ng chemical gloves tulad ng nitrile—hindi cotton. Tumatagos sa cotton ang kemikal.", "จับน้ำมันหรือทินเนอร์ใช้ถุงมือกันสารเคมีเช่นไนไตรล์ ไม่ใช่ถุงมือผ้า เพราะสารซึมผ่านผ้าได้", "Khi chạm dầu, thinner dùng găng chống hóa chất như nitrile, không dùng găng vải. Hóa chất thấm qua găng vải."),
+      L("밥 먹기 전, 담배 피우기 전에 꼭 손을 씻습니다.", "Maghugas ng kamay bago kumain at manigarilyo.", "ล้างมือก่อนกินข้าวและก่อนสูบบุหรี่", "Rửa tay trước khi ăn và hút thuốc."),
+      L("기름 묻은 걸레는 뚜껑 있는 금속 통에 버립니다. 쌓아 두면 저절로 불이 날 수 있습니다.", "Itapon ang basahang may langis sa metal na lalagyan na may takip. Puwedeng kusang magliyab kapag naipon.", "ทิ้งผ้าเปื้อนน้ำมันในถังโลหะมีฝาปิด ถ้ากองไว้อาจลุกไหม้เอง", "Bỏ giẻ dính dầu vào thùng kim loại có nắp. Chất đống có thể tự bốc cháy."),
+      L("작업복은 집 빨래와 따로 빨아 가족에게 묻지 않게 합니다.", "Labhan nang hiwalay ang damit pantrabaho para hindi madamay ang pamilya.", "ซักชุดทำงานแยกจากเสื้อผ้าที่บ้าน ไม่ให้ติดครอบครัว", "Giặt quần áo làm việc riêng với đồ gia đình.")
+    ]}
+  ]);
+
+  add("c-heart", [
+    H("뇌졸중 의심 신호: '이웃·손·발·시선'", "Palatandaan ng stroke", "สัญญาณสงสัยโรคหลอดเลือดสมอง", "Dấu hiệu nghi đột quỵ"),
+    { t: "kv", rows: [
+      [L("이~ 웃어 보세요", "Ngumiti", "ลองยิ้ม", "Thử cười"), L("한쪽 입꼬리가 처집니다", "Lumalaylay ang isang gilid ng bibig", "มุมปากข้างหนึ่งตก", "Một bên khóe miệng bị xệ")],
+      [L("두 손을 들어 보세요", "Itaas ang dalawang kamay", "ลองยกสองมือ", "Thử giơ hai tay"), L("한쪽 팔이 힘없이 내려옵니다", "Bumababa ang isang braso", "แขนข้างหนึ่งตกลงไม่มีแรง", "Một tay buông xuống không có sức")],
+      [L("발음해 보세요", "Magsalita", "ลองพูด", "Thử nói"), L("말이 어눌하거나 나오지 않습니다", "Malabo o hindi makapagsalita", "พูดไม่ชัดหรือพูดไม่ออก", "Nói ngọng hoặc không nói được")],
+      [L("시선", "Paningin", "สายตา", "Ánh mắt"), L("한쪽이 안 보이거나 물체가 둘로 보입니다 → 하나라도 있으면 바로 119", "Hindi makakita ang isang mata o doble ang nakikita → kahit isa, tumawag agad sa 119", "มองไม่เห็นข้างหนึ่งหรือเห็นภาพซ้อน → มีข้อเดียวก็โทร 119 ทันที", "Một bên không thấy hoặc nhìn thành hai → chỉ cần một dấu hiệu là gọi 119 ngay")]
+    ]},
+    { t: "p", x: L("혈압은 120/80 아래가 정상이고, 140/90 이상이면 고혈압입니다. 야간·교대 근무를 하면 잠이 부족해지기 쉬우니, 쉬는 날에도 비슷한 시간에 자고 일어나도록 합니다.",
+      "Normal ang presyon na mas mababa sa 120/80; altapresyon kapag 140/90 pataas. Madaling kulangin sa tulog sa night shift, kaya matulog at gumising sa halos parehong oras kahit day off.",
+      "ความดันปกติต่ำกว่า 120/80 ถ้า 140/90 ขึ้นไปคือความดันสูง คนทำงานกะกลางคืนมักนอนไม่พอ วันหยุดก็ควรนอนและตื่นเวลาใกล้เคียงกัน",
+      "Huyết áp bình thường dưới 120/80; từ 140/90 là cao huyết áp. Làm đêm, làm ca dễ thiếu ngủ, nên ngày nghỉ cũng ngủ dậy vào giờ gần giống nhau.") }
+  ], ["대한뇌졸중학회 '이웃·손·발·시선' 뇌졸중 증상 알리기", "대한고혈압학회 혈압 분류"]);
+
+  add("c-stress", [
+    H("이런 신호가 2주 넘게 이어지면", "Kapag tumagal nang 2 linggo ang mga ito", "ถ้าสัญญาณเหล่านี้นานเกิน 2 สัปดาห์", "Nếu những dấu hiệu này kéo dài quá 2 tuần", "bad"),
+    { t: "ol", tone: "bad", items: [
+      L("잠을 못 자거나 너무 많이 잠", "Hindi makatulog o sobrang tulog", "นอนไม่หลับหรือนอนมากเกินไป", "Mất ngủ hoặc ngủ quá nhiều"),
+      L("좋아하던 일에도 흥미가 없음", "Walang gana kahit sa dating gusto", "ไม่สนใจแม้สิ่งที่เคยชอบ", "Không còn hứng thú cả với việc từng thích"),
+      L("일에 집중이 안 되고 실수가 잦아짐", "Hindi makapag-concentrate at madalas magkamali", "ไม่มีสมาธิในงานและผิดพลาดบ่อย", "Không tập trung làm việc, hay mắc lỗi")
+    ]},
+    { t: "p", x: L("마음이 지치면 기계 앞에서 실수가 늘어 사고로 이어질 수 있습니다. 혼자 견디지 말고 이야기하는 것이 나를 지키는 일입니다. 안전보건공단 근로자건강센터에서는 무료로 상담을 받을 수 있습니다.",
+      "Kapag pagod ang isip, dumadami ang pagkakamali sa harap ng makina at puwedeng humantong sa aksidente. Ang pakikipag-usap ay pagprotekta sa sarili. May libreng konsultasyon sa Worker Health Center ng KOSHA.",
+      "เมื่อใจเหนื่อย ความผิดพลาดหน้าเครื่องจักรจะเพิ่มขึ้นและอาจเกิดอุบัติเหตุ การพูดคุยคือการปกป้องตัวเอง ศูนย์สุขภาพคนงานของ KOSHA ให้คำปรึกษาฟรี",
+      "Khi tinh thần mệt mỏi, lỗi trước máy tăng lên có thể dẫn đến tai nạn. Nói ra là cách bảo vệ bản thân. Trung tâm sức khỏe người lao động của KOSHA tư vấn miễn phí.") },
+    { t: "note", x: L("마음이 너무 힘들 때는 24시간 상담전화 109에 전화할 수 있습니다.", "Kapag sobrang bigat ng loob, puwedeng tumawag sa 109 (24 oras).", "เมื่อใจทุกข์มาก โทรสายด่วน 109 ได้ตลอด 24 ชั่วโมง", "Khi quá khó khăn về tinh thần, có thể gọi đường dây 109 (24 giờ).") }
+  ], ["안전보건공단 근로자건강센터", "보건복지부 자살예방상담전화 109"]);
+
+  add("p1-11", [
+    H("쉬는 시간도 법으로 정해져 있습니다", "Itinakda rin ng batas ang pahinga", "เวลาพักก็กำหนดโดยกฎหมาย", "Thời gian nghỉ cũng do luật quy định"),
+    { t: "kv", rows: [
+      [L("4시간 일하면", "Kapag 4 oras na nagtrabaho", "ทำงาน 4 ชั่วโมง", "Làm 4 giờ"), L("30분 이상 쉼", "30 minuto o higit na pahinga", "พัก 30 นาทีขึ้นไป", "Nghỉ từ 30 phút")],
+      [L("8시간 일하면", "Kapag 8 oras", "ทำงาน 8 ชั่วโมง", "Làm 8 giờ"), L("1시간 이상 쉼", "1 oras o higit", "พัก 1 ชั่วโมงขึ้นไป", "Nghỉ từ 1 giờ")],
+      [L("쉬는 시간", "Oras ng pahinga", "เวลาพัก", "Giờ nghỉ"), L("일하는 중간에 주고, 자유롭게 쓸 수 있어야 합니다", "Ibinibigay sa gitna ng trabaho at malayang magagamit", "ให้ระหว่างงานและใช้ได้อย่างอิสระ", "Cho giữa giờ làm và được sử dụng tự do")]
+    ]},
+    { t: "p", x: L("피곤한 채로 기계를 다루면 반응이 늦어지고 실수가 늘어납니다. 쉬는 시간에는 기계 옆이 아니라 휴게실에서 물을 마시고, 눈과 귀를 쉬게 해 주세요. 휴게실이 덥거나 춥거나 지저분하면 회사에 개선을 요청할 수 있습니다.",
+      "Kapag pagod ka habang gumagamit ng makina, bumabagal ang reaksyon at dumadami ang mali. Sa pahinga, pumunta sa rest area—hindi sa tabi ng makina—uminom ng tubig at ipahinga ang mata at tainga. Puwedeng humiling ng pagpapabuti kapag mainit, malamig o marumi ang rest area.",
+      "ใช้เครื่องจักรตอนเหนื่อย ปฏิกิริยาจะช้าและผิดพลาดมากขึ้น ช่วงพักให้ไปห้องพัก ไม่ใช่ข้างเครื่อง ดื่มน้ำ และพักตาพักหู ถ้าห้องพักร้อน หนาว หรือสกปรก ขอให้บริษัทปรับปรุงได้",
+      "Vận hành máy khi mệt thì phản xạ chậm, lỗi tăng. Giờ nghỉ hãy vào phòng nghỉ, không ở cạnh máy, uống nước và cho mắt, tai nghỉ ngơi. Phòng nghỉ nóng, lạnh hay bẩn thì có thể yêu cầu công ty cải thiện.") }
+  ], ["근로기준법 제54조(휴게)"]);
+
+  add("p2-1", [
+    H("회사가 갖춰야 하는 것 (예)", "Ang dapat ihanda ng kumpanya (halimbawa)", "สิ่งที่บริษัทต้องมี (ตัวอย่าง)", "Những gì công ty phải có (ví dụ)"),
+    { t: "ul", items: [
+      L("안전보건 목표와 경영방침", "Layunin at patakaran sa kaligtasan", "เป้าหมายและนโยบายความปลอดภัย", "Mục tiêu và chính sách an toàn"),
+      L("유해·위험요인을 찾아 고치는 절차 (위험성평가)", "Proseso ng paghahanap at pag-aayos ng panganib (risk assessment)", "ขั้นตอนค้นหาและแก้ไขอันตราย (การประเมินความเสี่ยง)", "Quy trình tìm và khắc phục mối nguy (đánh giá rủi ro)"),
+      L("안전에 쓸 인력과 예산", "Tauhan at badyet para sa kaligtasan", "คนและงบประมาณสำหรับความปลอดภัย", "Nhân lực và ngân sách cho an toàn"),
+      L("일하는 사람의 의견을 듣는 방법", "Paraan ng pakikinig sa opinyon ng manggagawa", "วิธีรับฟังความเห็นของคนทำงาน", "Cách lắng nghe ý kiến người lao động"),
+      L("사고·비상 상황 대응 매뉴얼과 훈련", "Manwal at pagsasanay sa aksidente at emergency", "คู่มือและการฝึกรับมืออุบัติเหตุและเหตุฉุกเฉิน", "Sổ tay và diễn tập ứng phó sự cố, khẩn cấp"),
+      L("반기마다 이것들이 잘 되는지 점검", "Pagsusuri tuwing kalahating taon", "ตรวจทุกครึ่งปีว่าทำได้ดีหรือไม่", "Kiểm tra mỗi nửa năm xem có thực hiện tốt không")
+    ]},
+    { t: "p", x: L("이 법은 회사를 처벌하려는 것이 목적이 아니라, 사고가 나기 전에 위험을 없애도록 하는 것이 목적입니다. 근로자가 위험을 말하고 회사가 고치는 것, 그것이 이 법이 바라는 모습입니다.",
+      "Hindi layunin ng batas na parusahan ang kumpanya, kundi alisin ang panganib bago magka-aksidente. Ang manggagawang nagsasabi ng panganib at ang kumpanyang nag-aayos—iyan ang hangad ng batas.",
+      "จุดประสงค์ของกฎหมายนี้ไม่ใช่การลงโทษบริษัท แต่คือให้ขจัดอันตรายก่อนเกิดอุบัติเหตุ คนงานบอกอันตราย บริษัทแก้ไข นั่นคือสิ่งที่กฎหมายต้องการ",
+      "Mục đích của luật không phải để phạt công ty mà để loại bỏ nguy hiểm trước khi xảy ra tai nạn. Người lao động nói ra mối nguy, công ty khắc phục — đó là điều luật mong muốn.") }
+  ], ["중대재해 처벌 등에 관한 법률 시행령 제4조(안전보건관리체계의 구축 및 이행 조치)"]);
+
+  add("p2-2", [
+    H("내 의견은 이렇게 전할 수 있어요", "Ganito maipaparating ang opinyon mo", "ส่งความเห็นได้แบบนี้", "Có thể gửi ý kiến như sau", "do"),
+    { t: "ol", tone: "do", items: [
+      L("매일 TBM 시간에 위험한 점을 말합니다.", "Sabihin ang panganib sa TBM araw-araw.", "บอกจุดอันตรายในช่วง TBM ทุกวัน", "Nói điều nguy hiểm trong giờ TBM hằng ngày."),
+      L("아차사고 제보함이나 건의함, 메신저로 알립니다.", "Gamitin ang near-miss box, suggestion box o messenger.", "แจ้งผ่านกล่องรับแจ้งเหตุเกือบเกิด กล่องรับความเห็น หรือแชท", "Báo qua hộp sự cố suýt xảy ra, hộp góp ý hoặc tin nhắn."),
+      L("산업안전보건위원회나 노사협의회의 근로자 위원에게 전달합니다.", "Iparating sa kinatawan ng manggagawa sa safety committee o labor-management council.", "ส่งต่อให้กรรมการฝ่ายคนงานในคณะกรรมการความปลอดภัยหรือสภาแรงงาน-นายจ้าง", "Chuyển cho ủy viên đại diện người lao động trong hội đồng an toàn hoặc hội đồng lao động - quản lý.")
+    ]},
+    { t: "note", x: L("회사가 위험을 알고도 고치지 않으면, 고용노동부(국번 없이 1350)에 신고할 수 있습니다. 신고했다고 불이익을 주는 것은 금지되어 있습니다.",
+      "Kapag alam ng kumpanya ang panganib pero hindi inaayos, puwedeng iulat sa Ministry of Employment and Labor (1350). Bawal ang parusa dahil nag-ulat ka.",
+      "ถ้าบริษัทรู้ว่ามีอันตรายแต่ไม่แก้ไข แจ้งกระทรวงการจ้างงานและแรงงานได้ (1350) ห้ามลงโทษเพราะการแจ้ง",
+      "Nếu công ty biết mối nguy mà không sửa, có thể báo Bộ Việc làm và Lao động (1350). Cấm gây bất lợi vì đã báo cáo.") }
+  ], ["산업안전보건법 제157조(감독기관에 대한 신고)"]);
+
+  add("p4-1", [
+    H("괴롭힘이 아닌 것도 알아 두세요", "Alamin din ang hindi panliligalig", "รู้ด้วยว่าอะไรไม่ใช่การกลั่นแกล้ง", "Biết cả những gì không phải quấy rối"),
+    { t: "p", x: L("안전수칙을 지키라고 지적하거나, 정해진 업무를 지시하고 실수를 바로잡는 것은 괴롭힘이 아닙니다. 다만 같은 지적이라도 욕설을 하거나, 여러 사람 앞에서 반복해 모욕하거나, 국적·말투를 비웃는다면 괴롭힘이 될 수 있습니다.",
+      "Hindi panliligalig ang pagpapaalala sa safety rules, pagbibigay ng normal na trabaho o pagtutuwid ng pagkakamali. Pero kahit pagpapaalala, nagiging panliligalig kapag may mura, paulit-ulit na pang-iinsulto sa harap ng iba, o pagtatawanan ang nasyonalidad o punto.",
+      "การตักเตือนให้ทำตามกฎความปลอดภัย การสั่งงานตามหน้าที่ หรือแก้ไขความผิดพลาด ไม่ใช่การกลั่นแกล้ง แต่ถ้าตักเตือนด้วยคำหยาบ ดูถูกซ้ำ ๆ ต่อหน้าคนอื่น หรือหัวเราะเยาะสัญชาติ สำเนียง อาจเป็นการกลั่นแกล้ง",
+      "Nhắc nhở tuân thủ quy định an toàn, giao việc theo nhiệm vụ, sửa lỗi sai không phải là quấy rối. Nhưng cùng là nhắc nhở mà chửi bới, xúc phạm lặp lại trước nhiều người, chế giễu quốc tịch, giọng nói thì có thể là quấy rối.") },
+    H("외국인 근로자가 자주 겪는 일", "Karaniwang nararanasan ng dayuhang manggagawa", "สิ่งที่คนงานต่างชาติมักเจอ", "Điều lao động nước ngoài hay gặp", "bad"),
+    { t: "ol", tone: "bad", items: [
+      L("이름 대신 '야', 나라 이름으로 부름", "Tinatawag na 'Hoy' o pangalan ng bansa sa halip na pangalan", "เรียก 'เฮ้ย' หรือเรียกชื่อประเทศแทนชื่อ", "Gọi 'ê' hay tên nước thay vì tên"),
+      L("위험하고 힘든 일만 계속 맡김", "Laging binibigyan ng delikado at mabigat na trabaho lang", "ให้ทำแต่งานอันตรายและหนักตลอด", "Chỉ giao việc nguy hiểm, nặng nhọc"),
+      L("여권·외국인등록증을 회사가 맡아 두고 돌려주지 않음", "Kinukuha at hindi ibinabalik ng kumpanya ang passport o ARC", "บริษัทเก็บพาสปอร์ตหรือบัตรต่างด้าวไว้ไม่คืน", "Công ty giữ hộ chiếu, thẻ người nước ngoài không trả")
+    ]}
+  ], ["고용노동부 「직장 내 괴롭힘 판단 및 예방·대응 매뉴얼」", "출입국관리법 제33조의3(외국인 여권 등의 취업 담보 금지)"]);
+
+  add("p4-2", [
+    H("이런 것도 기억하세요", "Tandaan din ito", "จำสิ่งนี้ด้วย", "Hãy nhớ cả điều này"),
+    { t: "ul", items: [
+      L("회식, 출장, 업무 관련 메신저도 '직장'에 포함됩니다.", "Kasama sa 'trabaho' ang company dinner, business trip at work messenger.", "งานเลี้ยงบริษัท การเดินทางไปทำงาน แชทเรื่องงาน ก็นับเป็น 'ที่ทำงาน'", "Liên hoan, công tác, tin nhắn công việc cũng được tính là 'nơi làm việc'."),
+      L("피해자에 대한 소문을 퍼뜨리거나 탓하는 것은 2차 피해입니다. 해서는 안 됩니다.", "Ang pagkalat ng tsismis o paninisi sa biktima ay pangalawang pinsala. Huwag gawin.", "การปล่อยข่าวหรือโทษผู้เสียหายคือความเสียหายซ้ำ ห้ามทำ", "Lan truyền tin đồn hay đổ lỗi cho nạn nhân là tổn hại thứ cấp. Không được làm."),
+      L("'농담이었다'는 말은 변명이 되지 않습니다.", "Hindi dahilan ang 'biro lang'.", "คำว่า 'ล้อเล่น' ไม่ใช่ข้ออ้าง", "Câu 'chỉ đùa thôi' không phải lời bào chữa.")
+    ]},
+    { t: "p", x: L("말과 행동이 괜찮은지 헷갈리면 '가족이 이런 일을 당하면 괜찮을까?'라고 생각해 보세요. 서로 존중하는 작업장이 사고도 적습니다.",
+      "Kung hindi sigurado kung okay ang salita o kilos, isipin: 'Okay ba kung mangyari ito sa pamilya ko?' Mas kaunti ang aksidente sa lugar na may respeto.",
+      "ถ้าไม่แน่ใจว่าคำพูดหรือการกระทำเหมาะสมไหม ลองคิดว่า 'ถ้าครอบครัวเราโดนแบบนี้จะโอเคไหม' ที่ทำงานที่เคารพกันอุบัติเหตุก็น้อย",
+      "Phân vân lời nói, hành động có ổn không, hãy nghĩ: 'Người nhà mình bị như vậy có ổn không?' Nơi làm việc tôn trọng nhau cũng ít tai nạn hơn.") }
+  ]);
+
+  add("p4-3", [
+    H("동료가 피해를 당하는 것을 봤다면", "Kapag nakita mong biktima ang kasama", "ถ้าเห็นเพื่อนถูกกระทำ", "Nếu thấy đồng nghiệp bị hại", "do"),
+    { t: "ol", tone: "do", items: [
+      L("그 자리를 자연스럽게 끊어 줍니다. 예: \"반장님이 찾으세요, 같이 가요.\"", "Putulin nang natural ang sitwasyon. Hal.: \"Hinahanap ka ng team leader, tara.\"", "ตัดสถานการณ์อย่างเป็นธรรมชาติ เช่น \"หัวหน้าเรียก ไปด้วยกัน\"", "Cắt ngang tình huống một cách tự nhiên. Ví dụ: \"Tổ trưởng tìm đấy, đi cùng nhé.\""),
+      L("나중에 피해자에게 괜찮은지 묻고, 원하면 증인이 되어 줍니다.", "Tanungin ang biktima kung okay siya, at maging saksi kung gusto niya.", "ภายหลังถามผู้เสียหายว่าโอเคไหม และเป็นพยานให้ถ้าเขาต้องการ", "Sau đó hỏi nạn nhân có ổn không, và làm nhân chứng nếu họ muốn."),
+      L("본 내용을 날짜와 함께 적어 둡니다.", "Isulat ang nakita kasama ang petsa.", "จดสิ่งที่เห็นพร้อมวันที่", "Ghi lại những gì đã thấy kèm ngày tháng.")
+    ]},
+    { t: "note", x: L("한국어가 서툴러도 괜찮습니다. 외국인력상담센터(1577-0071)는 내 나라 말로 상담해 줍니다.", "Okay lang kahit hindi magaling sa Korean. May konsultasyon sa sarili mong wika sa 1577-0071.", "พูดเกาหลีไม่คล่องก็ไม่เป็นไร ศูนย์ให้คำปรึกษาแรงงานต่างชาติ (1577-0071) ให้คำปรึกษาเป็นภาษาของคุณ", "Không giỏi tiếng Hàn cũng không sao. Trung tâm tư vấn lao động nước ngoài (1577-0071) tư vấn bằng tiếng nước bạn.") }
+  ]);
+
+  add("p4-4", [
+    H("회사가 해결하지 않을 때", "Kapag hindi inaayos ng kumpanya", "เมื่อบริษัทไม่แก้ไข", "Khi công ty không giải quyết", "do"),
+    { t: "ol", tone: "do", items: [
+      L("고용노동부 고객상담센터 1350에 전화해 상담합니다.", "Tumawag sa 1350 ng Ministry of Employment and Labor.", "โทรปรึกษาศูนย์บริการ 1350 ของกระทรวงแรงงาน", "Gọi trung tâm tư vấn 1350 của Bộ Lao động."),
+      L("가까운 지방고용노동관서나 노동포털(온라인)에 진정을 냅니다.", "Mag-file ng reklamo sa pinakamalapit na labor office o online sa labor portal.", "ยื่นคำร้องที่สำนักงานแรงงานใกล้บ้าน หรือทางออนไลน์ผ่านพอร์ทัลแรงงาน", "Nộp đơn khiếu nại tại văn phòng lao động gần nhất hoặc trực tuyến qua cổng lao động."),
+      L("기록·메시지·사진 같은 증거와 본 사람의 연락처를 함께 준비합니다.", "Ihanda ang ebidensya tulad ng tala, mensahe at litrato, at contact ng saksi.", "เตรียมหลักฐาน เช่น บันทึก ข้อความ รูปภาพ และเบอร์ติดต่อพยาน", "Chuẩn bị bằng chứng như ghi chép, tin nhắn, ảnh và số liên lạc của nhân chứng.")
+    ]},
+    { t: "p", x: L("과태료나 처벌은 회사가 법을 지키도록 하기 위한 것입니다. 무엇보다 중요한 것은 피해를 빨리 멈추고, 같은 일이 다시 일어나지 않게 하는 것입니다.",
+      "Ang multa at parusa ay para sumunod ang kumpanya sa batas. Pinakamahalaga ang mabilis na pagpapatigil sa pinsala at hindi na pag-uulit nito.",
+      "ค่าปรับและการลงโทษมีไว้ให้บริษัทปฏิบัติตามกฎหมาย สิ่งสำคัญที่สุดคือหยุดความเสียหายให้เร็ว และไม่ให้เกิดซ้ำ",
+      "Tiền phạt và chế tài là để công ty tuân thủ luật. Quan trọng nhất là chấm dứt nhanh tổn hại và không để lặp lại.") }
+  ]);
+
+  // ---- 일부 작업 단원 소폭 보강 ----
+  add("w-weld", [
+    { t: "def",
+      k: L("아크 눈병 (용접 섬광)", "Arc eye (welding flash)", "ตาอักเสบจากแสงเชื่อม", "Viêm mắt do hồ quang"),
+      v: L("보안면 없이 잠깐만 봐도, 몇 시간 뒤 밤에 눈에 모래가 들어간 것처럼 아프고 눈물이 납니다. 옆 사람의 용접 빛도 위험하니 차광막 안쪽을 보지 않습니다. 용접면은 전류에 맞는 차광번호(보통 10~13번)를 씁니다.",
+        "Kahit saglit lang tingnan nang walang face shield, makalipas ang ilang oras sa gabi, sasakit ang mata na parang may buhangin at magluluha. Delikado rin ang liwanag ng katabi, kaya huwag tumingin sa loob ng screen. Gumamit ng shade number na angkop sa current (karaniwan 10–13).",
+        "แม้มองแป๊บเดียวโดยไม่ใส่กระบังหน้า ไม่กี่ชั่วโมงต่อมาตอนกลางคืนจะปวดตาเหมือนมีทรายและน้ำตาไหล แสงเชื่อมของคนข้าง ๆ ก็อันตราย อย่ามองเข้าไปในม่านกันแสง ใช้หน้ากากเชื่อมเบอร์กรองแสงตามกระแสไฟ (ปกติ 10–13)",
+        "Chỉ nhìn chốc lát không mặt nạ, vài giờ sau vào ban đêm mắt đau như có cát và chảy nước mắt. Ánh hàn của người bên cạnh cũng nguy hiểm, không nhìn vào trong tấm chắn. Mặt nạ hàn dùng số lọc sáng phù hợp dòng điện (thường 10–13).") }
+  ]);
+  add("w-6", [
+    { t: "note", x: L("2m 이상 높이에서 난간이 없으면 안전대를 씁니다. 안전대 고리는 허리보다 높은 튼튼한 곳에 걸고, 몸통을 감싸는 그네식이 더 안전합니다.",
+      "Sa taas na 2m pataas na walang barandilya, gumamit ng safety harness. Ikabit ang hook sa matibay na lugar na mas mataas sa baywang; mas ligtas ang full-body harness.",
+      "ที่สูง 2 ม. ขึ้นไปที่ไม่มีราวกั้น ต้องใช้เข็มขัดนิรภัย คล้องตะขอไว้ที่จุดแข็งแรงที่สูงกว่าเอว แบบเต็มตัวปลอดภัยกว่า",
+      "Ở độ cao từ 2m không có lan can phải dùng dây an toàn. Móc vào chỗ chắc chắn cao hơn thắt lưng; loại toàn thân an toàn hơn.") }
+  ], ["산업안전보건기준에 관한 규칙 제42조(추락의 방지), 제44조(안전대의 부착설비 등)"]);
+  add("w-confined", [
+    { t: "p", x: L("질식사고에서는 쓰러진 동료를 구하러 들어간 사람까지 함께 숨지는 일이 많습니다. 밀폐공간 작업 때는 밖에서 지켜보는 감시인을 꼭 두고, 안에 있는 사람과 계속 연락합니다.",
+      "Sa aksidente ng pagka-suffocate, madalas namamatay rin ang pumasok para tumulong. Laging maglagay ng tagabantay sa labas at makipag-ugnayan sa nasa loob.",
+      "ในอุบัติเหตุขาดอากาศ คนที่เข้าไปช่วยเพื่อนมักเสียชีวิตไปด้วย งานในที่อับอากาศต้องมีผู้เฝ้าระวังอยู่ข้างนอกเสมอและติดต่อกับคนข้างในตลอด",
+      "Trong tai nạn ngạt khí, người vào cứu đồng nghiệp cũng thường tử vong theo. Làm trong không gian kín phải có người giám sát bên ngoài và liên lạc liên tục với người bên trong.") }
+  ]);
+})();
+
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
 const UI2 = {
   nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
@@ -2552,6 +3147,7 @@ const TRACK = (() => {
   setInterval(() => {
     if (!cur || document.hidden || Date.now() - lastAct > IDLE * 1000) return;
     const s = secs(); s[cur] = (s[cur] || 0) + TICK; set("secs", s);
+    const w = get("wsecs", {}); w[cur] = (w[cur] || 0) + TICK; set("wsecs", w);   // 이번 주 읽은 시간
   }, TICK * 1000);
   const lessonMin = id => Math.round((secs()[id] || 0) / 60);
   const totalMin = () => Math.round(Object.values(secs()).reduce((a, b) => a + b, 0) / 60);
@@ -2575,7 +3171,8 @@ const TRACK = (() => {
     send,
     setCurrent(id, title) { if (cur && cur !== id) leave(cur, curTitle); cur = id; curTitle = title || ""; lastAct = Date.now(); },
     lessonMin, totalMin, markSent,
-    lessonSecs: id => secs()[id] || 0
+    lessonSecs: id => secs()[id] || 0,
+    weekSecs: id => get("wsecs", {})[id] || 0
   };
 })();
 
@@ -2765,6 +3362,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
   if (prevWk !== WK.id) {
     if (prevWk !== null) done = {};
     store.set("wk", WK.id); store.set("done", done); store.set("wkMin0", TRACK.totalMin());
+    store.set("wsecs", {});                                         // 이번 주 읽은 시간은 0부터 다시 셈
   }
   const wHist = () => store.get("wkHist", {});
   const wDone = () => WK.lessons.filter(a => done[a.lesson.id]).length;
@@ -2865,7 +3463,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       <p class="hint" id="waitHint" hidden style="text-align:center;margin-top:6px">${T(UI5.waitHint)}</p>`;
     // 최소 읽기 시간: 2분 (화면이 보이고 조작이 있을 때만 시간이 올라감)
     const MIN_SEC = 120, markEl = document.getElementById("mark"), hintEl = document.getElementById("waitHint");
-    const need = () => Math.max(0, MIN_SEC - TRACK.lessonSecs(l.id));
+    const need = () => Math.max(0, MIN_SEC - TRACK.weekSecs(l.id));
     const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const paint = () => {
       if (done[l.id] || !need()) { markEl.disabled = false; markEl.textContent = done[l.id] ? "✓ " + tx(UI.doneOn) : tx(UI.done); hintEl.hidden = true; return true; }
