@@ -2244,6 +2244,178 @@ function scene(k) {
   }));
 })();
 
+// 보완: 안전보건공단 「안전보건 교육 기본서 – 제조업」(2026) PART 3·부록(SIF 고위험요인)을 참고해 내용을 요약·재작성
+(() => {
+  const P2 = window.NEW_PARTS[1];
+  const find = id => { for (const p of window.NEW_PARTS) for (const l of p.lessons) if (l.id === id) return l; return null; };
+  const idx = (l, pred) => l.blocks.findIndex(pred);
+  const lastSrc = l => idx(l, b => b.t === "src");
+  const BOOK = "참고: 안전보건공단 「안전보건 교육 기본서 – 제조업」(2026) — 내용을 요약해 다시 씀";
+  const SIF = "참고: 고용노동부·안전보건공단 「제조업 등 사망사고 유발 SIF 고위험요인」 (비율은 해당 작업 사망사고 중 차지하는 비율)";
+  const addSrc = (l, items) => { const i = lastSrc(l); if (i >= 0) l.blocks[i].items = l.blocks[i].items.concat(items); else l.blocks.push({ t: "src", items }); };
+  const olAfter = (l, headTone) => l.blocks[idx(l, b => b.t === "h" && b.tone === headTone) + 1];
+
+  // ---------- 1. 새 단원: 제조업 사망사고 5대 유형 ----------
+  const five = {
+    id: "w-0", scene: "struck",
+    title: L("제조업 사망사고 5대 유형", "5 pangunahing uri ng nakamamatay na aksidente", "5 รูปแบบหลักของอุบัติเหตุถึงตายในโรงงาน", "5 loại tai nạn chết người chính trong sản xuất"),
+    blocks: [
+      { t: "lead", x: L(
+        "최근 3년('23~'25) 제조업 사망사고의 약 90%가 아래 다섯 가지로 일어났습니다. 판금 공장에서 하는 일도 모두 여기에 해당합니다.",
+        "Halos 90% ng mga namatay sa manufacturing sa nakaraang 3 taon ('23–'25) ay dahil sa limang ito. Kasama rito ang lahat ng trabaho sa sheet metal factory.",
+        "ราว 90% ของผู้เสียชีวิตในภาคการผลิต 3 ปีล่าสุด ('23–'25) เกิดจาก 5 รูปแบบนี้ งานในโรงงานแผ่นโลหะก็อยู่ในกลุ่มนี้ทั้งหมด",
+        "Khoảng 90% số ca tử vong trong ngành sản xuất 3 năm gần đây ('23–'25) do 5 loại dưới đây. Công việc ở xưởng gia công tấm kim loại đều thuộc các loại này.") },
+      { t: "ppe", items: [
+        ["i:pinch", L("① 끼임 26.7%", "① Naipit 26.7%", "① ถูกหนีบ 26.7%", "① Bị kẹp 26,7%"),
+          L("프레스·절곡기 금형, 롤러, 회전체. → 정비·청소 전 전원 차단·잠금, 면장갑 금지", "Die ng press/bending, roller, umiikot na bahagi. → Patayin at i-lock bago mag-ayos o maglinis; bawal ang cotton gloves", "แม่พิมพ์เครื่องเพรส/พับ ลูกกลิ้ง ชิ้นส่วนหมุน → ตัดไฟและล็อกก่อนซ่อม/ทำความสะอาด ห้ามถุงมือผ้า", "Khuôn máy dập/chấn, trục cán, bộ phận quay. → Ngắt điện, khóa trước khi sửa, vệ sinh; cấm găng vải")],
+        ["i:struck", L("② 맞음·깔림 21.7%", "② Tinamaan/nadaganan 21.7%", "② ถูกกระแทก/ทับ 21.7%", "② Bị đập/đè 21,7%"),
+          L("떨어지는 판재 묶음, 깨진 숫돌, 무너진 적재물. → 인양물 아래 출입금지, 낮게 쌓기, 덮개", "Nahulog na bundle ng sheet, basag na disc, gumuhong salansan. → Bawal sa ilalim ng karga, mababang salansan, takip", "มัดแผ่นโลหะตก หินเจียรแตก กองของถล่ม → ห้ามอยู่ใต้ของที่ยก กองให้ต่ำ ติดฝาครอบ", "Bó tấm rơi, đá mài vỡ, hàng xếp đổ. → Cấm đứng dưới vật nâng, xếp thấp, có nắp che")],
+        ["i:fall", L("③ 떨어짐 19.4%", "③ Nahulog 19.4%", "③ ตกจากที่สูง 19.4%", "③ Ngã cao 19,4%"),
+          L("사다리, 지붕, 트럭 적재함, 난간 없는 곳. → 난간·발판, 안전모, 물건 들고 오르지 않기", "Hagdan, bubong, karga ng trak, walang barandilya. → Barandilya at plataporma, helmet, huwag umakyat na may dala", "บันได หลังคา กระบะรถบรรทุก ที่ไม่มีราวกั้น → ราวกั้นและนั่งร้าน หมวกนิรภัย ไม่ถือของขึ้นบันได", "Thang, mái nhà, thùng xe tải, nơi không lan can. → Lan can, sàn thao tác, mũ, không cầm đồ khi leo")],
+        ["i:fire", L("④ 화재·폭발 12.4%", "④ Sunog/pagsabog 12.4%", "④ ไฟไหม้/ระเบิด 12.4%", "④ Cháy/nổ 12,4%"),
+          L("용접 불티, 가스 누출, 드럼 절단. → 불티 방지포·소화기, 가연물 치우기", "Spark sa welding, tagas ng gas, pagputol ng drum. → Fire blanket at extinguisher, alisin ang madaling masunog", "ประกายไฟเชื่อม ก๊าซรั่ว ตัดถัง → ผ้ากันไฟและถังดับเพลิง เก็บวัสดุติดไฟ", "Tia lửa hàn, rò khí, cắt thùng phuy. → Bạt chống cháy, bình chữa cháy, dọn vật dễ cháy")],
+        ["i:collide", L("⑤ 부딪힘 9.3%", "⑤ Nabangga 9.3%", "⑤ ถูกชน 9.3%", "⑤ Va chạm 9,3%"),
+          L("지게차, 크레인 인양물. → 전용 통로·유도자, 제한속도, 인양물에서 떨어지기", "Forklift, karga ng crane. → Sariling daanan at signal person, speed limit, lumayo sa karga", "รถยก ของที่เครนยก → ทางเดินแยกและผู้ให้สัญญาณ จำกัดความเร็ว อยู่ห่างของที่ยก", "Xe nâng, vật cẩu. → Lối đi riêng, người xi nhan, giới hạn tốc độ, tránh xa vật cẩu")]
+      ]},
+      { t: "note", x: L(
+        "이어지는 단원에서 각 작업별로 자세히 배웁니다. 위험하다고 느끼면 작업을 멈추고 관리자에게 말하세요.",
+        "Sa mga susunod na aralin, matututunan ito nang detalyado para sa bawat trabaho. Kung pakiramdam mo ay delikado, huminto at sabihin sa supervisor.",
+        "บทถัดไปจะเรียนรายละเอียดตามแต่ละงาน ถ้ารู้สึกว่าอันตราย ให้หยุดงานและแจ้งหัวหน้า",
+        "Các bài tiếp theo sẽ học chi tiết từng công việc. Thấy nguy hiểm thì dừng việc và báo quản lý.") },
+      { t: "src", items: ["고용노동부 산업재해 현황 통계(제조업 사고사망, 2023~2025년)", BOOK] }
+    ]
+  };
+  P2.lessons.unshift(five);
+
+  // ---------- 2. 정비·청소 (비정형 작업) ----------
+  const w1 = find("w-1");
+  if (w1) {
+    const keepPhoto = w1.blocks.filter(b => b.t === "photo");
+    w1.blocks = keepPhoto.concat([
+      { t: "stat", n: "56.6%", x: L(
+        "이물질 제거·청소 중 사망사고에서 '설비 전원을 끄지 않은 경우'의 비율. 정비·수리 중 사망사고에서는 38.3%입니다.",
+        "Bahagi ng 'hindi pinatay ang makina' sa mga namatay habang naglilinis o nag-aalis ng bara. 38.3% naman sa pag-aayos at maintenance.",
+        "สัดส่วน 'ไม่ตัดไฟเครื่อง' ในอุบัติเหตุถึงตายขณะทำความสะอาด/เอาสิ่งแปลกปลอมออก ส่วนงานซ่อมบำรุงอยู่ที่ 38.3%",
+        "Tỷ lệ 'không ngắt điện thiết bị' trong các ca tử vong khi vệ sinh, gỡ vật lạ. Khi sửa chữa, bảo trì là 38,3%.") },
+      { t: "def",
+        k: L("LOTO (잠금·표지)", "LOTO (Lock Out · Tag Out)", "LOTO (ล็อกและติดป้าย)", "LOTO (Khóa · Treo thẻ)"),
+        v: L("전원 스위치를 끄고 내 자물쇠로 잠근 뒤(Lock Out) '점검 중·조작금지' 표지를 거는 것(Tag Out)입니다. 열쇠는 작업하는 내가 가지고 있습니다.",
+          "Patayin ang switch, i-lock gamit ang sarili mong kandado (Lock Out), at isabit ang karatulang 'May inaayos – Huwag paandarin' (Tag Out). Ikaw ang may hawak ng susi.",
+          "ปิดสวิตช์ไฟ ล็อกด้วยกุญแจของตัวเอง (Lock Out) แล้วแขวนป้าย 'กำลังซ่อม ห้ามเปิด' (Tag Out) ผู้ทำงานเป็นผู้เก็บกุญแจเอง",
+          "Tắt công tắc nguồn, khóa bằng ổ khóa của mình (Lock Out) rồi treo thẻ 'Đang sửa – Cấm vận hành' (Tag Out). Người làm việc tự giữ chìa khóa.") },
+      { t: "h", x: H_POINT, tone: "bad" },
+      { t: "ol", tone: "bad", items: [
+        L("전원을 끄지 않고 걸린 판재·스크랩을 빼거나 청소함", "Inalis ang naipit na sheet o scrap, o naglinis, nang hindi pinapatay ang makina", "เอาแผ่นโลหะหรือเศษที่ติดออก หรือทำความสะอาด โดยไม่ตัดไฟ", "Gỡ tấm, phế liệu bị kẹt hoặc vệ sinh mà không ngắt điện"),
+        L("작업 중인 줄 모르는 다른 사람이 스위치를 켬 (사망사고의 약 11%)", "Pinaandar ng ibang tao na hindi alam na may nagtatrabaho (mga 11% ng namatay)", "คนอื่นที่ไม่รู้ว่ามีคนทำงานอยู่กดเปิดสวิตช์ (ราว 11% ของผู้เสียชีวิต)", "Người khác không biết có người đang làm đã bật công tắc (khoảng 11% ca tử vong)"),
+        L("들어 올린 슬라이드·금형·설비가 갑자기 내려옴 (11.5%)", "Biglang bumaba ang itinaas na slide, die o makina (11.5%)", "สไลด์ แม่พิมพ์ หรือเครื่องที่ยกไว้ตกลงมากะทันหัน (11.5%)", "Đầu trượt, khuôn, thiết bị đang nâng bất ngờ hạ xuống (11,5%)"),
+        L("안전장치를 떼거나 끄고 작업함", "Tinanggal o pinatay ang safety device habang nagtatrabaho", "ถอดหรือปิดอุปกรณ์นิรภัยแล้วทำงาน", "Tháo hoặc tắt thiết bị an toàn khi làm việc"),
+        L("난간 없는 높은 곳에서 청소하다 떨어짐", "Nahulog habang naglilinis sa mataas na lugar na walang barandilya", "ทำความสะอาดที่สูงที่ไม่มีราวกั้นแล้วตก", "Ngã khi vệ sinh ở chỗ cao không có lan can")
+      ]},
+      { t: "h", x: H_DO, tone: "do" },
+      { t: "ol", tone: "do", items: [
+        L("정비·수리·금형 교체·청소·이물질 제거는 반드시 기계를 멈추고 전원을 끈 뒤 합니다.", "Laging patigilin at patayin ang makina bago mag-ayos, magpalit ng die, maglinis o mag-alis ng bara.", "ซ่อม เปลี่ยนแม่พิมพ์ ทำความสะอาด เอาสิ่งแปลกปลอมออก ต้องหยุดเครื่องและตัดไฟก่อนทุกครั้ง", "Sửa chữa, thay khuôn, vệ sinh, gỡ vật lạ phải dừng máy và ngắt điện trước."),
+        L("조작부에 내 자물쇠를 채우고 '점검 중·조작금지' 표지를 겁니다 (LOTO). 열쇠는 내가 가지고 있습니다.", "I-lock ang control gamit ang sarili mong kandado at isabit ang karatulang 'May inaayos' (LOTO). Ikaw ang may hawak ng susi.", "ล็อกแผงควบคุมด้วยกุญแจของตัวเองและแขวนป้าย 'กำลังซ่อม ห้ามเปิด' (LOTO) เก็บกุญแจไว้เอง", "Khóa bảng điều khiển bằng ổ khóa của mình và treo thẻ 'Đang sửa – Cấm vận hành' (LOTO). Tự giữ chìa khóa."),
+        L("함께 일하는 사람과 신호·연락 방법을 미리 정하고, 다시 켤 때는 모두 물러났는지 확인합니다.", "Pagkasunduan muna ang senyas sa kasama; bago paandarin muli, tiyaking nakalayo na ang lahat.", "ตกลงสัญญาณกับผู้ร่วมงานไว้ก่อน และก่อนเปิดเครื่องอีกครั้งให้ตรวจว่าทุกคนออกห่างแล้ว", "Thống nhất trước cách ra tín hiệu với người cùng làm; trước khi bật lại, xác nhận mọi người đã tránh xa."),
+        L("들어 올린 슬라이드·금형 아래에는 안전블록·고임목을 받치고, 필요하면 크레인·레버풀러로 한 번 더 지지합니다.", "Lagyan ng safety block o wedge ang ilalim ng itinaas na slide o die; kung kailangan, suportahan pa ng crane o lever hoist.", "ใต้สไลด์หรือแม่พิมพ์ที่ยกไว้ให้ใส่บล็อกนิรภัยหรือหมอนรอง และถ้าจำเป็นให้ใช้เครนหรือรอกโยกช่วยรับอีกชั้น", "Kê khối an toàn, nêm dưới đầu trượt, khuôn đang nâng; nếu cần, đỡ thêm bằng cầu trục hoặc pa lăng lắc tay."),
+        L("안전장치(광선식 장치·연동 문 등)를 임의로 떼거나 끄지 않습니다. 고장 나면 바로 알립니다.", "Huwag tanggalin o patayin ang safety device (light guard, interlock door). Kapag sira, sabihin agad.", "ห้ามถอดหรือปิดอุปกรณ์นิรภัย (ม่านแสง ประตูอินเตอร์ล็อก) เอง ถ้าเสียให้แจ้งทันที", "Không tự tháo, tắt thiết bị an toàn (rèm quang, cửa liên động). Hỏng thì báo ngay."),
+        L("높은 곳 청소는 난간 있는 작업발판이나 고소작업대에서 하고, 어려우면 안전대를 겁니다.", "Sa paglilinis sa mataas, gumamit ng plataporma na may barandilya o aerial work platform; kung hindi puwede, magsuot ng safety harness.", "ทำความสะอาดที่สูงให้ใช้นั่งร้านที่มีราวกั้นหรือรถกระเช้า ถ้าไม่ได้ให้คล้องเข็มขัดนิรภัย", "Vệ sinh chỗ cao dùng sàn thao tác có lan can hoặc xe nâng người; nếu không được thì móc dây an toàn.")
+      ]},
+      { t: "src", items: ["산업안전보건기준에 관한 규칙 제92조(정비 등의 작업 시의 운전정지 등), 제93조(방호장치의 해체 금지), 제104조(금형조정작업의 위험 방지)", "고용노동부 산업재해 현황 통계(제조업 사고사망, 2023~2025년)", SIF + " — 정비·수리·교체·조정, 이물질 제거·청소"] }
+    ]);
+  }
+
+  // ---------- 3. 천정크레인 ----------
+  const cr = SHEET.crane;
+  if (cr) {
+    cr.blocks[idx(cr, b => b.t === "chk")].items.push(
+      L("슬링·샤클·클램프가 닳거나 휘거나 찢어지지 않았는지 — 폐기 기준에 해당하면 바로 교체", "Walang pudpod, baluktot o punit ang sling, shackle at clamp — palitan agad kapag pasok sa pamantayan ng pagtapon", "สายยก สเกน แคลมป์ ไม่สึก ไม่งอ ไม่ขาด — ถ้าเข้าเกณฑ์ทิ้งให้เปลี่ยนทันที", "Cáp vải, ma ní, kẹp không mòn, cong, rách — đến tiêu chuẩn loại bỏ thì thay ngay"));
+    olAfter(cr, "bad").items = [
+      L("닳거나 변형된 줄걸이 용구가 끊어져 맞음 (크레인 사망사고의 18.2%)", "Naputol ang pudpod o baluktot na sling at tinamaan (18.2% ng namatay sa crane)", "อุปกรณ์ผูกยึดที่สึกหรืองอขาดแล้วกระแทก (18.2% ของผู้เสียชีวิตจากเครน)", "Dụng cụ buộc mòn, biến dạng bị đứt, rơi trúng (18,2% ca tử vong do cẩu)"),
+      L("운전자가 인양물 경로를 다 보지 못해 사람을 침 (17.6%)", "Hindi nakita ng operator ang buong daanan ng karga at may tinamaan (17.6%)", "ผู้ควบคุมมองไม่เห็นเส้นทางของที่ยกทั้งหมด จึงชนคน (17.6%)", "Người điều khiển không nhìn hết đường đi của vật cẩu, đâm vào người (17,6%)"),
+      L("한 줄로 걸어 긴 판재·파이프가 미끄러져 빠짐 (16.4%)", "Isang sling lang kaya dumulas ang mahabang sheet o tubo (16.4%)", "ผูกจุดเดียว แผ่นยาวหรือท่อลื่นหลุด (16.4%)", "Buộc một dây nên tấm dài, ống trượt tuột (16,4%)"),
+      L("줄걸이가 훅에서 빠짐 — 해지장치 없음·고장 (10.7%)", "Kumalas ang sling sa hook — walang o sira ang safety latch (10.7%)", "สายหลุดจากตะขอ — ไม่มีหรือสลักกันหลุดเสีย (10.7%)", "Dây tuột khỏi móc — không có hoặc hỏng chốt an toàn (10,7%)"),
+      L("정격하중을 넘겨 들거나 인양물 아래·옆을 지나가다 맞음", "Lumampas sa rated load, o tinamaan habang dumadaan sa ilalim o tabi ng karga", "ยกเกินพิกัด หรือเดินผ่านใต้/ข้างของที่ยกแล้วถูกกระแทก", "Nâng quá tải, hoặc bị trúng khi đi dưới, cạnh vật cẩu"),
+      L("인양물을 손으로 잡고 따라가다 기계·벽 사이에 끼임", "Naipit sa pagitan ng makina at pader habang hinahawakan ang karga", "จับของที่ยกเดินตามแล้วถูกหนีบระหว่างเครื่องกับผนัง", "Cầm vật nâng đi theo bị kẹp giữa máy và tường"),
+      L("마그넷 리프터 전원이 끊겨 판재가 떨어짐", "Nahulog ang sheet dahil nawalan ng kuryente ang magnet lifter", "ไฟฟ้าของแม่เหล็กยกดับ แผ่นโลหะตก", "Mất điện nam châm nâng làm tấm rơi"),
+      L("크레인 상부 레일을 점검하다 떨어짐", "Nahulog habang sinusuri ang itaas na riles ng crane", "ตกขณะตรวจรางด้านบนของเครน", "Ngã khi kiểm tra ray trên của cầu trục")
+    ];
+    olAfter(cr, "do").items.push(
+      L("긴 판재·파이프는 두 줄걸이나 전용 리프팅 장비(빔·클램프)로 겁니다. 비스듬히 끌지 말고 수직으로 들어 올립니다.", "Ang mahabang sheet o tubo ay gamitan ng dalawang sling o lifting beam/clamp. Huwag hilahin nang pahilis; iangat nang patayo.", "แผ่นยาวหรือท่อให้ผูกสองจุดหรือใช้อุปกรณ์ยกเฉพาะ (คาน แคลมป์) ห้ามลากเฉียง ให้ยกขึ้นตรง ๆ", "Tấm dài, ống dùng hai dây hoặc thiết bị nâng chuyên dụng (dầm, kẹp). Không kéo xiên, nâng thẳng đứng."),
+      L("운전자는 인양물 전체 경로가 보이는 곳에서 무선 리모컨으로 떨어져서 조작합니다. 안 보이면 신호수를 둡니다.", "Ang operator ay nasa lugar na kita ang buong daanan at gumagamit ng wireless remote mula sa malayo. Kung hindi kita, maglagay ng signal person.", "ผู้ควบคุมอยู่ในจุดที่เห็นเส้นทางทั้งหมด และใช้รีโมตไร้สายจากระยะห่าง ถ้ามองไม่เห็นให้มีผู้ให้สัญญาณ", "Người điều khiển đứng nơi thấy toàn bộ đường đi, dùng điều khiển không dây từ xa. Không thấy thì bố trí người xi nhan."),
+      L("상부 레일·주행로 점검은 전원을 끄고, 점검통로에서 안전대를 걸고 합니다.", "Patayin ang kuryente at magsuot ng safety harness sa inspection walkway kapag sinusuri ang itaas na riles.", "ตรวจรางด้านบนต้องตัดไฟ และคล้องเข็มขัดนิรภัยบนทางเดินตรวจ", "Kiểm tra ray trên phải ngắt điện và móc dây an toàn trên lối kiểm tra."));
+    addSrc(cr, ["산업안전보건기준에 관한 규칙 제163조(와이어로프 등 달기구의 안전계수), 제167조(늘어난 달기체인 등의 사용 금지)", SIF + " — 크레인 사용 작업", BOOK]);
+  }
+
+  // ---------- 4. 지게차 ----------
+  const fk = SHEET.fork;
+  if (fk) {
+    olAfter(fk, "bad").items = [
+      L("급경사·턱·바닥 요철에서 넘어지거나 부딪힘 (지게차 사망사고의 21.6%)", "Tumaob o bumangga sa matarik, gilid o lubak na sahig (21.6% ng namatay sa forklift)", "พลิกคว่ำหรือชนบนทางลาดชัน ขอบ หรือพื้นขรุขระ (21.6% ของผู้เสียชีวิตจากรถยก)", "Lật hoặc va chạm ở dốc gấp, gờ, sàn lồi lõm (21,6% ca tử vong do xe nâng)"),
+      L("포크·팔레트에 사람을 태우거나 지게차로 사람을 들어 올림 (21.6%)", "Isinakay o itinaas ang tao gamit ang fork o pallet (21.6%)", "ให้คนขึ้นงาหรือพาเลท หรือใช้รถยกยกคนขึ้นที่สูง (21.6%)", "Cho người đứng trên càng, pallet hoặc dùng xe nâng nâng người (21,6%)"),
+      L("짐 무게가 한쪽으로 치우쳐 판재가 떨어짐 (15.5%)", "Nakatagilid ang bigat ng karga kaya nahulog ang sheet (15.5%)", "น้ำหนักของเอียงไปข้างเดียว แผ่นโลหะตก (15.5%)", "Hàng lệch tải một bên làm tấm rơi (15,5%)"),
+      L("운전석을 떠난 사이 지게차가 굴러가 사람을 침 (10.8%)", "Umandar ang forklift habang wala sa upuan ang driver at may tinamaan (10.8%)", "ลงจากรถแล้วรถยกไหลไปชนคน (10.8%)", "Rời ghế lái, xe nâng tự trôi đâm vào người (10,8%)"),
+      L("짐에 가려 앞이 안 보이거나 후진하다 사람을 침", "Nabangga ang tao dahil natatakpan ang tanaw o habang umaatras", "ของบังสายตาหรือถอยหลังแล้วชนคน", "Hàng che tầm nhìn hoặc lùi xe đâm vào người")
+    ];
+    olAfter(fk, "do").items.push(
+      L("통로의 턱·구멍·흩어진 스크랩을 치워 바닥을 평평하게 하고, 지게차 통로와 사람 통로를 나눕니다.", "Alisin ang gilid, butas at kalat na scrap para pantay ang sahig; paghiwalayin ang daanan ng forklift at ng tao.", "เก็บขอบ หลุม และเศษที่เกลื่อนให้พื้นเรียบ และแยกทางรถยกกับทางคนเดิน", "Dọn gờ, hố, phế liệu rơi để sàn bằng phẳng; tách lối xe nâng và lối người đi."),
+      L("짐은 무게가 한쪽으로 쏠리지 않게 가운데 싣고, 팔레트·전용 받침을 씁니다.", "Ilagay ang karga sa gitna para hindi tumagilid ang bigat; gumamit ng pallet o tamang patungan.", "วางของตรงกลางไม่ให้น้ำหนักเอียง และใช้พาเลทหรือฐานรองเฉพาะ", "Đặt hàng ở giữa để không lệch tải; dùng pallet, giá đỡ chuyên dụng."),
+      L("높은 곳 작업에 지게차를 쓰지 않습니다. 고소작업대를 씁니다.", "Huwag gamitin ang forklift sa trabaho sa mataas. Gumamit ng aerial work platform.", "ห้ามใช้รถยกทำงานที่สูง ให้ใช้รถกระเช้า", "Không dùng xe nâng để làm việc trên cao. Dùng xe nâng người."),
+      L("운전석을 떠날 때는 포크를 바닥에 내리고, 브레이크를 걸고, 필요하면 고임목을 대고, 열쇠를 빼서 가지고 갑니다.", "Kapag aalis sa upuan: ibaba ang fork sa sahig, i-preno, lagyan ng wedge kung kailangan, at dalhin ang susi.", "เมื่อลงจากรถ วางงาลงพื้น ดึงเบรก ใส่หมอนหนุนล้อถ้าจำเป็น และถอดกุญแจติดตัวไป", "Khi rời ghế lái: hạ càng xuống sàn, kéo phanh, chèn bánh nếu cần, rút chìa khóa mang theo."));
+    addSrc(fk, [SIF + " — 지게차 사용 작업", BOOK]);
+  }
+
+  // ---------- 5. 높은 곳 작업: 트럭 상하차 ----------
+  const w6 = find("w-6");
+  if (w6) {
+    olAfter(w6, "bad").items.push(
+      L("트럭 적재함에서 판재를 싣고 묶다 미끄러져 떨어짐", "Nadulas at nahulog mula sa karga ng trak habang naglalagay at nagtatali ng sheet", "ลื่นตกจากกระบะรถบรรทุกขณะขนและมัดแผ่นโลหะ", "Trượt ngã từ thùng xe tải khi xếp, buộc tấm kim loại"));
+    olAfter(w6, "do").items.push(
+      L("트럭 상·하차는 적재함과 높이가 같은 상하차장이나 발판에서 하고, 안전모를 씁니다. 적재함 끝에 등을 지고 서지 않습니다.", "Magkarga sa loading dock o plataporma na kapantay ng trak, at magsuot ng helmet. Huwag tumalikod sa gilid ng karga.", "ขึ้นลงของรถบรรทุกที่ลานหรือแท่นที่สูงเท่ากระบะ และสวมหมวกนิรภัย อย่ายืนหันหลังให้ขอบกระบะ", "Bốc xếp ở bến hoặc sàn cao bằng thùng xe, đội mũ bảo hộ. Không đứng quay lưng ra mép thùng."),
+      L("사다리를 쓸 때는 안전모를 쓰고, 아래에 미끄럼 방지를 하거나 다른 사람이 잡아 줍니다.", "Kapag gumagamit ng hagdan, magsuot ng helmet at lagyan ng anti-slip ang paa o may humawak.", "ใช้บันไดต้องสวมหมวกนิรภัย และกันลื่นที่ขาบันไดหรือให้คนช่วยจับ", "Dùng thang phải đội mũ, chống trượt chân thang hoặc có người giữ."));
+    addSrc(w6, [BOOK]);
+  }
+
+  // ---------- 6. 밀폐공간: 알곤 배관 사례 ----------
+  const cf = find("w-confined");
+  if (cf) {
+    const wi = idx(cf, b => b.t === "warn");
+    cf.blocks.splice(wi, 0,
+      { t: "h", x: L("3단계 관리", "3 hakbang ng pamamahala", "การจัดการ 3 ขั้น", "Quản lý 3 bước"), tone: "do" },
+      { t: "ol", tone: "do", items: [
+        L("밀폐공간인지 평가합니다 — 사람이 머무르도록 만든 곳이 아니고 환기가 부족한 곳", "Suriin kung confined space — hindi ginawa para tirhan ng tao at kulang ang hangin", "ประเมินว่าเป็นที่อับอากาศหรือไม่ — ไม่ได้สร้างให้คนอยู่และอากาศถ่ายเทไม่พอ", "Đánh giá có phải không gian kín không — nơi không thiết kế cho người ở và thiếu thông gió"),
+        L("입구에 '출입금지' 표시를 합니다", "Lagyan ng karatulang 'Bawal pumasok' ang pasukan", "ติดป้าย 'ห้ามเข้า' ที่ทางเข้า", "Đặt biển 'Cấm vào' ở lối vào"),
+        L("들어갈 때는 허가를 받습니다 (출입허가제)", "Kumuha ng pahintulot bago pumasok (entry permit)", "ต้องได้รับอนุญาตก่อนเข้า (ระบบใบอนุญาตเข้า)", "Phải được cấp phép trước khi vào (chế độ giấy phép vào)")
+      ]},
+      { t: "def",
+        k: L("실제 사고: 알곤으로 채운 배관 속을 들여다보다 사망", "Totoong aksidente: namatay habang sinisilip ang loob ng tubo na puno ng argon", "อุบัติเหตุจริง: เสียชีวิตขณะเข้าไปดูในท่อที่อัดก๊าซอาร์กอน", "Tai nạn thật: tử vong khi chui vào xem ống chứa argon"),
+        v: L("TIG 용접 뒷면(백비드)을 확인하려고 알곤 가스를 채운 큰 배관에 들어간 작업자가 숨졌습니다. 나중에 같은 조건에서 재 보니 산소가 6~11%뿐이었습니다(정상 21%). 알곤은 냄새도 색도 없어 알아챌 수 없습니다. 알곤을 쓴 배관·탱크는 먼저 환기하고 산소를 잰 뒤 들어갑니다.",
+          "Namatay ang manggagawang pumasok sa malaking tubo na puno ng argon para tingnan ang back bead ng TIG weld. Nang sukatin sa parehong kondisyon, 6–11% lang ang oxygen (normal 21%). Walang amoy at kulay ang argon kaya hindi mo ito mapapansin. Pahanginan muna at sukatin ang oxygen bago pumasok sa tubo o tangke na ginamitan ng argon.",
+          "คนงานที่เข้าไปในท่อใหญ่ที่อัดก๊าซอาร์กอนเพื่อดูแนวเชื่อมด้านหลัง (TIG) เสียชีวิต เมื่อวัดในสภาพเดียวกันพบออกซิเจนเพียง 6–11% (ปกติ 21%) อาร์กอนไม่มีกลิ่นไม่มีสีจึงไม่รู้ตัว ท่อหรือถังที่ใช้อาร์กอนต้องระบายอากาศและวัดออกซิเจนก่อนเข้า",
+          "Một công nhân chui vào ống lớn chứa argon để kiểm tra mặt sau mối hàn TIG đã tử vong. Đo lại cùng điều kiện, oxy chỉ 6–11% (bình thường 21%). Argon không mùi, không màu nên không thể nhận ra. Ống, bồn đã dùng argon phải thông gió và đo oxy trước khi vào.") });
+    addSrc(cf, ["산업안전보건기준에 관한 규칙 제619조의2(산소 및 유해가스 농도의 측정), 제623조(감시인의 배치 등), 제641조 (2025.12.1. 개정: 측정장비 지급, 측정결과 기록, 사고 시 119 우선 신고)", BOOK + " (밀폐공간 질식재해 예방, 아르곤 치환 배관 재해사례)"]);
+  }
+
+  // ---------- 7. 용접: 알곤 질식 경고 ----------
+  const wd = SHEET.weld;
+  if (wd) {
+    const ni = idx(wd, b => b.t === "src");
+    wd.blocks.splice(ni, 0, { t: "warn", x: L(
+      "알곤·CO2는 공기보다 무거워 좁은 곳·구덩이·배관 안에 고입니다. 알곤으로 채운 배관이나 탱크 안에는 환기와 산소 측정 없이 절대 머리를 넣거나 들어가지 않습니다.",
+      "Mas mabigat ang argon at CO₂ kaysa hangin at naiipon sa makitid na lugar, hukay o loob ng tubo. Huwag kailanman ipasok ang ulo o pumasok sa tubo o tangke na may argon nang walang bentilasyon at pagsukat ng oxygen.",
+      "อาร์กอนและ CO₂ หนักกว่าอากาศ จะสะสมในที่แคบ หลุม หรือในท่อ ห้ามยื่นหัวหรือเข้าไปในท่อหรือถังที่อัดอาร์กอนโดยไม่ระบายอากาศและวัดออกซิเจนเด็ดขาด",
+      "Argon và CO₂ nặng hơn không khí, đọng lại ở chỗ hẹp, hố, trong ống. Tuyệt đối không thò đầu hoặc vào ống, bồn chứa argon khi chưa thông gió và đo oxy.") });
+  }
+
+  // ---------- 8. 회전하는 기계: 중복 정리 ----------
+  const w3 = find("w-3");
+  if (w3) {
+    const ol = olAfter(w3, "do");
+    const seen = new Set();
+    ol.items = ol.items.filter(i => { const k = i.ko.replace(/체인·풀리 등 /, "벨트·체인 등 "); if (seen.has(k)) return false; seen.add(k); return true; });
+    addSrc(w3, [BOOK]);
+  }
+})();
+
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
 const UI2 = {
   nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
