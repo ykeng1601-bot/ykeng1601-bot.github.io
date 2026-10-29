@@ -1672,28 +1672,56 @@ const SHEET = {
     ["산업안전보건기준에 관한 규칙 제234조(가스등의 용기), 제241조(화재위험작업 시의 준수사항), 제306조(교류아크용접기 등)", "산업안전보건기준에 관한 규칙 제32조(보호구), 제618조~(밀폐공간 작업)"],
     { note: L("용접 흄에 노출되는 사람은 특수건강진단 대상입니다.", "Ang nalalantad sa welding fume ay dapat sumailalim sa espesyal na health check-up.", "ผู้ที่สัมผัสควันเชื่อมต้องตรวจสุขภาพพิเศษ", "Người tiếp xúc khói hàn thuộc diện khám sức khỏe đặc biệt.") }),
 
-  grind: WK("w-grind", "grinder", L("핸드그라인더", "Hand grinder", "เครื่องเจียรมือ", "Máy mài cầm tay"),
+  grind: (() => { const g = WK("w-grind", "grinder", L("핸드그라인더", "Hand grinder", "เครื่องเจียรมือ", "Máy mài cầm tay"),
     [
-      L("덮개가 있고 단단히 고정되었는지", "May takip at mahigpit ang pagkakakabit", "มีฝาครอบและยึดแน่น", "Có nắp che và đã cố định chắc"),
-      L("숫돌·절단석에 금이나 이가 빠진 곳이 없는지, 최고사용속도가 그라인더보다 높은지", "Walang lamat o bungi ang disc, at mas mataas ang maximum speed nito kaysa sa grinder", "หินหรือใบตัดไม่มีรอยร้าวหรือบิ่น และความเร็วสูงสุดของใบสูงกว่าเครื่อง", "Đá mài, đá cắt không nứt, mẻ; tốc độ tối đa của đá cao hơn của máy"),
+      L("덮개가 있고 단단히 고정되었는지 (덮개는 자율안전확인 KCs 표시 제품)", "May takip at mahigpit ang pagkakakabit (takip na may KCs mark)", "มีฝาครอบและยึดแน่น (ฝาครอบเป็นสินค้าที่มีเครื่องหมาย KCs)", "Có nắp che và đã cố định chắc (nắp che có dấu KCs)"),
+      L("숫돌·절단석에 금이나 이가 빠진 곳이 없는지, 최고사용속도가 그라인더 회전수보다 높은지", "Walang lamat o bungi ang disc, at mas mataas ang maximum speed nito kaysa sa RPM ng grinder", "หินหรือใบตัดไม่มีรอยร้าวหรือบิ่น และความเร็วสูงสุดของใบสูงกว่ารอบของเครื่อง", "Đá mài, đá cắt không nứt, mẻ; tốc độ tối đa của đá cao hơn số vòng quay của máy"),
       L("전선 피복과 플러그가 상하지 않았는지", "Walang sira ang kable at plug", "สายไฟและปลั๊กไม่ชำรุด", "Dây điện và phích cắm không hư hỏng"),
-      L("보조 손잡이가 달려 있는지", "Nakakabit ang side handle", "มีด้ามจับเสริมติดอยู่", "Đã lắp tay cầm phụ")
+      L("보조 손잡이가 달려 있는지", "Nakakabit ang side handle", "มีด้ามจับเสริมติดอยู่", "Đã lắp tay cầm phụ"),
+      L("면장갑을 끼지 않았는지, 소매·끈이 늘어지지 않았는지", "Hindi naka-cotton gloves, at walang nakalawit na manggas o tali", "ไม่สวมถุงมือผ้าฝ้าย และแขนเสื้อหรือสายไม่ห้อยหลวม", "Không đeo găng tay vải sợi, tay áo và dây không lòng thòng")
     ],
     [
-      L("숫돌이 깨져 파편에 맞음", "Tinamaan ng piraso ng nabasag na disc", "หินแตกเศษกระเด็นใส่", "Đá vỡ, mảnh văng trúng"),
+      L("고속으로 도는 숫돌이 깨져 파편에 맞음 — 제조업 '맞음' 사망사고의 주요 원인", "Tinamaan ng piraso ng nabasag na disc na mabilis umiikot — pangunahing sanhi ng pagkamatay sa 'tinamaan'", "หินที่หมุนเร็วแตก เศษกระเด็นใส่ — สาเหตุหลักของการเสียชีวิตจาก 'ถูกวัตถุกระแทก'", "Đá quay tốc độ cao bị vỡ, mảnh văng trúng — nguyên nhân chính gây chết người do 'bị vật đập'"),
       L("절단석이 끼어 그라인더가 튕겨 나옴 (킥백)", "Tumalbog ang grinder dahil naipit ang cutting disc (kickback)", "ใบตัดติดขัดทำให้เครื่องดีดกลับ (คิกแบ็ก)", "Đá cắt bị kẹt làm máy giật ngược (kickback)"),
       L("덮개를 떼고 써서 손·다리가 베임", "Nahiwa ang kamay o binti dahil tinanggal ang takip", "ถอดฝาครอบแล้วใช้ มือหรือขาถูกบาด", "Tháo nắp che khi dùng, tay chân bị cắt"),
+      L("면장갑·소매가 회전하는 숫돌에 말려 들어감", "Naipulupot ang cotton gloves o manggas sa umiikot na disc", "ถุงมือผ้าหรือแขนเสื้อถูกหินที่หมุนดึงเข้าไป", "Găng tay vải, tay áo bị cuốn vào đá đang quay"),
+      L("작은 공작물을 손으로 잡고 갈다가 튕기거나 손이 숫돌에 닿음", "Tumalsik ang maliit na piyesa o tumama ang kamay sa disc dahil kamay lang ang humahawak", "จับชิ้นงานเล็กด้วยมือแล้วเจียร ชิ้นงานกระเด็นหรือมือโดนหิน", "Cầm phôi nhỏ bằng tay khi mài, phôi văng hoặc tay chạm đá"),
       L("돌아가는 상태로 내려놓아 그라인더가 움직임", "Ibinaba habang umiikot pa, kaya gumalaw ang grinder", "วางเครื่องลงขณะยังหมุน เครื่องดิ้นไป", "Đặt máy xuống khi còn quay, máy bị chạy đi"),
       L("불꽃이 눈에 튀거나 주변에 불이 남", "Tumalsik ang spark sa mata o nagkasunog sa paligid", "ประกายไฟเข้าตาหรือเกิดไฟไหม้รอบ ๆ", "Tia lửa bắn vào mắt hoặc gây cháy xung quanh")
     ],
     [
+      L("덮개는 절대 떼지 않습니다. 떼어야 하는 작업이라면 작업 방법을 바꾸도록 관리자에게 말합니다.", "Huwag kailanman tanggalin ang takip. Kung kailangan, sabihin sa supervisor para baguhin ang paraan ng trabaho.", "ห้ามถอดฝาครอบเด็ดขาด ถ้างานต้องถอด ให้แจ้งหัวหน้าเพื่อเปลี่ยนวิธีทำงาน", "Tuyệt đối không tháo nắp che. Nếu việc cần tháo, báo quản lý để đổi cách làm."),
       L("두 손으로 단단히 잡고, 몸은 숫돌 회전 방향 정면을 피합니다.", "Hawakan nang mahigpit ng dalawang kamay at umiwas sa harap ng direksyon ng ikot.", "จับแน่นด้วยสองมือ และไม่ยืนตรงแนวการหมุนของหิน", "Cầm chắc bằng hai tay, tránh đứng trước hướng quay của đá."),
       L("작업 전 1분, 숫돌을 바꾼 뒤 3분 이상 시운전하고, 측면용이 아닌 숫돌은 옆면으로 갈지 않습니다.", "Test run 1 minuto bago gamitin at 3 minuto pagkatapos magpalit; huwag gamitin ang gilid ng disc na hindi para doon.", "ทดลองเดิน 1 นาทีก่อนใช้ และ 3 นาทีหลังเปลี่ยนหิน ห้ามใช้ด้านข้างของหินที่ไม่ได้ออกแบบไว้", "Chạy thử 1 phút trước khi dùng, 3 phút sau khi thay đá; không mài bằng mặt bên của đá không dành cho mài bên."),
       L("숫돌 교체는 플러그를 뽑고 하며, 스위치를 눌린 채로 고정(잠금)해서 쓰지 않습니다.", "Tanggalin ang plug bago magpalit ng disc; huwag i-lock ang switch na naka-on.", "ถอดปลั๊กก่อนเปลี่ยนหิน และห้ามล็อกสวิตช์ค้างไว้", "Rút phích cắm khi thay đá; không khóa công tắc ở trạng thái bật."),
+      L("공작물은 바이스나 전용 지그로 단단히 고정하고, 손으로 잡고 갈지 않습니다.", "I-clamp nang mahigpit ang piyesa sa vise o jig; huwag hawakan ng kamay habang ginigiling.", "ยึดชิ้นงานให้แน่นด้วยปากกาจับหรือจิ๊กเฉพาะ ห้ามถือด้วยมือขณะเจียร", "Kẹp chặt phôi bằng ê-tô hoặc đồ gá chuyên dụng; không cầm tay khi mài."),
       L("회전이 완전히 멈춘 뒤 내려놓습니다.", "Ibaba lang kapag tuluyang huminto ang ikot.", "วางลงหลังจากหยุดหมุนสนิทแล้ว", "Chỉ đặt xuống khi đá đã dừng hẳn."),
-      L("보안경과 보안면을 함께 쓰고, 귀마개·장갑을 착용합니다. 공작물은 바이스로 고정합니다.", "Magsuot ng goggles at face shield, ear plug at gloves. I-clamp ang piyesa sa vise.", "สวมทั้งแว่นตาและกระบังหน้า ที่อุดหู ถุงมือ และยึดชิ้นงานด้วยปากกาจับ", "Đeo cả kính và mặt nạ bảo hộ, nút tai, găng tay; kẹp phôi bằng ê-tô.")
+      L("보안경과 보안면을 함께 쓰고 귀마개를 합니다. 면장갑 대신 손에 맞는 가죽장갑을 끼고 소매를 여밉니다.", "Magsuot ng goggles at face shield, at ear plug. Gumamit ng leather gloves na sukat sa kamay sa halip na cotton gloves, at ayusin ang manggas.", "สวมทั้งแว่นตาและกระบังหน้า และที่อุดหู ใช้ถุงมือหนังที่พอดีมือแทนถุงมือผ้า และรัดแขนเสื้อให้เรียบร้อย", "Đeo cả kính và mặt nạ bảo hộ, nút tai. Dùng găng tay da vừa tay thay cho găng vải sợi, cài gọn tay áo."),
+      L("불꽃이 사람이나 가연물 쪽으로 튀지 않게 방향을 잡고, 주변 가연물을 치우거나 가림막을 칩니다.", "Itutok ang spark palayo sa tao at madaling masunog; alisin ang madaling masunog o maglagay ng harang.", "หันประกายไฟไม่ให้ไปทางคนหรือวัสดุติดไฟ เก็บวัสดุติดไฟหรือตั้งฉากกั้น", "Hướng tia lửa tránh người và vật dễ cháy; dọn vật dễ cháy hoặc dựng tấm chắn.")
     ],
-    ["산업안전보건기준에 관한 규칙 제122조(연삭숫돌: 덮개, 시운전, 최고사용회전속도, 측면 사용 금지)", "산업안전보건기준에 관한 규칙 제32조(보호구)"]),
+    ["산업안전보건기준에 관한 규칙 제122조(연삭숫돌: 덮개, 시운전, 최고사용회전속도, 측면 사용 금지), 제32조(보호구), 제241조(화재위험작업)",
+     "산업안전보건법 제89조(자율안전확인: 연삭기 덮개), 시행규칙 별표 6(301 보안경 착용 — 그라인더작업장 입구)",
+     "참고: 안전보건공단 「안전보건 교육 기본서 – 제조업」(2026) 제조업 사망재해 예방대책(물체에 맞음·끼임, 선반 연마작업) — 내용을 요약해 다시 씀"],
+    { lead: L(
+      "핸드그라인더 숫돌은 1분에 1만 번 넘게 돕니다. 숫돌이 깨지면 파편이 총알처럼 날아갑니다. 덮개와 보안경이 생명을 지킵니다.",
+      "Ang disc ng hand grinder ay umiikot nang mahigit 10,000 beses kada minuto. Kapag nabasag, lumilipad ang piraso na parang bala. Ang takip at goggles ang nagliligtas ng buhay.",
+      "หินของเครื่องเจียรมือหมุนเกิน 10,000 รอบต่อนาที ถ้าแตก เศษจะพุ่งเหมือนกระสุน ฝาครอบและแว่นตาช่วยรักษาชีวิต",
+      "Đá của máy mài cầm tay quay hơn 10.000 vòng mỗi phút. Khi vỡ, mảnh văng như đạn. Nắp che và kính bảo hộ giữ mạng sống của bạn.") });
+    const at = g.blocks.findIndex(b => b.t === "h" && b.tone === "bad");
+    g.blocks.splice(1, 0, { t: "stat", n: "21.7%", x: L(
+      "최근 3년('23~'25) 제조업 사망사고 중 물체에 맞음·깔림·뒤집힘의 비율. 고속 회전체(숫돌) 파손이 주요 원인입니다.",
+      "Bahagi ng 'tinamaan, nadaganan, tumaob' sa mga namatay sa manufacturing sa nakaraang 3 taon ('23–'25). Pangunahing sanhi ang pagkabasag ng mabilis na umiikot na disc.",
+      "สัดส่วนการเสียชีวิตจากถูกวัตถุกระแทก ถูกทับ พลิกคว่ำ ในภาคการผลิต 3 ปีล่าสุด ('23–'25) สาเหตุหลักคือหินที่หมุนเร็วแตก",
+      "Tỷ lệ chết do bị vật đập, đè, lật trong ngành sản xuất 3 năm gần đây ('23–'25). Nguyên nhân chính là vỡ vật quay tốc độ cao (đá mài).") });
+    g.blocks.splice(at + 1, 0, { t: "signs", cls: "must",
+      x: L("그라인더 작업 · 반드시 착용", "Trabaho sa grinder · Dapat isuot", "งานเจียร · ต้องสวมใส่", "Mài · Bắt buộc đeo"),
+      items: [
+        ["301", L("보안경", "Safety goggles", "แว่นตานิรภัย", "Kính bảo hộ")],
+        ["304", L("보안면", "Face shield", "กระบังหน้า", "Mặt nạ che mặt")],
+        ["306", L("귀마개", "Ear plug", "ที่อุดหู", "Nút bịt tai")],
+        ["308", L("안전장갑(가죽)", "Gloves (leather)", "ถุงมือ (หนัง)", "Găng tay (da)")]
+      ]});
+    return g; })(),
 
   crane: WK("w-crane", "crane", L("천정크레인과 줄걸이", "Overhead crane at rigging", "เครนเหนือศีรษะและการผูกยึด", "Cầu trục và móc buộc"),
     [
