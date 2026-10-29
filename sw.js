@@ -1,4 +1,4 @@
-const CACHE = "safety-edu-v8";
+const CACHE = "safety-edu-v9";
 const FILES = [
 "./",
 "index.html",

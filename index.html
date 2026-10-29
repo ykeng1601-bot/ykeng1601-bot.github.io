@@ -2545,7 +2545,7 @@ const TRACK = (() => {
   }
 
   // ---- 학습 시간: 화면이 보이고 최근 90초 안에 조작이 있을 때만 15초씩 더함 ----
-  const TICK = 15, IDLE = 90;
+  const TICK = 5, IDLE = 90;
   let cur = null, curTitle = "", lastAct = Date.now();
   ["scroll", "touchstart", "pointerdown", "keydown", "wheel"].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));
   const secs = () => get("secs", {});
@@ -2574,7 +2574,8 @@ const TRACK = (() => {
     enabled: () => !!url(),
     send,
     setCurrent(id, title) { if (cur && cur !== id) leave(cur, curTitle); cur = id; curTitle = title || ""; lastAct = Date.now(); },
-    lessonMin, totalMin, markSent
+    lessonMin, totalMin, markSent,
+    lessonSecs: id => secs()[id] || 0
   };
 })();
 
@@ -2603,6 +2604,13 @@ const UI3 = {
 };
 
 // 주간 교육(매주 6단원, 7주 반복) + 오늘의 안전 한마디
+const UI5 = {
+  wait: L("{t} 더 읽으면 체크할 수 있어요", "Puwedeng i-tsek pagkatapos ng {t} pa", "อ่านอีก {t} แล้วจึงกดได้", "Đọc thêm {t} nữa thì mới đánh dấu được"),
+  waitHint: L("한 단원은 최소 2분 이상 읽어야 합니다. 화면을 오래 그대로 두면 시간이 멈추니, 넘기면서 읽어 주세요.",
+    "Kailangang basahin ang bawat aralin nang hindi bababa sa 2 minuto. Humihinto ang oras kapag matagal na hindi ginagalaw ang screen, kaya mag-scroll habang nagbabasa.",
+    "แต่ละบทต้องอ่านอย่างน้อย 2 นาที ถ้าปล่อยหน้าจอนิ่งนาน เวลาจะหยุดนับ ให้เลื่อนอ่านไปเรื่อย ๆ",
+    "Mỗi bài phải đọc ít nhất 2 phút. Để màn hình đứng yên lâu thì thời gian sẽ dừng, hãy vừa đọc vừa cuộn.")
+};
 const UI4 = {
   dailyTitle: L("오늘의 안전 한마디", "Paalala sa kaligtasan ngayon", "คำเตือนความปลอดภัยวันนี้", "Lời nhắc an toàn hôm nay"),
   weekTitle: L("이번 주 교육", "Aralin ngayong linggo", "บทเรียนสัปดาห์นี้", "Bài học tuần này"),
@@ -2729,6 +2737,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .weekcard .rows{margin:10px 0 8px}
 .weekcard .hint{margin:8px 0 0}
 .weekcard .wdone{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--ok-soft);color:var(--ink);font-weight:700}
+.mark:disabled{border-color:var(--line);color:var(--ink-2);cursor:not-allowed}
 .wtag{display:inline-block;margin:0 0 8px;padding:3px 10px;border-radius:999px;background:#F5B800;color:#15191F;font-weight:800;font-size:12.5px}
 </style>`);
 
@@ -2852,8 +2861,19 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     app.innerHTML = `<div class="crumb"><b>PART ${part.no}</b><span>${T(part.title)}</span></div>
       ${l.scene ? `<figure class="scenebox">${scene(l.scene)}</figure>` : ""}${WSET.has(l.id) ? `<span class="wtag">★ ${T(UI4.tag)}</span>` : ""}<h1 class="ltitle">${T(l.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(l.title.ko)}</p>` : ""}
       <div class="blocks">${l.blocks.map(block).join("")}${LSRC[l.id] ? block({ t: "src", items: LSRC[l.id] }) : ""}</div>
-      <button type="button" class="mark" id="mark" aria-pressed="${!!done[l.id]}">${done[l.id] ? "✓ " + T(UI.doneOn) : T(UI.done)}</button>`;
-    document.getElementById("mark").onclick = () => {
+      <button type="button" class="mark" id="mark" aria-pressed="${!!done[l.id]}">${done[l.id] ? "✓ " + T(UI.doneOn) : T(UI.done)}</button>
+      <p class="hint" id="waitHint" hidden style="text-align:center;margin-top:6px">${T(UI5.waitHint)}</p>`;
+    // 최소 읽기 시간: 2분 (화면이 보이고 조작이 있을 때만 시간이 올라감)
+    const MIN_SEC = 120, markEl = document.getElementById("mark"), hintEl = document.getElementById("waitHint");
+    const need = () => Math.max(0, MIN_SEC - TRACK.lessonSecs(l.id));
+    const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+    const paint = () => {
+      if (done[l.id] || !need()) { markEl.disabled = false; markEl.textContent = done[l.id] ? "✓ " + tx(UI.doneOn) : tx(UI.done); hintEl.hidden = true; return true; }
+      markEl.disabled = true; markEl.textContent = "⏱ " + tx(UI5.wait).replace("{t}", fmt(need())); hintEl.hidden = false; return false;
+    };
+    if (!paint()) lessonTimer = setInterval(() => { if (paint()) { clearInterval(lessonTimer); lessonTimer = null; } }, 1000);
+    markEl.onclick = () => {
+      if (!done[l.id] && need()) return;
       if (done[l.id]) delete done[l.id]; else { done[l.id] = 1; TRACK.markSent(l.id); TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length, min: TRACK.lessonMin(l.id), totalMin: TRACK.totalMin() }); }
       store.set("done", done);
       if (done[l.id] && WSET.has(l.id)) {
@@ -2973,7 +2993,9 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 
   app.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
 
+  let lessonTimer = null;
   function render() {
+    if (lessonTimer) { clearInterval(lessonTimer); lessonTimer = null; }
     document.documentElement.lang = lang;
     langsEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
     document.getElementById("brandTxt").textContent = tx(UI.brand);
