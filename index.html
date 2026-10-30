@@ -3071,6 +3071,106 @@ function scene(k) {
   ]);
 })();
 
+// PART 5 직장 내 괴롭힘·성희롱 보강 — 직접 작성
+(() => {
+  const add = window.ADD_MORE;
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+  const CASE = (k, v) => ({ t: "def", k, v });
+
+  // ---------- 직장 내 괴롭힘 ----------
+  add("p4-1", [
+    H("괴롭힘인지 판단하는 3가지", "3 batayan kung panliligalig ito", "3 เกณฑ์ตัดสินว่าเป็นการกลั่นแกล้ง", "3 tiêu chí xác định quấy rối"),
+    { t: "kv", rows: [
+      [L("① 우위를 이용", "① Paggamit ng kapangyarihan", "① ใช้ความได้เปรียบ", "① Lợi dụng ưu thế"), L("직급뿐 아니라 나이·근속·인원수·정규직 여부·한국어 실력처럼 관계에서 힘이 센 쪽도 포함합니다.", "Hindi lang posisyon—kasama ang edad, tagal sa trabaho, dami ng kakampi, regular na empleyado o galing sa Korean.", "ไม่ใช่แค่ตำแหน่ง แต่รวมถึงอายุ อายุงาน จำนวนพวก การเป็นพนักงานประจำ หรือความเก่งภาษาเกาหลี", "Không chỉ chức vụ mà cả tuổi, thâm niên, số đông, là nhân viên chính thức hay giỏi tiếng Hàn.")],
+      [L("② 업무상 적정 범위를 넘음", "② Lumampas sa makatwirang saklaw ng trabaho", "② เกินขอบเขตที่เหมาะสมของงาน", "② Vượt phạm vi công việc hợp lý"), L("일과 관계없거나, 필요 이상으로 심하거나, 방법이 사회 통념상 받아들일 수 없는 경우입니다.", "Walang kinalaman sa trabaho, sobra kaysa kailangan, o hindi katanggap-tanggap ang paraan.", "ไม่เกี่ยวกับงาน รุนแรงเกินจำเป็น หรือวิธีการที่สังคมยอมรับไม่ได้", "Không liên quan công việc, quá mức cần thiết, hoặc cách làm xã hội không chấp nhận được.")],
+      [L("③ 고통·환경 악화", "③ Pagdurusa o masamang kapaligiran", "③ ทำให้ทุกข์หรือสภาพงานแย่ลง", "③ Gây đau khổ, môi trường xấu đi"), L("몸이나 마음에 고통을 주거나, 일하기 힘든 분위기를 만든 경우입니다. 가해자의 의도와 상관없이 판단합니다.", "Nagdulot ng pisikal o emosyonal na sakit, o ginawang mahirap ang trabaho. Hindi mahalaga ang intensyon ng gumawa.", "ทำให้ทุกข์กายหรือใจ หรือทำให้บรรยากาศทำงานยาก ตัดสินโดยไม่ขึ้นกับเจตนาของผู้กระทำ", "Gây đau đớn thể xác, tinh thần hoặc tạo bầu không khí khó làm việc. Xét bất kể ý định của người gây ra.")]
+    ]},
+    H("현장 사례로 보기", "Mga halimbawa sa trabaho", "ดูจากตัวอย่างหน้างาน", "Xem qua ví dụ thực tế"),
+    CASE(L("사례 1 · 괴롭힘에 해당", "Halimbawa 1 · Panliligalig", "ตัวอย่าง 1 · เป็นการกลั่นแกล้ง", "Ví dụ 1 · Là quấy rối"),
+      L("반장이 베트남 출신 신입에게 몇 주째 매일 \"너희 나라 사람들은 머리가 나빠\"라고 말하고, 다른 사람들 앞에서 작업 실수를 흉내 내며 웃는다. → 지위를 이용했고, 업무와 관계없는 모욕이 반복되었으므로 괴롭힘입니다.",
+        "Ilang linggo nang araw-araw sinasabi ng team leader sa bagong Vietnamese: \"Mahina ang utak ng mga taga-bansa mo,\" at ginagaya ang pagkakamali niya sa harap ng iba habang tumatawa. → Ginamit ang posisyon at paulit-ulit ang pang-iinsulto na walang kinalaman sa trabaho kaya panliligalig ito.",
+        "หัวหน้าพูดกับพนักงานใหม่ชาวเวียดนามทุกวันหลายสัปดาห์ว่า \"คนประเทศแกหัวไม่ดี\" และล้อเลียนความผิดพลาดต่อหน้าคนอื่นแล้วหัวเราะ → ใช้ตำแหน่ง และดูถูกซ้ำ ๆ ที่ไม่เกี่ยวกับงาน จึงเป็นการกลั่นแกล้ง",
+        "Tổ trưởng nhiều tuần liền ngày nào cũng nói với nhân viên mới người Việt \"người nước mày đầu óc kém\", và bắt chước lỗi của họ trước mọi người rồi cười. → Lợi dụng chức vụ, xúc phạm lặp lại không liên quan công việc nên là quấy rối.")),
+    CASE(L("사례 2 · 괴롭힘이 아님", "Halimbawa 2 · Hindi panliligalig", "ตัวอย่าง 2 · ไม่ใช่การกลั่นแกล้ง", "Ví dụ 2 · Không phải quấy rối"),
+      L("반장이 보안경을 안 쓰고 그라인더를 쓰는 작업자에게 \"보안경 쓰세요. 다음에도 안 쓰면 작업에서 빼겠습니다\"라고 단호하게 말했다. → 안전을 위한 정당한 업무 지시이므로 괴롭힘이 아닙니다.",
+        "Mariing sinabi ng team leader sa manggagawang gumagamit ng grinder nang walang goggles: \"Magsuot ng goggles. Kapag inulit mo, aalisin kita sa trabahong ito.\" → Makatwirang utos para sa kaligtasan kaya hindi ito panliligalig.",
+        "หัวหน้าพูดอย่างหนักแน่นกับคนที่ใช้เครื่องเจียรโดยไม่ใส่แว่นตาว่า \"ใส่แว่นตา ถ้าครั้งหน้าไม่ใส่จะให้ออกจากงานนี้\" → เป็นคำสั่งงานที่ชอบธรรมเพื่อความปลอดภัย จึงไม่ใช่การกลั่นแกล้ง",
+        "Tổ trưởng nói dứt khoát với người dùng máy mài không đeo kính: \"Đeo kính vào. Lần sau không đeo sẽ cho nghỉ việc này.\" → Đây là chỉ thị công việc chính đáng vì an toàn nên không phải quấy rối.")),
+    CASE(L("사례 3 · 괴롭힘에 해당", "Halimbawa 3 · Panliligalig", "ตัวอย่าง 3 · เป็นการกลั่นแกล้ง", "Ví dụ 3 · Là quấy rối"),
+      L("선배 몇 명이 한 동료에게만 점심을 같이 먹지 말자고 하고, 단체 채팅방에서 빼고, 작업 정보를 일부러 알려 주지 않는다. → 여러 명이라는 우위를 이용한 따돌림이고, 작업 정보를 주지 않는 것은 안전도 위협하므로 괴롭힘입니다.",
+        "Napagkasunduan ng ilang senior na huwag sabayan sa tanghalian ang isang kasama, inalis siya sa group chat, at sadyang hindi sinasabi ang impormasyon sa trabaho. → Pagbubukod gamit ang dami, at delikado pa sa kaligtasan ang hindi pagbibigay ng impormasyon kaya panliligalig ito.",
+        "รุ่นพี่หลายคนตกลงไม่กินข้าวกับเพื่อนคนหนึ่ง เอาออกจากกลุ่มแชท และจงใจไม่บอกข้อมูลงาน → เป็นการรวมหัวกันกีดกัน และการไม่ให้ข้อมูลงานยังเป็นอันตรายต่อความปลอดภัย จึงเป็นการกลั่นแกล้ง",
+        "Vài người đàn anh rủ nhau không ăn trưa cùng một đồng nghiệp, xóa khỏi nhóm chat và cố ý không cho biết thông tin công việc. → Cô lập bằng số đông, và giấu thông tin công việc còn đe dọa an toàn nên là quấy rối.")),
+    { t: "note", x: L("사장의 가족(배우자·4촌 이내 친족)인 직원이 괴롭혀도 처벌 대상입니다. 5명 미만 사업장까지 넓히는 법 개정이 추진되고 있으니, 해당되는지는 1350에 물어보세요.",
+      "Pinaparusahan din ang panliligalig ng kamag-anak ng amo (asawa o kamag-anak hanggang pinsan). May balak palawakin ang batas sa lugar na mas mababa sa 5 tao—tanungin ang 1350 kung sakop ka.",
+      "พนักงานที่เป็นครอบครัวของเจ้าของ (คู่สมรส ญาติไม่เกินลูกพี่ลูกน้อง) กลั่นแกล้งก็ถูกลงโทษ กำลังมีการแก้กฎหมายให้ครอบคลุมสถานที่ที่มีน้อยกว่า 5 คน ถามได้ที่ 1350 ว่าครอบคลุมหรือไม่",
+      "Nhân viên là người nhà chủ (vợ/chồng, họ hàng đến anh chị em họ) quấy rối cũng bị phạt. Luật đang được sửa để mở rộng cho nơi dưới 5 người — hỏi 1350 xem mình có thuộc diện không.") }
+  ], ["근로기준법 제76조의2(직장 내 괴롭힘의 금지), 제116조(사용자 및 친족 근로자 괴롭힘 과태료)", "고용노동부 「직장 내 괴롭힘 판단 및 예방·대응 매뉴얼」(판단 요소)"]);
+
+  // ---------- 직장 내 성희롱 ----------
+  add("p4-2", [
+    H("성희롱의 4가지 모습", "4 anyo ng sexual harassment", "4 รูปแบบของการล่วงละเมิดทางเพศ", "4 dạng quấy rối tình dục"),
+    { t: "kv", rows: [
+      [L("몸으로", "Pisikal", "ทางร่างกาย", "Thể chất"), L("만지기, 껴안기, 몸을 밀착하기, 뒤에서 어깨를 주무르기", "Paghawak, pagyakap, pagdikit ng katawan, pagmasahe sa balikat mula sa likod", "จับ กอด แนบตัว นวดไหล่จากข้างหลัง", "Sờ, ôm, áp sát người, bóp vai từ phía sau")],
+      [L("말로", "Salita", "ทางวาจา", "Lời nói"), L("음란한 농담, 몸매 평가, 성생활을 묻기, 성적인 별명 부르기", "Bastos na biro, pagkomento sa katawan, pagtatanong sa sex life, sekswal na palayaw", "มุกลามก วิจารณ์รูปร่าง ถามเรื่องเพศ เรียกฉายาทางเพศ", "Đùa tục, bình phẩm cơ thể, hỏi chuyện tình dục, gọi biệt danh khiêu dâm")],
+      [L("눈으로", "Biswal", "ทางสายตา", "Hình ảnh"), L("음란한 사진·영상 보여 주기·보내기, 특정 부위를 계속 쳐다보기", "Pagpapakita o pagpapadala ng bastos na larawan o video, pagtitig sa bahagi ng katawan", "ให้ดูหรือส่งรูป คลิปลามก จ้องมองส่วนใดส่วนหนึ่งของร่างกาย", "Cho xem, gửi ảnh, video đồi trụy; nhìn chằm chằm vào bộ phận cơ thể")],
+      [L("불이익", "Paghihiganti", "การให้โทษ", "Gây bất lợi"), L("성적 요구를 거절했다고 일·평가·재계약에서 손해를 줌", "Pinarusahan sa trabaho, evaluation o renewal ng kontrata dahil tumanggi", "ปฏิเสธเรื่องเพศแล้วถูกกลั่นแกล้งเรื่องงาน การประเมิน การต่อสัญญา", "Từ chối đòi hỏi tình dục thì bị thiệt về công việc, đánh giá, gia hạn hợp đồng")]
+    ]},
+    { t: "p", x: L("성희롱은 '그럴 뜻이 없었다'로 판단하지 않습니다. 피해자와 같은 처지의 보통 사람이 불쾌하고 굴욕적으로 느낄 만한지를 봅니다. 한 번뿐이어도, 회사 밖 회식이나 메신저에서 일어나도 성희롱이 될 수 있습니다.",
+      "Hindi batayan ang 'wala akong ganoong intensyon'. Tinitingnan kung makakaramdam ng pagkasuklam o kahihiyan ang karaniwang tao na nasa parehong sitwasyon. Kahit isang beses lang, o sa company dinner o messenger, puwede itong maging sexual harassment.",
+      "ไม่ได้ตัดสินจาก 'ไม่ได้ตั้งใจ' แต่ดูว่าคนทั่วไปในสถานะเดียวกับผู้เสียหายจะรู้สึกไม่พอใจและอับอายหรือไม่ แม้เกิดครั้งเดียว หรือเกิดในงานเลี้ยงนอกบริษัทหรือในแชท ก็เป็นการล่วงละเมิดได้",
+      "Không xét theo 'tôi không có ý đó'. Xét xem người bình thường ở hoàn cảnh như nạn nhân có thấy khó chịu, nhục nhã không. Dù chỉ một lần, hay xảy ra ở liên hoan ngoài công ty, tin nhắn, vẫn có thể là quấy rối tình dục.") },
+    CASE(L("사례 · 성희롱에 해당", "Halimbawa · Sexual harassment", "ตัวอย่าง · เป็นการล่วงละเมิด", "Ví dụ · Là quấy rối tình dục"),
+      L("회식 자리에서 상사가 필리핀 출신 여직원에게 \"한국 남자 소개해 줄까?\" \"몸매가 좋네\"라고 하며 어깨에 손을 올렸다. 직원이 웃으며 자리를 피했다. → 웃었다고 동의한 것이 아닙니다. 업무와 관련된 자리에서 성적인 말과 접촉을 했으므로 성희롱입니다.",
+        "Sa company dinner, sinabi ng boss sa babaeng Filipino: \"Gusto mo ipakilala kita sa Koreanong lalaki?\" \"Ang ganda ng katawan mo,\" at hinawakan ang balikat niya. Ngumiti siya at umiwas. → Hindi pagpayag ang pagngiti. Sekswal na salita at paghawak sa okasyong may kinalaman sa trabaho kaya sexual harassment ito.",
+        "ในงานเลี้ยงบริษัท หัวหน้าพูดกับพนักงานหญิงชาวฟิลิปปินส์ว่า \"จะแนะนำผู้ชายเกาหลีให้ไหม\" \"หุ่นดีนะ\" แล้ววางมือบนไหล่ เธอยิ้มแล้วหลบไป → การยิ้มไม่ใช่การยินยอม เป็นคำพูดและการสัมผัสทางเพศในงานที่เกี่ยวกับงาน จึงเป็นการล่วงละเมิด",
+        "Ở buổi liên hoan, cấp trên nói với nữ nhân viên người Philippines \"Có muốn giới thiệu đàn ông Hàn không?\" \"Dáng đẹp nhỉ\" rồi đặt tay lên vai. Cô ấy cười rồi tránh đi. → Cười không phải là đồng ý. Lời nói và đụng chạm tình dục ở dịp liên quan công việc nên là quấy rối tình dục.")),
+    H("싫다고 말하는 법", "Paano sabihing ayaw mo", "วิธีบอกว่าไม่ชอบ", "Cách nói không", "do"),
+    { t: "ol", tone: "do", items: [
+      L("\"싫어요. 그만하세요.\" — 짧고 분명하게 말합니다.", "\"Ayoko. Tumigil ka.\" — maikli at malinaw.", "\"ไม่ชอบ หยุดเถอะ\" — พูดสั้น ๆ ชัด ๆ", "\"Tôi không thích. Dừng lại.\" — nói ngắn và rõ."),
+      L("말하기 어려우면 그 자리를 떠나고, 믿을 수 있는 동료나 관리자에게 바로 알립니다.", "Kung mahirap magsalita, umalis at sabihin agad sa pinagkakatiwalaang kasama o manager.", "ถ้าพูดยากให้ออกจากที่นั่น แล้วบอกเพื่อนหรือหัวหน้าที่ไว้ใจทันที", "Khó nói thì rời khỏi đó, báo ngay cho đồng nghiệp hoặc quản lý tin cậy."),
+      L("싫다고 말하지 못했어도 내 잘못이 아닙니다. 나중에라도 신고할 수 있습니다.", "Hindi mo kasalanan kahit hindi ka nakatanggi. Puwede ka pa ring mag-ulat kahit huli na.", "แม้ไม่ได้ปฏิเสธก็ไม่ใช่ความผิดของคุณ แจ้งภายหลังได้", "Dù không nói được là không thích, đó không phải lỗi của bạn. Sau này vẫn có thể báo cáo.")
+    ]}
+  ], ["남녀고용평등과 일·가정 양립 지원에 관한 법률 제2조 제2호(직장 내 성희롱의 정의), 제12조", "고용노동부 「직장 내 성희롱 예방·대응 매뉴얼」"]);
+
+  // ---------- 피해를 당하거나 봤을 때 ----------
+  add("p4-3", [
+    H("증거 남기는 방법", "Paano mag-ipon ng ebidensya", "วิธีเก็บหลักฐาน", "Cách lưu bằng chứng", "do"),
+    { t: "ol", tone: "do", items: [
+      L("일이 있을 때마다 날짜·시간·장소·한 말 그대로·본 사람을 메모장이나 메신저 '나에게 보내기'로 적어 둡니다.", "Isulat agad ang petsa, oras, lugar, eksaktong sinabi at mga saksi sa notes o i-send sa sarili sa messenger.", "ทุกครั้งที่เกิดเรื่อง จดวันที่ เวลา สถานที่ คำพูดตรง ๆ และพยาน ในโน้ตหรือส่งแชทหาตัวเอง", "Mỗi lần xảy ra, ghi ngày, giờ, nơi, nguyên văn lời nói, người chứng kiến vào ghi chú hoặc 'gửi cho chính mình' trên tin nhắn."),
+      L("문자·메신저·사진은 지우지 말고 화면을 캡처해 둡니다.", "Huwag burahin ang text, chat at litrato—i-screenshot.", "อย่าลบข้อความ แชท รูปภาพ ให้แคปหน้าจอเก็บไว้", "Không xóa tin nhắn, ảnh; chụp màn hình lưu lại."),
+      L("내가 참여한 대화를 녹음하는 것은 불법이 아닙니다. 다른 사람끼리의 대화를 몰래 녹음하는 것은 안 됩니다.", "Hindi ilegal ang pag-record ng usapang kasali ka. Bawal ang lihim na pag-record ng usapan ng ibang tao.", "การอัดเสียงบทสนทนาที่ตัวเองร่วมอยู่ไม่ผิดกฎหมาย แต่ห้ามแอบอัดบทสนทนาของคนอื่น", "Ghi âm cuộc nói chuyện mà mình tham gia không phạm pháp. Không được lén ghi âm cuộc nói chuyện giữa người khác."),
+      L("다쳤거나 몸·마음이 아프면 병원 진료 기록을 남깁니다.", "Kapag nasaktan o may sakit sa katawan o isip, magpatingin at itago ang medical record.", "ถ้าบาดเจ็บหรือป่วยกายใจ ไปหาหมอและเก็บประวัติการรักษา", "Bị thương hoặc đau đớn thể xác, tinh thần thì đi khám và giữ hồ sơ.")
+    ]},
+    H("도움받을 수 있는 곳", "Saan puwedeng humingi ng tulong", "ที่ขอความช่วยเหลือได้", "Nơi có thể nhận giúp đỡ"),
+    { t: "kv", rows: [
+      [L("1350", "1350", "1350", "1350"), L("고용노동부 상담 — 괴롭힘·성희롱 상담과 신고 방법 안내", "Ministry of Labor — konsultasyon at gabay sa pag-uulat", "กระทรวงแรงงาน — ปรึกษาและแนะนำวิธีแจ้ง", "Bộ Lao động — tư vấn và hướng dẫn cách báo cáo")],
+      [L("1577-0071", "1577-0071", "1577-0071", "1577-0071"), L("외국인력상담센터 — 모국어 상담", "Foreign Workforce Counseling Center — sariling wika", "ศูนย์ให้คำปรึกษาแรงงานต่างชาติ — ภาษาของคุณ", "Trung tâm tư vấn lao động nước ngoài — tiếng mẹ đẻ")],
+      [L("노동위원회", "Labor Relations Commission", "คณะกรรมการแรงงานสัมพันธ์", "Ủy ban quan hệ lao động"), L("회사가 성희롱 피해자를 보호하지 않거나 불이익을 주면 시정을 신청할 수 있습니다 (6개월 안에).", "Kapag hindi pinrotektahan o pinarusahan ng kumpanya ang biktima ng sexual harassment, puwedeng mag-apply ng pagwawasto (sa loob ng 6 na buwan).", "ถ้าบริษัทไม่คุ้มครองหรือลงโทษผู้เสียหายจากการล่วงละเมิดทางเพศ ยื่นขอให้แก้ไขได้ (ภายใน 6 เดือน)", "Nếu công ty không bảo vệ hoặc gây bất lợi cho nạn nhân quấy rối tình dục, có thể yêu cầu khắc phục (trong vòng 6 tháng).")],
+      [L("112", "112", "112", "112"), L("때리기, 강제로 만지기, 협박은 범죄입니다. 경찰에 신고합니다.", "Krimen ang pananakit, sapilitang paghawak at pagbabanta. Tumawag sa pulis.", "ทำร้ายร่างกาย จับต้องโดยบังคับ ข่มขู่ เป็นอาชญากรรม แจ้งตำรวจ", "Đánh đập, sờ mó cưỡng ép, đe dọa là tội phạm. Báo cảnh sát.")],
+      [L("1899-3075", "1899-3075", "1899-3075", "1899-3075"), L("해바라기센터 — 성폭력 피해자 의료·상담·법률 지원 (24시간)", "Sunflower Center — medikal, konsultasyon at legal na tulong para sa biktima ng sekswal na karahasan (24 oras)", "ศูนย์ทานตะวัน — ช่วยเหลือการแพทย์ ปรึกษา กฎหมาย แก่ผู้เสียหายจากความรุนแรงทางเพศ (24 ชม.)", "Trung tâm Hướng Dương — hỗ trợ y tế, tư vấn, pháp lý cho nạn nhân bạo lực tình dục (24 giờ)")]
+    ]}
+  ], ["남녀고용평등법 제26조(차별적 처우등의 시정신청: 6개월 이내), 제29조의2~제29조의3(시정명령)", "통신비밀보호법 제3조(타인 간의 대화 녹음 금지)", "여성가족부 해바라기센터"]);
+
+  // ---------- 회사가 위반하면 ----------
+  add("p4-4", [
+    { t: "def",
+      k: L("노동위원회 시정명령", "Utos ng pagwawasto ng Labor Commission", "คำสั่งให้แก้ไขของคณะกรรมการแรงงาน", "Lệnh khắc phục của Ủy ban lao động"),
+      v: L("회사가 성희롱 피해자를 제대로 보호하지 않거나 불리하게 대하면, 노동위원회가 회사에 불이익을 멈추고 배상하라고 명령할 수 있습니다. 회사가 이 명령을 따르지 않으면 1억원 이하의 과태료를 냅니다.",
+        "Kapag hindi pinrotektahan o pinarusahan ng kumpanya ang biktima ng sexual harassment, puwedeng utusan ng Labor Commission ang kumpanya na itigil ito at magbayad ng danyos. Kapag hindi sumunod, multa hanggang 100 milyong won.",
+        "ถ้าบริษัทไม่คุ้มครองหรือปฏิบัติไม่เป็นธรรมต่อผู้เสียหายจากการล่วงละเมิดทางเพศ คณะกรรมการแรงงานสั่งให้หยุดและชดใช้ได้ ถ้าไม่ปฏิบัติตามถูกปรับไม่เกิน 100 ล้านวอน",
+        "Nếu công ty không bảo vệ đúng hoặc đối xử bất lợi với nạn nhân quấy rối tình dục, Ủy ban lao động có thể ra lệnh chấm dứt và bồi thường. Không tuân thủ thì bị phạt đến 100 triệu won.") },
+    H("회사가 미리 해야 하는 일", "Ang dapat gawin ng kumpanya nang maaga", "สิ่งที่บริษัทต้องทำล่วงหน้า", "Việc công ty phải làm trước", "do"),
+    { t: "ul", items: [
+      L("취업규칙에 괴롭힘 예방·신고·조치 방법을 적어 둡니다.", "Isulat sa rules of employment ang pag-iwas, pag-uulat at aksyon laban sa panliligalig.", "เขียนวิธีป้องกัน แจ้ง และดำเนินการเรื่องการกลั่นแกล้งไว้ในข้อบังคับการทำงาน", "Ghi cách phòng ngừa, báo cáo, xử lý quấy rối vào nội quy lao động."),
+      L("1년에 1번 이상 성희롱 예방교육을 하고, 그 내용을 누구나 볼 수 있게 게시합니다.", "Magbigay ng training sa pag-iwas sa sexual harassment kahit isang beses sa isang taon at ipaskil ang nilalaman.", "จัดอบรมป้องกันการล่วงละเมิดทางเพศอย่างน้อยปีละครั้ง และติดประกาศเนื้อหาให้ทุกคนเห็น", "Đào tạo phòng chống quấy rối tình dục ít nhất 1 lần/năm và niêm yết nội dung cho mọi người xem."),
+      L("신고 담당자와 연락 방법을 정해 알립니다. 외국인 근로자도 이해할 수 있게 안내합니다.", "Itakda at ipaalam ang taong tatanggap ng ulat at paraan ng pakikipag-ugnayan—pati sa dayuhang manggagawa.", "กำหนดและแจ้งผู้รับเรื่องและช่องทางติดต่อ ให้คนงานต่างชาติเข้าใจด้วย", "Chỉ định và thông báo người tiếp nhận báo cáo, cách liên lạc, sao cho cả lao động nước ngoài hiểu.")
+    ]}
+  ], ["남녀고용평등법 제13조(성희롱 예방교육), 제29조의2~제29조의3(노동위원회 시정명령), 제39조 제1항(시정명령 불이행 과태료 1억원 이하)", "근로기준법 제93조 제11호(취업규칙: 직장 내 괴롭힘 예방 및 발생 시 조치)"]);
+  // 출처 중복 정리
+  for (const p of window.NEW_PARTS) for (const l of p.lessons) for (const b of l.blocks) if (b.t === "src") b.items = [...new Set(b.items)];
+})();
+
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
 const UI2 = {
   nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
@@ -3202,6 +3302,10 @@ const UI3 = {
 
 // 주간 교육(매주 6단원, 7주 반복) + 오늘의 안전 한마디
 const UI5 = {
+  notWeek: L("이번 주 교육이 아닌 단원입니다. 자유롭게 읽어도 되지만, 이번 주 이수에는 들어가지 않습니다.",
+    "Hindi ito aralin ngayong linggo. Puwede mong basahin, pero hindi ito bibilangin sa linggong ito.",
+    "บทนี้ไม่ใช่บทเรียนของสัปดาห์นี้ อ่านได้ตามสบาย แต่จะไม่นับรวมการเรียนครบสัปดาห์นี้",
+    "Đây không phải bài của tuần này. Có thể đọc tự do nhưng không tính vào hoàn thành tuần này."),
   wait: L("{t} 더 읽으면 체크할 수 있어요", "Puwedeng i-tsek pagkatapos ng {t} pa", "อ่านอีก {t} แล้วจึงกดได้", "Đọc thêm {t} nữa thì mới đánh dấu được"),
   waitHint: L("한 단원은 최소 2분 이상 읽어야 합니다. 화면을 오래 그대로 두면 시간이 멈추니, 넘기면서 읽어 주세요.",
     "Kailangang basahin ang bawat aralin nang hindi bababa sa 2 minuto. Humihinto ang oras kapag matagal na hindi ginagalaw ang screen, kaya mag-scroll habang nagbabasa.",
@@ -3457,7 +3561,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     if (k < 0) return home();
     const { part, lesson: l, idx } = ALL[k];
     app.innerHTML = `<div class="crumb"><b>PART ${part.no}</b><span>${T(part.title)}</span></div>
-      ${l.scene ? `<figure class="scenebox">${scene(l.scene)}</figure>` : ""}${WSET.has(l.id) ? `<span class="wtag">★ ${T(UI4.tag)}</span>` : ""}<h1 class="ltitle">${T(l.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(l.title.ko)}</p>` : ""}
+      ${l.scene ? `<figure class="scenebox">${scene(l.scene)}</figure>` : ""}${WSET.has(l.id) ? `<span class="wtag">★ ${T(UI4.tag)}</span>` : `<div class="note" style="margin:0 0 10px"><span>${T(UI5.notWeek)} <button type="button" class="linkbtn" data-go="">${T(UI4.weekTitle)} →</button></span></div>`}<h1 class="ltitle">${T(l.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(l.title.ko)}</p>` : ""}
       <div class="blocks">${l.blocks.map(block).join("")}${LSRC[l.id] ? block({ t: "src", items: LSRC[l.id] }) : ""}</div>
       <button type="button" class="mark" id="mark" aria-pressed="${!!done[l.id]}">${done[l.id] ? "✓ " + T(UI.doneOn) : T(UI.done)}</button>
       <p class="hint" id="waitHint" hidden style="text-align:center;margin-top:6px">${T(UI5.waitHint)}</p>`;
@@ -3488,11 +3592,20 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     pager.hidden = false;
     const pv = document.getElementById("pv"), nx = document.getElementById("nx"), hm = document.getElementById("hm");
     pv.textContent = "← " + tx(UI.prev); hm.textContent = tx(UI.home);
-    pv.disabled = k === 0;
-    pv.onclick = () => k > 0 && go(ALL[k - 1].lesson.id);
     hm.onclick = () => go("");
-    if (ALL[k + 1]) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(ALL[k + 1].lesson.id); }
-    else { nx.textContent = tx(UI.quizTitle) + " →"; nx.onclick = () => go("quiz"); }
+    const wi = WK.lessons.findIndex(a => a.lesson.id === l.id);
+    if (wi >= 0) {
+      // 이번 주 교육 단원: 이전/다음은 이번 주 6단원 안에서만 이동
+      const pw = WK.lessons[wi - 1], nw = WK.lessons[wi + 1];
+      pv.disabled = !pw; pv.onclick = () => pw && go(pw.lesson.id);
+      if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(nw.lesson.id); }
+      else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => go(""); }
+    } else {
+      pv.disabled = k === 0;
+      pv.onclick = () => k > 0 && go(ALL[k - 1].lesson.id);
+      if (ALL[k + 1]) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(ALL[k + 1].lesson.id); }
+      else { nx.textContent = tx(UI.quizTitle) + " →"; nx.onclick = () => go("quiz"); }
+    }
   }
 
   let qs = { i: 0, score: 0, picked: null };
