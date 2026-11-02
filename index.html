@@ -3171,6 +3171,481 @@ function scene(k) {
   for (const p of window.NEW_PARTS) for (const l of p.lessons) for (const b of l.blocks) if (b.t === "src") b.items = [...new Set(b.items)];
 })();
 
+// PART 5 확대: 새 단원 6개 (맨 뒤에 추가 → 기존 주차 배정 유지)
+(() => {
+  const P5 = window.NEW_PARTS[window.NEW_PARTS.length - 1];
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+  const QA = (q, a) => ({ t: "def", k: q, v: a });
+
+  P5.lessons.push(
+  // ---------- 1. 괴롭힘 Q&A ----------
+  { id: "p4-5", title: L("괴롭힘, 이것도 해당될까? (Q&A)", "Panliligalig ba ito? (Q&A)", "แบบนี้นับเป็นการกลั่นแกล้งไหม (ถาม-ตอบ)", "Thế này có phải quấy rối không? (Hỏi-đáp)"),
+    blocks: [
+      { t: "lead", x: L("현장에서 자주 받는 질문입니다. 판단의 기준은 '업무에 필요한 범위였는가, 그리고 사람을 존중했는가'입니다.",
+        "Mga madalas itanong sa trabaho. Ang batayan: 'Kailangan ba ito sa trabaho, at iginalang ba ang tao?'",
+        "คำถามที่พบบ่อยในหน้างาน เกณฑ์คือ 'จำเป็นต่องานหรือไม่ และเคารพคนหรือไม่'",
+        "Những câu hỏi hay gặp tại hiện trường. Tiêu chí là 'có cần thiết cho công việc không, và có tôn trọng con người không'.") },
+      QA(L("Q. 반장이 큰 소리로 혼냈어요. 괴롭힘인가요?", "Q. Sinigawan ako ng team leader. Panliligalig ba?", "Q. หัวหน้าดุเสียงดัง เป็นการกลั่นแกล้งไหม", "Q. Tổ trưởng mắng to tiếng. Có phải quấy rối không?"),
+        L("A. 위험한 행동을 즉시 멈추게 하려고 소리친 것은 괴롭힘이 아닙니다. 하지만 욕설·인격 모독이 섞이거나, 같은 일로 여러 사람 앞에서 계속 망신을 준다면 괴롭힘이 될 수 있습니다.",
+          "A. Hindi panliligalig ang pagsigaw para agad patigilin ang delikadong kilos. Pero kapag may mura o pang-iinsulto, o paulit-ulit kang pinapahiya sa harap ng iba, puwede itong maging panliligalig.",
+          "A. ตะโกนเพื่อหยุดการกระทำที่อันตรายทันที ไม่ใช่การกลั่นแกล้ง แต่ถ้ามีคำหยาบ ดูหมิ่น หรือประจานซ้ำ ๆ ต่อหน้าคนอื่น อาจเป็นการกลั่นแกล้ง",
+          "A. Hét lên để dừng ngay hành động nguy hiểm thì không phải quấy rối. Nhưng nếu kèm chửi bới, xúc phạm nhân cách, hoặc liên tục làm nhục trước nhiều người thì có thể là quấy rối.")),
+      QA(L("Q. 회식에 안 가면 눈치를 줘요.", "Q. Pinaparinggan ako kapag hindi sumama sa company dinner.", "Q. ไม่ไปงานเลี้ยงแล้วถูกมองไม่ดี", "Q. Không đi liên hoan thì bị khó chịu ra mặt."),
+        L("A. 회식은 강제가 아닙니다. 참석하지 않았다고 일을 몰아주거나 따돌린다면 괴롭힘에 해당할 수 있습니다. 술을 억지로 권하는 것도 마찬가지입니다.",
+          "A. Hindi sapilitan ang company dinner. Kapag dinagdagan ang trabaho mo o ibinukod ka dahil hindi sumama, puwedeng panliligalig. Ganoon din ang pagpilit uminom.",
+          "A. งานเลี้ยงไม่ใช่การบังคับ ถ้าไม่ไปแล้วถูกโยนงานหรือกีดกัน อาจเป็นการกลั่นแกล้ง การบังคับดื่มเหล้าก็เช่นกัน",
+          "A. Liên hoan không bắt buộc. Không đi mà bị dồn việc hay cô lập thì có thể là quấy rối. Ép uống rượu cũng vậy.")),
+      QA(L("Q. 쉬는 날에도 계속 연락이 와요.", "Q. Patuloy akong kinokontak kahit day off.", "Q. วันหยุดก็ยังติดต่อมาเรื่อย ๆ", "Q. Ngày nghỉ vẫn liên tục bị gọi, nhắn."),
+        L("A. 급한 사고·설비 문제로 한 번 연락하는 것은 업무일 수 있습니다. 하지만 급하지 않은 일로 밤늦게나 휴일마다 반복해서 연락하고 답을 강요하면 괴롭힘이 될 수 있습니다.",
+          "A. Puwedeng trabaho ang isang tawag dahil sa emergency. Pero kapag paulit-ulit sa gabi o day off para sa hindi agarang bagay at pinipilit kang sumagot, puwedeng panliligalig.",
+          "A. ติดต่อครั้งเดียวเพราะอุบัติเหตุหรือเครื่องเสียด่วนอาจเป็นเรื่องงาน แต่ถ้าติดต่อซ้ำ ๆ ดึกดื่นหรือวันหยุดในเรื่องไม่ด่วนและบังคับให้ตอบ อาจเป็นการกลั่นแกล้ง",
+          "A. Liên lạc một lần vì sự cố gấp có thể là công việc. Nhưng liên tục nhắn đêm khuya, ngày nghỉ vì việc không gấp và ép trả lời thì có thể là quấy rối.")),
+      QA(L("Q. 한국어를 못 한다고 놀려요.", "Q. Tinutukso ako dahil hindi magaling sa Korean.", "Q. ถูกล้อว่าพูดเกาหลีไม่เก่ง", "Q. Bị trêu vì không giỏi tiếng Hàn."),
+        L("A. 말투·발음·국적·피부색을 놀리는 것은 업무와 관계없는 모욕입니다. 반복되면 괴롭힘이고, 회사는 이를 멈추게 할 의무가 있습니다.",
+          "A. Pang-iinsulto na walang kinalaman sa trabaho ang pagtukso sa punto, bigkas, nasyonalidad o kulay ng balat. Kapag paulit-ulit, panliligalig ito at dapat itong patigilin ng kumpanya.",
+          "A. การล้อสำเนียง การออกเสียง สัญชาติ สีผิว เป็นการดูถูกที่ไม่เกี่ยวกับงาน ถ้าซ้ำ ๆ คือการกลั่นแกล้ง และบริษัทมีหน้าที่ต้องหยุดมัน",
+          "A. Trêu giọng nói, phát âm, quốc tịch, màu da là xúc phạm không liên quan công việc. Lặp lại thì là quấy rối, công ty có nghĩa vụ chấm dứt.")),
+      QA(L("Q. 나만 힘든 일을 계속 시켜요.", "Q. Ako lang lagi ang binibigyan ng mabigat na trabaho.", "Q. ให้ฉันทำงานหนักอยู่คนเดียว", "Q. Chỉ mình tôi luôn bị giao việc nặng."),
+        L("A. 일의 배분은 회사가 정할 수 있지만, 이유 없이 특정 사람에게만 위험하거나 힘든 일을 계속 몰아주는 것은 괴롭힘이 될 수 있습니다. 날짜와 내용을 기록해 두세요.",
+          "A. Ang kumpanya ang nagbabahagi ng trabaho, pero puwedeng panliligalig kapag walang dahilan na laging iisang tao ang binibigyan ng delikado o mabigat na trabaho. Itala ang petsa at detalye.",
+          "A. บริษัทจัดสรรงานได้ แต่การโยนงานอันตรายหรือหนักให้คนเดียวตลอดโดยไม่มีเหตุผล อาจเป็นการกลั่นแกล้ง ให้จดวันที่และรายละเอียดไว้",
+          "A. Công ty được phân công việc, nhưng vô cớ chỉ dồn việc nguy hiểm, nặng cho một người có thể là quấy rối. Hãy ghi lại ngày và nội dung."))
+    ]},
+
+  // ---------- 2. 성희롱 Q&A ----------
+  { id: "p4-6", title: L("성희롱, 이것도 해당될까? (Q&A)", "Sexual harassment ba ito? (Q&A)", "แบบนี้นับเป็นการล่วงละเมิดทางเพศไหม (ถาม-ตอบ)", "Thế này có phải quấy rối tình dục không? (Hỏi-đáp)"),
+    blocks: [
+      { t: "lead", x: L("'나는 칭찬이었다', '장난이었다'는 기준이 아닙니다. 듣는 사람이 성적으로 불쾌하고 굴욕적으로 느낄 만한지가 기준입니다.",
+        "Hindi batayan ang 'papuri lang' o 'biro lang'. Ang batayan ay kung makakaramdam ng sekswal na pagkasuklam o kahihiyan ang nakarinig.",
+        "'แค่ชม' หรือ 'แค่ล้อเล่น' ไม่ใช่เกณฑ์ เกณฑ์คือผู้ฟังจะรู้สึกไม่พอใจหรืออับอายทางเพศหรือไม่",
+        "'Tôi chỉ khen', 'chỉ đùa thôi' không phải tiêu chí. Tiêu chí là người nghe có cảm thấy khó chịu, nhục nhã về mặt tình dục không.") },
+      QA(L("Q. \"오늘 예쁘네\"도 성희롱인가요?", "Q. Sexual harassment ba ang \"Ang ganda mo ngayon\"?", "Q. \"วันนี้สวยนะ\" ก็เป็นการล่วงละเมิดไหม", "Q. \"Hôm nay xinh thế\" cũng là quấy rối à?"),
+        L("A. 한 번의 가벼운 인사는 보통 해당하지 않습니다. 하지만 몸매·옷차림을 성적으로 평가하거나, 싫다고 했는데도 계속하면 성희롱이 될 수 있습니다.",
+          "A. Karaniwang hindi kasama ang isang magaan na bati. Pero kapag sekswal na pagkomento sa katawan o damit, o patuloy kahit sinabing ayaw, puwedeng sexual harassment.",
+          "A. ทักทายเบา ๆ ครั้งเดียวมักไม่เข้าข่าย แต่ถ้าวิจารณ์รูปร่างหรือการแต่งตัวในเชิงเพศ หรือทำต่อทั้งที่บอกว่าไม่ชอบ อาจเป็นการล่วงละเมิด",
+          "A. Một lời chào nhẹ một lần thường không tính. Nhưng bình phẩm cơ thể, trang phục theo hướng tình dục, hoặc vẫn tiếp tục khi đã bị nói không thích thì có thể là quấy rối.")),
+      QA(L("Q. 남자끼리, 여자끼리도 성희롱이 되나요?", "Q. Puwede ba ito sa parehong kasarian?", "Q. ผู้ชายด้วยกัน ผู้หญิงด้วยกัน ก็เป็นการล่วงละเมิดได้ไหม", "Q. Giữa nam với nam, nữ với nữ cũng là quấy rối?"),
+        L("A. 네. 성별과 상관없습니다. 남자 동료의 바지를 장난으로 내리거나, 음란한 사진을 단체로 보여 주는 것도 성희롱입니다.",
+          "A. Oo. Walang kinalaman ang kasarian. Sexual harassment din ang pagbaba ng pantalon ng lalaking kasama bilang biro o pagpapakita ng bastos na larawan sa grupo.",
+          "A. ใช่ ไม่เกี่ยวกับเพศ การแกล้งดึงกางเกงเพื่อนชาย หรือเปิดรูปลามกให้กลุ่มดู ก็เป็นการล่วงละเมิด",
+          "A. Có. Không phân biệt giới tính. Đùa kéo quần đồng nghiệp nam hay cho cả nhóm xem ảnh đồi trụy cũng là quấy rối tình dục.")),
+      QA(L("Q. 단체 채팅방에 야한 사진을 올리는 건요?", "Q. Paano ang pag-post ng bastos na larawan sa group chat?", "Q. โพสต์รูปโป๊ในกลุ่มแชทล่ะ", "Q. Đăng ảnh khiêu dâm vào nhóm chat thì sao?"),
+        L("A. 업무 관련 채팅방이면 직장 안과 같습니다. 보는 사람이 불쾌하면 성희롱이고, 내용에 따라 범죄가 될 수도 있습니다.",
+          "A. Kapag group chat ng trabaho, parang nasa loob ng trabaho. Sexual harassment kapag nainis ang nakakita, at puwedeng krimen depende sa nilalaman.",
+          "A. ถ้าเป็นกลุ่มแชทเกี่ยวกับงานก็เหมือนในที่ทำงาน ถ้าคนเห็นไม่พอใจคือการล่วงละเมิด และอาจเป็นอาชญากรรมขึ้นกับเนื้อหา",
+          "A. Nhóm chat liên quan công việc thì như ở nơi làm việc. Người xem khó chịu là quấy rối, tùy nội dung còn có thể là tội phạm.")),
+      QA(L("Q. 피해자가 그 자리에서 웃었다면요?", "Q. Paano kung ngumiti ang biktima noon?", "Q. ถ้าผู้เสียหายหัวเราะตอนนั้นล่ะ", "Q. Nếu nạn nhân cười lúc đó thì sao?"),
+        L("A. 상사 앞에서 분위기를 깨기 어려워 웃는 경우가 많습니다. 웃었다고 동의한 것이 아닙니다. 거절하지 못한 것은 피해자의 잘못이 아닙니다.",
+          "A. Madalas ngumingiti dahil mahirap sirain ang usapan sa harap ng boss. Hindi pagpayag ang pagngiti. Hindi kasalanan ng biktima na hindi siya nakatanggi.",
+          "A. หลายครั้งหัวเราะเพราะไม่กล้าทำให้บรรยากาศเสียต่อหน้าหัวหน้า หัวเราะไม่ได้แปลว่ายินยอม การปฏิเสธไม่ได้ไม่ใช่ความผิดของผู้เสียหาย",
+          "A. Nhiều khi cười vì khó làm mất không khí trước cấp trên. Cười không có nghĩa là đồng ý. Không từ chối được không phải lỗi của nạn nhân.")),
+      QA(L("Q. 퇴근 후 개인 메시지로 \"보고 싶다\"고 계속 보내요.", "Q. Pagkatapos ng trabaho, paulit-ulit na nagme-message ng \"Miss na kita\".", "Q. หลังเลิกงานส่งข้อความส่วนตัวว่า \"คิดถึง\" ซ้ำ ๆ", "Q. Sau giờ làm cứ nhắn riêng \"nhớ em\"."),
+        L("A. 직장 관계를 이용해 원하지 않는 사적인 연락을 계속하면 성희롱이 될 수 있고, 반복되면 스토킹 범죄가 될 수도 있습니다. 메시지를 지우지 말고 저장하세요.",
+          "A. Kapag ginamit ang relasyon sa trabaho para sa paulit-ulit na hindi gustong personal na mensahe, puwedeng sexual harassment, at kapag tuloy-tuloy, puwedeng krimen na stalking. Huwag burahin—i-save.",
+          "A. ใช้ความสัมพันธ์ในที่ทำงานติดต่อส่วนตัวที่ไม่ต้องการซ้ำ ๆ อาจเป็นการล่วงละเมิด และถ้าต่อเนื่องอาจเป็นอาชญากรรมสะกดรอยตาม อย่าลบข้อความ ให้เก็บไว้",
+          "A. Lợi dụng quan hệ công việc để liên tục nhắn riêng khi người kia không muốn có thể là quấy rối tình dục, kéo dài có thể là tội rình rập (stalking). Đừng xóa, hãy lưu lại."))
+    ]},
+
+  // ---------- 3. 고객·거래처에 의한 피해 ----------
+  { id: "p4-7", title: L("고객·거래처·다른 회사 사람이 그럴 때", "Kapag galing sa customer o ibang kumpanya", "เมื่อลูกค้าหรือคนบริษัทอื่นทำ", "Khi khách hàng, đối tác, người công ty khác làm vậy"),
+    blocks: [
+      { t: "lead", x: L("판금 공장에는 납품 기사, 원청 담당자, 협력업체 직원 등 다른 회사 사람이 자주 드나듭니다. 이들에게 폭언이나 성희롱을 당해도 회사가 보호해야 합니다.",
+        "Madalas pumunta sa sheet metal factory ang delivery driver, tauhan ng main contractor at ng subcontractor. Kahit sila ang nanakit o nanligalig, dapat kang protektahan ng kumpanya.",
+        "ในโรงงานแผ่นโลหะ มีคนบริษัทอื่นเข้าออกบ่อย เช่น คนขับส่งของ ผู้รับผิดชอบจากบริษัทแม่ พนักงานบริษัทรับเหมา ถ้าถูกพวกเขาด่าว่าหรือล่วงละเมิด บริษัทก็ต้องคุ้มครอง",
+        "Ở xưởng tấm kim loại hay có người công ty khác ra vào như tài xế giao hàng, người phụ trách bên đặt hàng, nhân viên nhà thầu phụ. Bị họ chửi bới hay quấy rối, công ty vẫn phải bảo vệ bạn.") },
+      { t: "kv", rows: [
+        [L("성희롱", "Sexual harassment", "ล่วงละเมิดทางเพศ", "Quấy rối tình dục"), L("고객 등에게 성희롱 피해를 입었다고 말하면, 회사는 근무 장소를 바꾸거나 배치를 바꾸는 등 보호 조치를 해야 합니다. 이를 이유로 불이익을 주면 안 됩니다.", "Kapag sinabi mong nanligalig ang customer, dapat kang protektahan ng kumpanya, hal. ilipat ng puwesto. Bawal kang parusahan dahil dito.", "เมื่อบอกว่าถูกลูกค้าล่วงละเมิด บริษัทต้องคุ้มครอง เช่น ย้ายที่ทำงานหรือเปลี่ยนหน้าที่ และห้ามลงโทษเพราะเรื่องนี้", "Khi báo bị khách hàng quấy rối, công ty phải bảo vệ như đổi chỗ làm, đổi bố trí. Không được gây bất lợi vì lý do này.")],
+        [L("폭언·폭행", "Mura at pananakit", "ด่าว่าและทำร้าย", "Chửi bới, hành hung"), L("고객의 폭언으로 몸과 마음이 상하지 않도록 회사는 업무를 잠시 멈추거나 바꾸게 하고, 필요하면 치료·상담을 지원해야 합니다.", "Dapat pansamantalang ipahinto o palitan ng kumpanya ang trabaho at suportahan ang gamot o konsultasyon kapag kailangan.", "บริษัทต้องให้หยุดหรือเปลี่ยนงานชั่วคราว และสนับสนุนการรักษาหรือปรึกษาเมื่อจำเป็น เพื่อไม่ให้กายใจเสียหายจากคำด่าของลูกค้า", "Công ty phải cho tạm dừng hoặc đổi việc, hỗ trợ điều trị, tư vấn khi cần để không bị tổn hại vì lời chửi bới của khách.")]
+      ]},
+      H("이렇게 하세요", "Gawin ito", "ทำแบบนี้", "Hãy làm thế này", "do"),
+      { t: "ol", tone: "do", items: [
+        L("상대가 누구든 그 자리에서 벗어나 반장이나 관리자에게 바로 알립니다.", "Sino man ang gumawa, umalis sa lugar at sabihin agad sa team leader o manager.", "ไม่ว่าอีกฝ่ายเป็นใคร ออกจากที่นั่นแล้วบอกหัวหน้าหรือผู้จัดการทันที", "Dù đối phương là ai, rời khỏi đó và báo ngay tổ trưởng hoặc quản lý."),
+        L("상대의 회사 이름, 차량 번호, 날짜·시간을 기록해 둡니다.", "Itala ang pangalan ng kumpanya, plate number ng sasakyan, petsa at oras.", "จดชื่อบริษัท ทะเบียนรถ วันที่และเวลาของอีกฝ่าย", "Ghi lại tên công ty, biển số xe, ngày giờ của đối phương."),
+        L("'거래처라서 참아야 한다'는 생각은 버리세요. 회사가 상대 회사에 항의하고 재발을 막아야 합니다.", "Kalimutan ang 'kailangan kong tiisin dahil kliyente sila'. Ang kumpanya ang dapat magreklamo at pumigil na maulit.", "ทิ้งความคิดว่า 'ต้องทนเพราะเป็นคู่ค้า' บริษัทต้องประท้วงบริษัทนั้นและป้องกันไม่ให้เกิดซ้ำ", "Bỏ suy nghĩ 'là đối tác nên phải chịu'. Công ty phải phản đối với bên kia và ngăn tái diễn.")
+      ]},
+      { t: "note", x: L("반대로 우리도 다른 회사에 가서 일할 때는 그곳 직원을 존중해야 합니다. 우리 회사 이름을 걸고 일하는 것입니다.",
+        "Sa kabilang banda, kapag tayo ang nagtatrabaho sa ibang kumpanya, igalang ang kanilang mga tauhan. Dala natin ang pangalan ng kumpanya.",
+        "ในทางกลับกัน เมื่อเราไปทำงานที่บริษัทอื่น ก็ต้องเคารพพนักงานที่นั่น เพราะเราทำงานในนามบริษัทของเรา",
+        "Ngược lại, khi đến làm ở công ty khác, ta cũng phải tôn trọng nhân viên ở đó. Ta làm việc mang tên công ty mình.") },
+      { t: "src", items: ["남녀고용평등법 제14조의2(고객 등에 의한 성희롱 방지)", "산업안전보건법 제41조(고객의 폭언등으로 인한 건강장해 예방조치 등)"] }
+    ]},
+
+  // ---------- 4. 2차 피해와 신고자 보호 ----------
+  { id: "p4-8", title: L("2차 피해를 막고 신고한 사람을 지키기", "Pigilan ang pangalawang pinsala at protektahan ang nag-ulat", "ป้องกันความเสียหายซ้ำและปกป้องผู้แจ้ง", "Ngăn tổn hại thứ cấp và bảo vệ người báo cáo"),
+    blocks: [
+      { t: "lead", x: L("피해를 말한 뒤에 받는 따가운 시선, 소문, 불이익을 '2차 피해'라고 합니다. 2차 피해가 무서워 아무도 말하지 않으면 괴롭힘은 계속됩니다.",
+        "Ang masasakit na tingin, tsismis at parusa pagkatapos magsalita ng biktima ay tinatawag na 'pangalawang pinsala'. Kapag natakot ang lahat na magsalita, magpapatuloy ang panliligalig.",
+        "สายตาที่ไม่เป็นมิตร ข่าวลือ และการถูกลงโทษหลังจากพูดเรื่องที่ถูกกระทำ เรียกว่า 'ความเสียหายซ้ำ' ถ้าทุกคนกลัวจนไม่มีใครพูด การกลั่นแกล้งจะดำเนินต่อไป",
+        "Ánh mắt soi mói, tin đồn, bất lợi sau khi lên tiếng gọi là 'tổn hại thứ cấp'. Nếu sợ mà không ai nói, quấy rối sẽ còn tiếp diễn.") },
+      H("이런 말과 행동이 2차 피해입니다", "Pangalawang pinsala ang mga ito", "คำพูดและการกระทำแบบนี้คือความเสียหายซ้ำ", "Lời nói, hành động này là tổn hại thứ cấp", "bad"),
+      { t: "ol", tone: "bad", items: [
+        L("\"네가 먼저 빌미를 준 거 아니야?\" — 피해자 탓하기", "\"Hindi ba ikaw ang nagsimula?\" — paninisi sa biktima", "\"เธอให้ท่าก่อนหรือเปล่า\" — โทษผู้เสียหาย", "\"Chẳng phải em gây chuyện trước à?\" — đổ lỗi cho nạn nhân"),
+        L("\"그 정도는 다들 참고 살아.\" — 피해를 작게 만들기", "\"Lahat naman tinitiis iyan.\" — pagmamaliit sa pinsala", "\"แค่นั้นใคร ๆ ก็ทน\" — ทำให้ความเสียหายดูเล็ก", "\"Chuyện đó ai cũng chịu được.\" — xem nhẹ tổn hại"),
+        L("누가 신고했는지 캐묻고 소문내기", "Pag-uusisa kung sino ang nag-ulat at pagkakalat ng tsismis", "สืบว่าใครแจ้งแล้วปล่อยข่าวลือ", "Dò hỏi ai báo cáo rồi lan tin đồn"),
+        L("신고한 사람과 말을 섞지 말라고 하거나 일에서 빼기", "Pagbabawal makipag-usap sa nag-ulat o pag-alis sa kaniya sa trabaho", "สั่งไม่ให้คุยกับผู้แจ้ง หรือเอาออกจากงาน", "Bảo đừng nói chuyện với người báo cáo hoặc gạt họ khỏi công việc")
+      ]},
+      H("법이 금지하는 불리한 처우", "Mga parusang ipinagbabawal ng batas", "การปฏิบัติที่ไม่เป็นธรรมที่กฎหมายห้าม", "Đối xử bất lợi bị luật cấm"),
+      { t: "ul", items: [
+        L("해고, 징계, 정직, 감봉, 승진 제한", "Pagtanggal, disiplina, suspensyon, bawas-sahod, hadlang sa promosyon", "เลิกจ้าง ลงโทษทางวินัย พักงาน ลดเงินเดือน จำกัดการเลื่อนตำแหน่ง", "Sa thải, kỷ luật, đình chỉ, giảm lương, hạn chế thăng tiến"),
+        L("원하지 않는 부서 이동, 일 빼앗기, 재계약 거절", "Paglipat na hindi gusto, pag-agaw ng trabaho, pagtanggi sa renewal ng kontrata", "ย้ายแผนกโดยไม่สมัครใจ ยึดงาน ไม่ต่อสัญญา", "Điều chuyển không mong muốn, tước việc, từ chối gia hạn hợp đồng"),
+        L("집단 따돌림·폭언을 내버려 두기", "Pagpapabaya sa pambubukod o mura ng grupo", "ปล่อยให้ถูกรุมกีดกันหรือด่าว่า", "Bỏ mặc việc bị cô lập, chửi bới tập thể")
+      ]},
+      { t: "warn", x: L("신고자나 피해자에게 불리한 처우를 하면 3년 이하의 징역 또는 3천만원 이하의 벌금에 처해질 수 있습니다. 조사에 참여한 동료(참고인)도 보호받습니다.",
+        "Ang pagpaparusa sa nag-ulat o biktima ay may kulong hanggang 3 taon o multa hanggang 30 milyong won. Protektado rin ang kasamang tumestigo.",
+        "การปฏิบัติไม่เป็นธรรมต่อผู้แจ้งหรือผู้เสียหาย อาจถูกจำคุกไม่เกิน 3 ปี หรือปรับไม่เกิน 30 ล้านวอน เพื่อนที่ให้ข้อมูลในการสอบสวนก็ได้รับความคุ้มครอง",
+        "Đối xử bất lợi với người báo cáo hay nạn nhân có thể bị phạt tù đến 3 năm hoặc phạt tiền đến 30 triệu won. Đồng nghiệp làm chứng cũng được bảo vệ.") },
+      { t: "src", items: ["근로기준법 제76조의3 제6항(불리한 처우 금지), 제109조(벌칙)", "남녀고용평등법 제14조 제6항(불리한 처우 금지), 제37조(벌칙)"] }
+    ]},
+
+  // ---------- 5. 회사 조사 절차 ----------
+  { id: "p4-9", title: L("신고하면 어떻게 진행되나요", "Ano ang mangyayari pagkatapos mag-ulat", "แจ้งแล้วจะดำเนินการอย่างไร", "Báo cáo rồi sẽ tiến hành thế nào"),
+    blocks: [
+      { t: "lead", x: L("신고 뒤에 무슨 일이 일어나는지 알면 덜 두렵습니다. 회사는 아래 순서로 처리해야 합니다.",
+        "Mas hindi nakakatakot kapag alam mo ang mangyayari. Ganito dapat ang proseso ng kumpanya.",
+        "ถ้ารู้ว่าหลังแจ้งจะเกิดอะไร ก็จะกลัวน้อยลง บริษัทต้องดำเนินการตามลำดับนี้",
+        "Biết trước sau khi báo cáo sẽ xảy ra gì thì đỡ sợ hơn. Công ty phải xử lý theo thứ tự sau.") },
+      { t: "ol", items: [
+        L("접수 — 말·문서·메신저 어떤 방법으로든 신고할 수 있습니다. 피해자가 아니어도 됩니다.", "Pagtanggap — puwedeng mag-ulat sa salita, sulat o messenger. Hindi kailangang biktima ka.", "รับเรื่อง — แจ้งได้ทุกทาง ทั้งพูด เอกสาร แชท ไม่จำเป็นต้องเป็นผู้เสียหาย", "Tiếp nhận — báo bằng lời, văn bản, tin nhắn đều được. Không cần là nạn nhân."),
+        L("즉시 보호 — 조사 기간에도 피해자가 원하면 근무 장소 변경, 유급휴가 등을 해 줍니다. 피해자 뜻에 반하는 조치는 하지 않습니다.", "Agarang proteksyon — kahit habang iniimbestigahan, puwedeng ilipat ng puwesto o bigyan ng bayad na leave kung gusto ng biktima. Walang hakbang na labag sa kagustuhan niya.", "คุ้มครองทันที — ระหว่างสอบสวน ถ้าผู้เสียหายต้องการ ย้ายที่ทำงานหรือให้ลาโดยได้รับค่าจ้าง ไม่ทำสิ่งที่ขัดกับความต้องการของผู้เสียหาย", "Bảo vệ ngay — kể cả trong thời gian điều tra, nếu nạn nhân muốn thì đổi chỗ làm, cho nghỉ có lương. Không làm trái ý nạn nhân."),
+        L("조사 — 피해자, 가해자, 본 사람의 이야기를 따로 듣고 증거를 확인합니다. 지체 없이, 공정하게 합니다.", "Imbestigasyon — hiwalay na pinakikinggan ang biktima, gumawa at saksi, at sinusuri ang ebidensya. Mabilis at patas.", "สอบสวน — ฟังผู้เสียหาย ผู้กระทำ และพยานแยกกัน ตรวจหลักฐาน ทำโดยไม่ชักช้าและเป็นธรรม", "Điều tra — nghe riêng nạn nhân, người gây ra, người chứng kiến và kiểm tra bằng chứng. Không chậm trễ, công bằng."),
+        L("결과 알림과 조치 — 사실이면 가해자를 징계하거나 근무 장소를 바꿉니다. 징계 전에 피해자의 의견을 듣습니다.", "Resulta at aksyon — kapag totoo, didisiplinahin o ililipat ang gumawa. Pakikinggan muna ang biktima bago magdisiplina.", "แจ้งผลและดำเนินการ — ถ้าเป็นความจริง ลงโทษหรือย้ายผู้กระทำ ฟังความเห็นผู้เสียหายก่อนลงโทษ", "Thông báo kết quả và xử lý — nếu đúng sự thật, kỷ luật hoặc điều chuyển người gây ra. Nghe ý kiến nạn nhân trước khi kỷ luật."),
+        L("비밀 유지와 재발 방지 — 조사 내용은 피해자 뜻에 반해 알리지 않고, 다시 일어나지 않도록 교육·점검을 합니다.", "Lihim at pag-iwas sa pag-ulit — hindi ipinapaalam ang imbestigasyon nang labag sa kagustuhan ng biktima; may training at pagsusuri para hindi maulit.", "รักษาความลับและป้องกันซ้ำ — ไม่เปิดเผยเนื้อหาการสอบสวนขัดกับความต้องการของผู้เสียหาย และจัดอบรมตรวจสอบไม่ให้เกิดซ้ำ", "Giữ bí mật và ngăn tái diễn — không tiết lộ nội dung điều tra trái ý nạn nhân; đào tạo, kiểm tra để không lặp lại.")
+      ]},
+      { t: "note", x: L("조사에 참고인으로 불려 가면 본 것만 사실대로 말하면 됩니다. 들은 내용은 다른 사람에게 옮기지 않습니다.",
+        "Kapag tinawag bilang saksi, sabihin lang nang totoo ang nakita mo. Huwag ikalat ang narinig.",
+        "ถ้าถูกเรียกเป็นพยาน ให้พูดตามจริงเฉพาะสิ่งที่เห็น และไม่นำสิ่งที่ได้ยินไปบอกต่อ",
+        "Được gọi làm người chứng kiến thì chỉ cần nói đúng sự thật những gì đã thấy. Không truyền đạt lại cho người khác.") },
+      { t: "src", items: ["근로기준법 제76조의3(직장 내 괴롭힘 발생 시 조치)", "남녀고용평등법 제14조(직장 내 성희롱 발생 시 조치)"] }
+    ]},
+
+  // ---------- 6. 서로 존중하는 일터 ----------
+  { id: "p4-10", title: L("서로 존중하는 일터 만들기", "Paggawa ng lugar ng trabahong may respeto", "สร้างที่ทำงานที่เคารพกัน", "Xây dựng nơi làm việc tôn trọng nhau"),
+    blocks: [
+      { t: "lead", x: L("우리 공장에는 여러 나라 사람이 함께 일합니다. 서로 존중하는 팀은 신호가 잘 맞고, 위험을 서로 알려 주어 사고도 적습니다.",
+        "Iba't ibang nasyonalidad ang nagtatrabaho sa ating pabrika. Ang team na may respeto ay nagkakaintindihan sa senyas at nagbababala sa isa't isa kaya mas kaunti ang aksidente.",
+        "ในโรงงานของเรามีคนหลายชาติทำงานด้วยกัน ทีมที่เคารพกันจะส่งสัญญาณเข้าใจกัน เตือนอันตรายกัน อุบัติเหตุจึงน้อย",
+        "Xưởng ta có người nhiều nước cùng làm việc. Đội tôn trọng nhau thì ăn ý tín hiệu, nhắc nhau về nguy hiểm nên ít tai nạn.") },
+      H("오늘부터 바꿀 수 있는 말", "Mga salitang mababago simula ngayon", "คำพูดที่เปลี่ยนได้ตั้งแต่วันนี้", "Lời nói có thể đổi từ hôm nay", "do"),
+      { t: "kv", rows: [
+        [L("❌ \"야!\"", "❌ \"Hoy!\"", "❌ \"เฮ้ย!\"", "❌ \"Ê!\""), L("⭕ 이름을 부릅니다 — \"안나 씨\"", "⭕ Tawagin sa pangalan — \"Anna\"", "⭕ เรียกชื่อ — \"คุณแอนนา\"", "⭕ Gọi tên — \"Chị Anna\"")],
+        [L("❌ \"그것도 몰라?\"", "❌ \"Hindi mo alam iyan?\"", "❌ \"แค่นี้ก็ไม่รู้เหรอ\"", "❌ \"Cái đó cũng không biết à?\""), L("⭕ \"다시 보여 줄게요.\"", "⭕ \"Ipapakita ko ulit.\"", "⭕ \"เดี๋ยวทำให้ดูอีกครั้ง\"", "⭕ \"Để tôi chỉ lại nhé.\"")],
+        [L("❌ \"너희 나라는…\"", "❌ \"Sa bansa ninyo…\"", "❌ \"ประเทศพวกแก…\"", "❌ \"Nước tụi mày…\""), L("⭕ 일과 관계없는 국적 이야기는 하지 않습니다", "⭕ Huwag pag-usapan ang nasyonalidad na walang kinalaman sa trabaho", "⭕ ไม่พูดเรื่องสัญชาติที่ไม่เกี่ยวกับงาน", "⭕ Không nói chuyện quốc tịch không liên quan công việc")],
+        [L("❌ 반말·명령조", "❌ Bastos at utos na tono", "❌ พูดห้วน สั่งการ", "❌ Nói trống không, ra lệnh"), L("⭕ \"이것 좀 해 주세요. 고마워요.\"", "⭕ \"Pakigawa nito. Salamat.\"", "⭕ \"ช่วยทำอันนี้หน่อยนะ ขอบคุณ\"", "⭕ \"Làm giúp cái này nhé. Cảm ơn.\"")]
+      ]},
+      H("괴롭힘을 봤을 때 할 수 있는 5가지", "5 bagay na magagawa kapag may nakitang panliligalig", "5 สิ่งที่ทำได้เมื่อเห็นการกลั่นแกล้ง", "5 việc có thể làm khi thấy quấy rối", "do"),
+      { t: "ol", tone: "do", items: [
+        L("주의 돌리기 — 다른 이야기나 일을 꺼내 상황을 끊습니다.", "Ibaling ang atensyon — magsimula ng ibang usapan o trabaho para maputol.", "เบี่ยงความสนใจ — พูดเรื่องอื่นหรืองานอื่นเพื่อตัดสถานการณ์", "Đánh lạc hướng — nói chuyện khác hoặc việc khác để cắt ngang."),
+        L("도움 요청 — 반장·관리자에게 알립니다.", "Humingi ng tulong — sabihin sa team leader o manager.", "ขอความช่วยเหลือ — แจ้งหัวหน้าหรือผู้จัดการ", "Nhờ giúp — báo tổ trưởng, quản lý."),
+        L("기록 — 본 것을 날짜와 함께 적어 둡니다.", "Itala — isulat ang nakita kasama ang petsa.", "บันทึก — จดสิ่งที่เห็นพร้อมวันที่", "Ghi lại — ghi những gì thấy kèm ngày tháng."),
+        L("나중에 위로 — 피해자에게 괜찮은지 묻고 곁에 있어 줍니다.", "Kumustahin pagkatapos — tanungin kung okay ang biktima at samahan siya.", "ปลอบใจภายหลัง — ถามผู้เสียหายว่าโอเคไหม และอยู่เคียงข้าง", "An ủi sau đó — hỏi nạn nhân có ổn không và ở bên họ."),
+        L("직접 말하기 — 안전하다면 \"그건 아닌 것 같아요\"라고 짧게 말합니다.", "Direktang sabihin — kung ligtas, maikling sabihin: \"Hindi tama iyan.\"", "พูดตรง ๆ — ถ้าปลอดภัย พูดสั้น ๆ ว่า \"แบบนั้นไม่ถูกนะ\"", "Nói thẳng — nếu an toàn, nói ngắn gọn \"Như vậy không đúng đâu.\"")
+      ]},
+      { t: "note", x: L("존중은 큰일이 아닙니다. 이름을 불러 주고, 다시 설명해 주고, 고맙다고 말하는 것에서 시작합니다.",
+        "Hindi malaking bagay ang respeto. Nagsisimula ito sa pagtawag sa pangalan, pag-uulit ng paliwanag at pagsasabi ng salamat.",
+        "การเคารพไม่ใช่เรื่องใหญ่ เริ่มจากเรียกชื่อ อธิบายซ้ำ และพูดขอบคุณ",
+        "Tôn trọng không phải điều lớn lao. Bắt đầu từ gọi tên, giải thích lại và nói cảm ơn.") },
+      { t: "src", items: ["고용노동부 「직장 내 괴롭힘 판단 및 예방·대응 매뉴얼」(주변인의 역할)"] }
+    ]}
+  );
+})();
+
+// 모든 단원 끝에 "스스로 확인" O/X 2문제
+(() => {
+  const add = window.ADD_MORE;
+  const Q = (q, o, w) => [q, o, w];
+  const OX = {
+  "p1-1": [
+    Q(L("다칠 뻔한 일(아차사고)은 실제로 다친 게 아니니 말하지 않아도 된다.", "Hindi na kailangang sabihin ang muntikang aksidente dahil walang nasaktan.", "เหตุเกือบเกิดอุบัติเหตุไม่ได้บาดเจ็บจริง ไม่ต้องบอกก็ได้", "Sự cố suýt xảy ra không bị thương thật nên không cần nói."), false,
+      L("큰 사고 1건 뒤에는 아차사고 300건이 있습니다. 아차사고를 말해야 큰 사고를 막습니다.", "Sa likod ng 1 malaking aksidente ay may 300 muntikang aksidente. Kailangang sabihin ito para mapigilan ang malaking aksidente.", "เบื้องหลังอุบัติเหตุใหญ่ 1 ครั้งมีเหตุเกือบเกิด 300 ครั้ง ต้องบอกจึงป้องกันอุบัติเหตุใหญ่ได้", "Sau 1 tai nạn lớn có 300 sự cố suýt xảy ra. Phải nói ra mới ngăn được tai nạn lớn.")),
+    Q(L("일하다 병에 걸리는 것도 산업재해이다.", "Aksidente sa trabaho rin ang pagkakasakit dahil sa trabaho.", "การป่วยจากการทำงานก็เป็นอุบัติเหตุจากการทำงาน", "Mắc bệnh do làm việc cũng là tai nạn lao động."), true,
+      L("업무 때문에 생긴 병(난청, 근골격계질환 등)도 산업재해입니다.", "Kasama ang sakit dahil sa trabaho (pagkabingi, sakit sa kalamnan at buto).", "โรคที่เกิดจากงาน (หูตึง โรคกล้ามเนื้อและกระดูก) ก็เป็นอุบัติเหตุจากการทำงาน", "Bệnh do công việc (điếc, bệnh cơ xương) cũng là tai nạn lao động."))
+  ],
+  "p1-2": [
+    Q(L("회사가 준 보호구를 착용하는 것은 근로자의 의무이다.", "Tungkulin ng manggagawa ang magsuot ng PPE na bigay ng kumpanya.", "การสวมอุปกรณ์ป้องกันที่บริษัทให้เป็นหน้าที่ของคนงาน", "Đeo đồ bảo hộ công ty cấp là nghĩa vụ của người lao động."), true,
+      L("근로자는 안전수칙을 지키고 보호구를 착용해야 합니다.", "Dapat sundin ng manggagawa ang safety rules at magsuot ng PPE.", "คนงานต้องปฏิบัติตามกฎความปลอดภัยและสวมอุปกรณ์ป้องกัน", "Người lao động phải tuân thủ quy định an toàn và đeo đồ bảo hộ.")),
+    Q(L("외국인 근로자는 산재보험을 받을 수 없다.", "Hindi makakatanggap ng work injury insurance ang dayuhang manggagawa.", "คนงานต่างชาติรับประกันอุบัติเหตุจากงานไม่ได้", "Lao động nước ngoài không được hưởng bảo hiểm tai nạn lao động."), false,
+      L("외국인 근로자도 한국인과 똑같이 산재보험을 받습니다.", "Pareho sa Koreano, makakatanggap din ang dayuhang manggagawa.", "คนงานต่างชาติได้รับเหมือนคนเกาหลี", "Lao động nước ngoài cũng được hưởng như người Hàn."))
+  ],
+  "a-stop": [
+    Q(L("급박한 위험이 있으면 허락을 기다리지 않고 작업을 멈추고 대피할 수 있다.", "Puwedeng huminto at lumikas nang hindi naghihintay ng pahintulot kapag may agarang panganib.", "ถ้ามีอันตรายเร่งด่วน หยุดงานและหลบได้โดยไม่ต้องรออนุญาต", "Có nguy hiểm cấp bách thì được dừng và lánh nạn không cần chờ cho phép."), true,
+      L("작업중지권입니다. 멈춘 뒤 바로 관리자에게 알립니다.", "Ito ang karapatang huminto. Sabihin agad sa manager pagkatapos.", "นี่คือสิทธิหยุดงาน หยุดแล้วแจ้งหัวหน้าทันที", "Đây là quyền dừng việc. Dừng xong báo ngay cho quản lý.")),
+    Q(L("작업을 멈췄다는 이유로 회사가 불이익을 줄 수 있다.", "Puwede kang parusahan ng kumpanya dahil huminto ka.", "บริษัทลงโทษได้เพราะหยุดงาน", "Công ty có thể gây bất lợi vì đã dừng việc."), false,
+      L("위험하다고 믿을 만한 이유가 있었다면 불이익을 줄 수 없습니다.", "Hindi puwede kung may makatwirang dahilan para maniwalang delikado.", "ถ้ามีเหตุผลที่เชื่อได้ว่าอันตราย บริษัทลงโทษไม่ได้", "Nếu có lý do hợp lý để tin là nguy hiểm thì không được gây bất lợi."))
+  ],
+  "a-tbm": [
+    Q(L("TBM은 사무실에서 30분 이상 하는 회의이다.", "Ang TBM ay 30 minutong pulong sa opisina.", "TBM คือการประชุมในออฟฟิศ 30 นาทีขึ้นไป", "TBM là cuộc họp trong văn phòng từ 30 phút."), false,
+      L("TBM은 작업 현장에서 5~10분 동안 짧게 합니다.", "Ginagawa ang TBM sa lugar ng trabaho nang 5–10 minuto.", "TBM ทำสั้น ๆ 5–10 นาทีที่หน้างาน", "TBM làm ngắn 5–10 phút tại hiện trường.")),
+    Q(L("TBM에서 이해하지 못한 말이 있으면 통역이나 다시 설명을 부탁해도 된다.", "Puwedeng humingi ng interpreter o ulit na paliwanag kapag hindi naintindihan sa TBM.", "ถ้าไม่เข้าใจใน TBM ขอล่ามหรือให้อธิบายซ้ำได้", "Không hiểu trong TBM thì có thể nhờ phiên dịch hoặc giải thích lại."), true,
+      L("모르는 채로 일하는 것이 가장 위험합니다.", "Pinakadelikado ang magtrabaho nang hindi naiintindihan.", "การทำงานโดยไม่เข้าใจอันตรายที่สุด", "Làm việc mà không hiểu là nguy hiểm nhất."))
+  ],
+  "p1-6": [
+    Q(L("큰 충격을 받은 안전모도 겉에 금이 없으면 계속 써도 된다.", "Puwedeng gamitin ang helmet na tinamaan nang malakas kung walang lamat sa labas.", "หมวกที่ถูกกระแทกแรง ถ้าไม่มีรอยร้าวภายนอกใช้ต่อได้", "Mũ bị va mạnh nếu bên ngoài không nứt thì dùng tiếp được."), false,
+      L("안쪽이 손상됐을 수 있으니 바꿉니다.", "Puwedeng sira ang loob kaya palitan.", "ข้างในอาจเสียหาย ต้องเปลี่ยน", "Bên trong có thể đã hỏng nên phải thay.")),
+    Q(L("그라인더·용접 작업은 보안경을 쓰고 그 위에 보안면을 쓴다.", "Sa grinder at welding, goggles muna saka face shield.", "งานเจียรและเชื่อม สวมแว่นตาแล้วสวมกระบังหน้าทับ", "Mài và hàn: đeo kính rồi đeo mặt nạ bên ngoài."), true,
+      L("보안면만 쓰면 옆이나 아래로 들어오는 파편을 막지 못합니다.", "Hindi kayang harangan ng face shield lang ang piraso mula sa gilid o ilalim.", "กระบังหน้าอย่างเดียวกันเศษจากด้านข้างหรือด้านล่างไม่ได้", "Chỉ mặt nạ thì không chặn được mảnh bay từ bên cạnh, bên dưới."))
+  ],
+  "p1-5": [
+    Q(L("파란색 원형 표지는 '반드시 해야 하는 것'을 알려 준다.", "Ang asul na bilog na karatula ay 'dapat gawin'.", "ป้ายวงกลมสีน้ำเงินบอก 'สิ่งที่ต้องทำ'", "Biển tròn màu xanh dương cho biết 'việc bắt buộc phải làm'."), true,
+      L("지시표지입니다. 예: 귀마개 착용, 안전화 착용.", "Utos na karatula. Hal.: ear plug, safety shoes.", "ป้ายบังคับ เช่น สวมที่อุดหู สวมรองเท้านิรภัย", "Biển bắt buộc. Ví dụ: đeo nút tai, đi giày bảo hộ.")),
+    Q(L("노란 삼각형 표지가 있으면 그 안으로 들어가면 안 된다는 뜻이다.", "Ang dilaw na tatsulok ay ibig sabihing bawal pumasok.", "ป้ายสามเหลี่ยมสีเหลืองหมายถึงห้ามเข้า", "Biển tam giác vàng nghĩa là cấm vào."), false,
+      L("노란색은 '경고 — 조심하세요'입니다. 금지는 빨간색 원입니다.", "Ang dilaw ay 'Babala—mag-ingat'. Pula na bilog ang pagbabawal.", "สีเหลืองคือ 'เตือน — ระวัง' ส่วนห้ามคือวงกลมสีแดง", "Màu vàng là 'cảnh báo — cẩn thận'. Cấm là vòng tròn đỏ."))
+  ],
+  "p1-7": [
+    Q(L("작업이 느려서 방호장치를 잠깐 끄는 것은 괜찮다.", "Okay lang patayin saglit ang safety device dahil mabagal.", "ปิดอุปกรณ์ป้องกันแป๊บเดียวเพราะงานช้า ไม่เป็นไร", "Tắt thiết bị bảo vệ một chút vì chậm thì không sao."), false,
+      L("방호장치를 끈 '잠깐'에 큰 사고가 납니다. 떼려면 사업주의 허가가 필요합니다.", "Sa 'saglit' na iyon nangyayari ang malaking aksidente. Kailangan ng pahintulot ng employer.", "อุบัติเหตุใหญ่เกิดใน 'แป๊บเดียว' นั้น ถ้าจะถอดต้องได้รับอนุญาตจากนายจ้าง", "Tai nạn lớn xảy ra đúng 'một chút' đó. Muốn tháo phải được chủ cho phép.")),
+    Q(L("안전검사에 불합격한 기계는 사용하면 안 된다.", "Hindi dapat gamitin ang makinang bumagsak sa safety inspection.", "เครื่องที่ไม่ผ่านการตรวจความปลอดภัยห้ามใช้", "Máy không đạt kiểm định an toàn thì không được dùng."), true,
+      L("검사를 받지 않았거나 불합격한 기계는 쓸 수 없습니다.", "Bawal ang hindi nainspeksyon o bumagsak.", "เครื่องที่ไม่ได้ตรวจหรือไม่ผ่านใช้ไม่ได้", "Máy chưa kiểm định hoặc không đạt thì không được dùng."))
+  ],
+  "p1-9": [
+    Q(L("화학물질을 빈 음료수 병에 옮겨 담아도 된다.", "Puwedeng ilipat ang kemikal sa bote ng inumin.", "เทสารเคมีใส่ขวดน้ำดื่มเปล่าได้", "Có thể chiết hóa chất vào chai nước uống rỗng."), false,
+      L("다른 사람이 마시는 사고가 납니다. 옮겨 담으면 경고표지도 붙여야 합니다.", "May nakakainom nito. Kapag inilipat, lagyan din ng babala.", "มีคนดื่มผิด ถ้าเทใส่ภาชนะอื่นต้องติดป้ายเตือนด้วย", "Có người uống nhầm. Chiết sang thì phải dán nhãn cảnh báo."),),
+    Q(L("MSDS에는 응급조치 방법이 적혀 있다.", "May first aid sa MSDS.", "MSDS มีวิธีปฐมพยาบาล", "MSDS có ghi cách sơ cứu."), true,
+      L("유해성, 응급조치, 화재·누출 대처, 보호구가 적혀 있습니다.", "May panganib, first aid, sunog at tagas, at PPE.", "มีอันตราย ปฐมพยาบาล การรับมือไฟไหม้และรั่วไหล อุปกรณ์ป้องกัน", "Có độc tính, sơ cứu, xử lý cháy, rò rỉ, đồ bảo hộ."))
+  ],
+  "w-0": [
+    Q(L("제조업 사망사고 중 가장 많은 유형은 '끼임'이다.", "Ang pinakamaraming uri ng nakamamatay na aksidente sa manufacturing ay 'naipit'.", "อุบัติเหตุถึงตายในภาคการผลิตที่มากที่สุดคือ 'ถูกหนีบ'", "Loại tai nạn chết người nhiều nhất trong sản xuất là 'bị kẹp'."), true,
+      L("최근 3년 26.7%로 1위입니다.", "26.7% sa nakaraang 3 taon—una.", "3 ปีล่าสุด 26.7% อันดับ 1", "3 năm gần đây 26,7%, đứng đầu.")),
+    Q(L("떨어짐 사고는 건설 현장에만 있고 공장에는 없다.", "Sa construction lang ang pagkahulog, wala sa pabrika.", "การตกจากที่สูงมีแค่ในงานก่อสร้าง ไม่มีในโรงงาน", "Ngã cao chỉ có ở công trường, không có ở nhà máy."), false,
+      L("제조업 사망의 19.4%가 떨어짐입니다. 사다리, 지붕, 트럭 적재함에서 일어납니다.", "19.4% ng namatay sa manufacturing ay nahulog—sa hagdan, bubong, trak.", "19.4% ของผู้เสียชีวิตในภาคการผลิตคือการตก จากบันได หลังคา กระบะรถ", "19,4% tử vong trong sản xuất là ngã cao — từ thang, mái, thùng xe."))
+  ],
+  "w-1": [
+    Q(L("걸린 스크랩을 빼는 건 금방 끝나니 전원을 켠 채 해도 된다.", "Mabilis lang alisin ang naipit na scrap kaya puwedeng naka-on.", "เอาเศษที่ติดออกแป๊บเดียว เปิดไฟไว้ก็ได้", "Gỡ phế liệu kẹt nhanh thôi nên để máy bật cũng được."), false,
+      L("청소·이물질 제거 중 사망의 56.6%가 전원을 끄지 않아서였습니다.", "56.6% ng namatay sa paglilinis ay dahil hindi pinatay ang makina.", "56.6% ของผู้เสียชีวิตขณะทำความสะอาดเกิดจากไม่ตัดไฟ", "56,6% tử vong khi vệ sinh là do không ngắt điện.")),
+    Q(L("LOTO 자물쇠의 열쇠는 작업하는 본인이 가지고 있어야 한다.", "Ang may hawak ng susi ng LOTO ay ang mismong nagtatrabaho.", "กุญแจล็อก LOTO ผู้ทำงานต้องเก็บไว้เอง", "Chìa khóa LOTO phải do chính người làm việc giữ."), true,
+      L("그래야 다른 사람이 실수로 켜지 못합니다.", "Para walang ibang makapagpaandar nang hindi sinasadya.", "เพื่อไม่ให้คนอื่นเปิดเครื่องโดยไม่ตั้งใจ", "Như vậy người khác mới không bật nhầm được."))
+  ],
+  "w-laser": [
+    Q(L("레이저 가공기의 반사된 빛도 눈을 다치게 할 수 있다.", "Puwedeng masaktan ang mata kahit sa naaninag na liwanag ng laser.", "แสงสะท้อนของเลเซอร์ก็ทำร้ายตาได้", "Tia phản xạ của máy laser cũng có thể làm hại mắt."), true,
+      L("판금용 레이저는 4등급이라 반사광도 위험합니다.", "Class 4 ang laser sa sheet metal kaya delikado pati naaninag.", "เลเซอร์ตัดโลหะเป็นระดับ 4 แสงสะท้อนก็อันตราย", "Laser cắt kim loại cấp 4 nên tia phản xạ cũng nguy hiểm.")),
+    Q(L("레이저 안에서 불이 나면 먼저 문을 열고 물을 뿌린다.", "Kapag nagkasunog sa loob ng laser, buksan agad ang pinto at buhusan ng tubig.", "ไฟไหม้ในเครื่องเลเซอร์ ให้เปิดประตูแล้วราดน้ำก่อน", "Cháy trong máy laser thì mở cửa và phun nước trước."), false,
+      L("비상정지 → 산소 밸브 잠금 → 소화기 순서입니다.", "Emergency stop → isara ang oxygen valve → extinguisher.", "หยุดฉุกเฉิน → ปิดวาล์วออกซิเจน → ถังดับเพลิง", "Dừng khẩn cấp → khóa van oxy → bình chữa cháy."))
+  ],
+  "w-bend": [
+    Q(L("펀치가 판재에 거의 닿을 때는 광선 장치가 꺼질 수 있어 손을 넣으면 위험하다.", "Kapag halos nakadikit na ang punch, puwedeng mamatay ang light guard kaya delikado ang kamay.", "ตอนพันช์เกือบถึงแผ่น ม่านแสงอาจปิด ยื่นมือเข้าไปอันตราย", "Khi chày gần chạm tấm, rèm quang có thể tắt nên đưa tay vào rất nguy hiểm."), true,
+      L("뮤팅 구간입니다. 판재 끝만 잡습니다.", "Muting zone ito. Hawakan lang ang dulo.", "เป็นช่วงมิวติ้ง จับเฉพาะปลายแผ่น", "Đó là vùng muting. Chỉ giữ mép tấm.")),
+    Q(L("2인 작업 때는 두 사람 모두 페달을 밟을 수 있다.", "Sa 2 tao, puwedeng tumapak sa pedal ang dalawa.", "งาน 2 คน เหยียบแป้นได้ทั้งสองคน", "Làm 2 người thì cả hai đều được đạp bàn đạp."), false,
+      L("페달은 정해진 한 사람만, 신호 후에 밟습니다.", "Isang takdang tao lang, pagkatapos ng senyas.", "เหยียบได้คนเดียวที่กำหนด หลังให้สัญญาณ", "Chỉ một người được chỉ định đạp, sau tín hiệu."))
+  ],
+  "w-2": [
+    Q(L("양수조작식 버튼 하나를 테이프로 눌러 놓으면 한 손으로 편하게 작업할 수 있어 괜찮다.", "Okay lang tapalan ang isang button ng two-hand control para isang kamay lang.", "เอาเทปกดปุ่มควบคุมสองมือไว้ปุ่มหนึ่ง จะทำมือเดียวได้สะดวก ไม่เป็นไร", "Dán băng keo đè một nút điều khiển hai tay để làm một tay cho tiện thì không sao."), false,
+      L("다른 손이 금형 사이에 들어갈 수 있게 되어 장치가 무의미해집니다.", "Puwedeng pumasok ang kabilang kamay sa die kaya nawawalan ng silbi.", "มืออีกข้างจะเข้าไปในแม่พิมพ์ได้ อุปกรณ์ไร้ประโยชน์", "Tay kia có thể lọt vào khuôn, thiết bị mất tác dụng.")),
+    Q(L("금형 교체 때는 안전블록을 끼우고 전원을 잠근다.", "Sa pagpapalit ng die, maglagay ng safety block at i-lock ang kuryente.", "เปลี่ยนแม่พิมพ์ใส่บล็อกนิรภัยและล็อกไฟ", "Khi thay khuôn, chèn khối an toàn và khóa điện."), true,
+      L("슬라이드가 갑자기 내려오는 것을 막습니다.", "Para hindi biglang bumaba ang slide.", "ป้องกันสไลด์ตกลงมากะทันหัน", "Ngăn đầu trượt bất ngờ hạ xuống."))
+  ],
+  "w-weld": [
+    Q(L("옆 사람의 용접 빛을 잠깐 보는 것은 괜찮다.", "Okay lang saglit tingnan ang welding ng katabi.", "มองแสงเชื่อมของคนข้าง ๆ แป๊บเดียวไม่เป็นไร", "Nhìn một chút ánh hàn của người bên cạnh thì không sao."), false,
+      L("잠깐만 봐도 몇 시간 뒤 아크 눈병이 생길 수 있습니다.", "Kahit saglit, puwedeng magka-arc eye pagkalipas ng ilang oras.", "แม้แป๊บเดียว ไม่กี่ชั่วโมงต่อมาอาจตาอักเสบ", "Dù chỉ một chút, vài giờ sau có thể bị viêm mắt hồ quang.")),
+    Q(L("가스용기는 쓰러지지 않게 체인으로 고정한다.", "Ikadena ang gas cylinder para hindi matumba.", "ถังก๊าซต้องล่ามโซ่กันล้ม", "Bình khí phải cố định bằng xích để không đổ."), true,
+      L("쓰러지면 밸브가 깨져 가스가 터져 나올 수 있습니다.", "Kapag natumba, puwedeng mabasag ang valve at sumabog ang gas.", "ถ้าล้ม วาล์วอาจแตกและก๊าซพุ่งออกมา", "Đổ xuống có thể vỡ van, khí phụt ra."))
+  ],
+  "w-grind": [
+    Q(L("숫돌을 바꾼 뒤에는 3분 이상 시운전한다.", "Pagkatapos magpalit ng disc, 3 minutong test run.", "เปลี่ยนหินแล้วทดลองเดิน 3 นาทีขึ้นไป", "Thay đá xong chạy thử từ 3 phút."), true,
+      L("금이 간 숫돌은 시운전 중에 깨지므로 사람이 다치지 않습니다.", "Mababasag ang may lamat na disc habang test run kaya walang masasaktan.", "หินที่ร้าวจะแตกระหว่างทดลอง คนจึงไม่บาดเจ็บ", "Đá nứt sẽ vỡ khi chạy thử nên không ai bị thương.")),
+    Q(L("그라인더 작업에는 손을 보호하려고 면장갑을 낀다.", "Gumamit ng cotton gloves sa grinder para protektahan ang kamay.", "งานเจียรใส่ถุงมือผ้าเพื่อป้องกันมือ", "Làm máy mài đeo găng vải để bảo vệ tay."), false,
+      L("면장갑은 회전체에 말려 들어갑니다. 손에 맞는 가죽장갑을 낍니다.", "Naipupulupot ang cotton gloves. Gumamit ng leather gloves na kasya.", "ถุงมือผ้าถูกดึงเข้าเครื่องหมุน ใช้ถุงมือหนังที่พอดีมือ", "Găng vải bị cuốn vào bộ phận quay. Dùng găng da vừa tay."))
+  ],
+  "w-crane": [
+    Q(L("판재 묶음이 흔들리면 손으로 잡아서 방향을 잡는다.", "Kapag umuuga ang bundle, hawakan ng kamay para ituwid.", "มัดแผ่นโลหะแกว่ง ให้ใช้มือจับบังคับทิศทาง", "Bó tấm lắc lư thì dùng tay giữ để định hướng."), false,
+      L("손 대신 유도 로프를 씁니다. 손으로 잡다 끼이는 사고가 납니다.", "Gumamit ng tag line sa halip na kamay—naiipit ang kamay.", "ใช้เชือกนำทางแทนมือ จับด้วยมือแล้วถูกหนีบ", "Dùng dây dẫn hướng thay tay. Cầm tay dễ bị kẹp.")),
+    Q(L("긴 판재·파이프는 두 줄걸이나 전용 리프팅 장비로 건다.", "Dalawang sling o lifting device sa mahabang sheet o tubo.", "แผ่นยาวหรือท่อผูกสองจุดหรือใช้อุปกรณ์ยกเฉพาะ", "Tấm dài, ống thì buộc hai dây hoặc dùng thiết bị nâng chuyên dụng."), true,
+      L("한 줄로 걸면 미끄러져 빠집니다 (크레인 사망의 16.4%).", "Dumudulas kapag isa lang (16.4% ng namatay sa crane).", "ผูกจุดเดียวจะลื่นหลุด (16.4% ของผู้เสียชีวิตจากเครน)", "Buộc một dây sẽ trượt tuột (16,4% tử vong do cẩu)."))
+  ],
+  "w-fork": [
+    Q(L("짐이 시야를 가리면 후진으로 운전하거나 유도자를 둔다.", "Kapag natatakpan ang tanaw, umatras o gumamit ng signal person.", "ถ้าของบังสายตา ให้ถอยหลังขับหรือมีผู้ให้สัญญาณ", "Hàng che tầm nhìn thì chạy lùi hoặc có người hướng dẫn."), true,
+      L("앞이 안 보인 채 달리면 사람을 칩니다.", "Makakabangga ka kapag hindi kita ang harap.", "ขับโดยมองไม่เห็นด้านหน้าจะชนคน", "Chạy mà không thấy phía trước sẽ đâm người.")),
+    Q(L("높은 곳 작업을 할 때 지게차 포크 위 팔레트에 올라가도 된다.", "Puwedeng tumayo sa pallet sa fork para sa trabaho sa mataas.", "ทำงานที่สูงขึ้นไปยืนบนพาเลทบนงารถยกได้", "Làm việc trên cao có thể đứng lên pallet trên càng xe nâng."), false,
+      L("지게차 사망의 21.6%가 이런 '용도 외 사용'입니다. 고소작업대를 씁니다.", "21.6% ng namatay sa forklift ay ganitong maling gamit. Gumamit ng aerial platform.", "21.6% ของผู้เสียชีวิตจากรถยกมาจากการใช้ผิดวัตถุประสงค์แบบนี้ ใช้รถกระเช้า", "21,6% tử vong do xe nâng là kiểu 'dùng sai mục đích' này. Dùng xe nâng người."))
+  ],
+  "w-crush": [
+    Q(L("대차는 당기는 것보다 미는 것이 안전하다.", "Mas ligtas itulak ang kariton kaysa hilahin.", "เข็นรถปลอดภัยกว่าดึง", "Đẩy xe an toàn hơn kéo."), true,
+      L("당기면 바퀴에 발이 밀려 들어갈 수 있습니다.", "Kapag hinila, puwedeng masagasaan ang paa.", "ถ้าดึง ล้ออาจทับเท้า", "Kéo thì bánh xe có thể cán vào chân.")),
+    Q(L("잠깐 자재를 옮길 때는 운동화를 신어도 된다.", "Puwedeng rubber shoes kapag saglit lang maglilipat.", "ย้ายวัสดุแป๊บเดียวใส่รองเท้าผ้าใบได้", "Chuyển vật liệu một chút thì đi giày thể thao cũng được."), false,
+      L("판재 한 장에도 발가락뼈가 부러질 수 있습니다. 항상 안전화.", "Kahit isang sheet, puwedeng mabali ang buto. Laging safety shoes.", "แผ่นเดียวก็ทำนิ้วเท้าหักได้ ใส่รองเท้านิรภัยเสมอ", "Một tấm cũng làm gãy xương ngón chân. Luôn đi giày bảo hộ."))
+  ],
+  "w-cut": [
+    Q(L("자른 면의 버(거스러미)는 눈에 잘 보여서 쉽게 피할 수 있다.", "Madaling makita at iwasan ang burr sa pinutol na gilid.", "ครีบบนขอบที่ตัดมองเห็นง่าย หลบได้ง่าย", "Ba via ở mép cắt dễ thấy nên dễ tránh."), false,
+      L("아주 얇아서 잘 안 보입니다. 베임방지 장갑을 끼고 디버링합니다.", "Napakanipis kaya mahirap makita. Gumamit ng cut-resistant gloves at mag-deburr.", "บางมากมองไม่ค่อยเห็น ใส่ถุงมือกันบาดและลบครีบ", "Rất mỏng nên khó thấy. Đeo găng chống cắt và mài ba via.")),
+    Q(L("베였을 때는 깨끗한 천으로 상처를 세게 누른다.", "Kapag nahiwa, diinan nang malakas gamit ang malinis na tela.", "ถูกบาดให้ใช้ผ้าสะอาดกดแผลแรง ๆ", "Bị cắt thì dùng vải sạch ấn mạnh vào vết thương."), true,
+      L("5분 이상 누르고, 다친 곳을 심장보다 높이 듭니다.", "Diinan nang 5 minuto at itaas nang mas mataas sa puso.", "กด 5 นาทีขึ้นไป และยกให้สูงกว่าหัวใจ", "Ấn từ 5 phút và nâng cao hơn tim."))
+  ],
+  "w-3": [
+    Q(L("드릴 작업 때는 반지·시계를 빼고 긴 머리를 묶는다.", "Sa drill, tanggalin ang singsing at relo at itali ang mahabang buhok.", "งานสว่านถอดแหวน นาฬิกา และรวบผมยาว", "Khoan thì tháo nhẫn, đồng hồ và buộc tóc dài."), true,
+      L("회전체에 감기면 순식간에 몸이 끌려 들어갑니다.", "Kapag napulupot, mabilis na mahihila ang katawan.", "ถ้าพันกับชิ้นส่วนหมุน ร่างกายจะถูกดึงเข้าไปในพริบตา", "Bị cuốn vào bộ phận quay thì cơ thể bị kéo vào trong tích tắc.")),
+    Q(L("칩은 기계가 돌아갈 때 손으로 빨리 치우는 것이 좋다.", "Mas mabuting alisin agad ng kamay ang chips habang umaandar.", "เศษโลหะควรรีบเก็บด้วยมือขณะเครื่องหมุน", "Phoi nên nhanh tay gạt đi khi máy đang quay."), false,
+      L("기계를 멈추고 브러시나 갈고리로 치웁니다.", "Patigilin ang makina at gumamit ng brush o kawit.", "หยุดเครื่องแล้วใช้แปรงหรือตะขอเก็บ", "Dừng máy rồi dùng chổi hoặc móc để dọn."))
+  ],
+  "w-lift": [
+    Q(L("1.2m×2.4m 크기의 3mm 철판 한 장은 약 70kg이다.", "Mga 70kg ang isang 3mm na sheet na 1.2m×2.4m.", "แผ่นเหล็ก 3 มม. ขนาด 1.2×2.4 ม. หนักราว 70 กก.", "Một tấm thép 3mm cỡ 1,2m×2,4m nặng khoảng 70kg."), true,
+      L("혼자 들지 말고 리프터·크레인을 씁니다.", "Huwag buhating mag-isa—gumamit ng lifter o crane.", "อย่ายกคนเดียว ใช้ที่ยกหรือเครน", "Không nâng một mình, dùng bộ nâng hoặc cẩu.")),
+    Q(L("무거운 물건은 허리를 굽히고 팔 힘으로 든다.", "Buhatin ang mabigat sa pagyuko at lakas ng braso.", "ยกของหนักให้ก้มหลังและใช้แรงแขน", "Vật nặng thì cúi lưng và nâng bằng sức tay."), false,
+      L("무릎을 굽히고 허리를 펴서 다리 힘으로 듭니다.", "Ibaluktot ang tuhod, tuwid ang likod, gamitin ang binti.", "งอเข่า หลังตรง ใช้แรงขา", "Gập gối, thẳng lưng, nâng bằng sức chân."))
+  ],
+  "w-6": [
+    Q(L("사다리 위쪽 끝은 걸쳐 놓은 곳보다 60cm 이상 올라와야 한다.", "Dapat lumampas nang 60cm ang dulo ng hagdan.", "ปลายบนบันไดต้องสูงเกินจุดพาดอย่างน้อย 60 ซม.", "Đầu trên thang phải nhô cao hơn chỗ tựa ít nhất 60cm."), true,
+      L("오르내릴 때 잡을 곳이 있어야 떨어지지 않습니다.", "Para may mahawakan sa pag-akyat at pagbaba.", "เพื่อให้มีที่จับตอนขึ้นลง", "Để có chỗ bám khi lên xuống.")),
+    Q(L("트럭 적재함 위에서는 끝쪽에 등을 지고 서서 일하는 것이 편하다.", "Mas maginhawang tumayo nang nakatalikod sa gilid ng karga ng trak.", "บนกระบะรถยืนหันหลังให้ขอบทำงานสะดวก", "Trên thùng xe đứng quay lưng ra mép làm cho tiện."), false,
+      L("뒤로 넘어지기 쉽습니다. 같은 높이의 상하차장을 씁니다.", "Madaling matumba patalikod. Gumamit ng kapantay na loading dock.", "ล้มหงายง่าย ใช้ลานขึ้นลงที่สูงเท่ากัน", "Dễ ngã ngửa. Dùng bến bốc xếp cao bằng."))
+  ],
+  "w-7": [
+    Q(L("감전된 사람을 보면 바로 손으로 잡아당긴다.", "Hilahin agad ng kamay ang nakuryente.", "เห็นคนถูกไฟดูดให้ใช้มือดึงทันที", "Thấy người bị điện giật thì dùng tay kéo ngay."), false,
+      L("나도 감전됩니다. 전원을 끄거나 마른 나무·플라스틱으로 떼어 냅니다.", "Makukuryente ka rin. Patayin ang kuryente o gumamit ng tuyong kahoy o plastik.", "ตัวเราจะถูกไฟดูดด้วย ตัดไฟหรือใช้ไม้แห้ง พลาสติกแยกออก", "Mình cũng bị giật. Ngắt điện hoặc tách ra bằng gỗ khô, nhựa.")),
+    Q(L("분전반은 자격이 있는 전기 담당자만 연다.", "Ang may kwalipikasyong electrician lang ang magbubukas ng panel.", "ตู้ไฟให้ช่างไฟที่มีคุณสมบัติเปิดเท่านั้น", "Chỉ thợ điện có chứng chỉ mới mở tủ điện."), true,
+      L("안에는 높은 전압이 흐릅니다.", "May mataas na boltahe sa loob.", "ข้างในมีไฟแรงสูง", "Bên trong có điện áp cao."))
+  ],
+  "w-8": [
+    Q(L("가스가 새는지 확인할 때는 라이터 불을 가까이 대 본다.", "Gumamit ng lighter para tingnan kung may tagas.", "ตรวจก๊าซรั่วด้วยการจุดไฟแช็กใกล้ ๆ", "Kiểm tra rò khí bằng cách đưa bật lửa lại gần."), false,
+      L("비눗물을 발라 거품이 나는지 봅니다.", "Gumamit ng tubig na may sabon at tingnan kung bumubula.", "ใช้น้ำสบู่ทาแล้วดูว่ามีฟองไหม", "Bôi nước xà phòng xem có sủi bọt không.")),
+    Q(L("용접 전에 반경 11m 안의 탈 것을 치운다.", "Alisin ang madaling masunog sa loob ng 11m bago mag-weld.", "ก่อนเชื่อมเก็บเชื้อเพลิงในรัศมี 11 ม.", "Trước khi hàn dọn chất cháy trong bán kính 11m."), true,
+      L("불티는 생각보다 멀리 튑니다.", "Mas malayo ang tilamsik ng spark kaysa inaakala.", "ประกายไฟกระเด็นไกลกว่าที่คิด", "Tia lửa bắn xa hơn bạn nghĩ."))
+  ],
+  "w-confined": [
+    Q(L("탱크 안에 쓰러진 동료를 보면 바로 들어가서 꺼낸다.", "Pumasok agad para iligtas ang kasama na nakahandusay sa tangke.", "เห็นเพื่อนล้มในถังให้เข้าไปช่วยทันที", "Thấy đồng nghiệp ngã trong bồn thì vào kéo ra ngay."), false,
+      L("구하러 들어간 사람도 쓰러집니다. 먼저 119, 공기호흡기를 쓴 사람만 들어갑니다.", "Babagsak din ang papasok. Tumawag muna sa 119; may breathing apparatus lang ang papasok.", "คนเข้าไปช่วยก็ล้มด้วย โทร 119 ก่อน และให้คนที่ใส่เครื่องช่วยหายใจเข้าเท่านั้น", "Người vào cứu cũng ngã. Gọi 119 trước; chỉ người đeo bình thở mới vào.")),
+    Q(L("알곤은 냄새가 없어서 산소가 부족해도 알아채기 어렵다.", "Walang amoy ang argon kaya mahirap mapansin ang kakulangan ng oxygen.", "อาร์กอนไม่มีกลิ่น ออกซิเจนน้อยก็รู้ตัวยาก", "Argon không mùi nên thiếu oxy cũng khó nhận ra."), true,
+      L("들어가기 전에 반드시 산소 농도를 잽니다 (18% 이상).", "Sukatin muna ang oxygen (18% pataas).", "ต้องวัดออกซิเจนก่อนเข้าทุกครั้ง (18% ขึ้นไป)", "Phải đo nồng độ oxy trước khi vào (từ 18%)."))
+  ],
+  "p1-3": [
+    Q(L("잘린 손가락은 얼음에 직접 닿게 넣어 가져간다.", "Ilagay nang direkta sa yelo ang naputol na daliri.", "นิ้วที่ขาดให้ใส่ติดกับน้ำแข็งโดยตรง", "Ngón tay bị đứt cho tiếp xúc trực tiếp với đá."), false,
+      L("거즈로 싸서 비닐에 넣고, 그 비닐을 얼음물에 담급니다.", "Balutin ng gasa, ilagay sa plastik, ilubog sa tubig na may yelo.", "ห่อด้วยผ้าก๊อซ ใส่ถุง แล้วแช่ถุงในน้ำแข็งผสมน้ำ", "Bọc gạc, cho vào túi nilon, ngâm túi trong nước đá.")),
+    Q(L("데었을 때는 흐르는 찬물에 15분 이상 식힌다.", "Kapag napaso, palamigin sa umaagos na tubig nang 15 minuto.", "ถูกลวกให้ใช้น้ำเย็นไหลผ่าน 15 นาทีขึ้นไป", "Bị bỏng thì làm mát dưới vòi nước lạnh từ 15 phút."), true,
+      L("물집은 터뜨리지 않습니다.", "Huwag putukin ang paltos.", "อย่าเจาะตุ่มพอง", "Không chọc vỡ bọng nước."))
+  ],
+  "c-fire": [
+    Q(L("기름에 붙은 불은 물을 뿌려서 끈다.", "Patayin ng tubig ang apoy sa langis.", "ไฟจากน้ำมันให้ราดน้ำดับ", "Lửa bén dầu thì phun nước dập."), false,
+      L("물을 뿌리면 불이 튀어 커집니다. 소화기를 씁니다.", "Lalaki ang apoy. Gumamit ng extinguisher.", "ราดน้ำไฟจะกระเด็นลุกลาม ใช้ถังดับเพลิง", "Phun nước làm lửa bắn ra to hơn. Dùng bình chữa cháy.")),
+    Q(L("소화기는 바람을 등지고 불의 아래쪽부터 뿌린다.", "Gamitin ang extinguisher nang nakatalikod sa hangin at itutok sa ibaba ng apoy.", "ใช้ถังดับเพลิงโดยหันหลังให้ลม ฉีดที่โคนไฟ", "Dùng bình chữa cháy quay lưng về hướng gió, phun vào gốc lửa."), true,
+      L("불꽃이 아니라 타는 물건을 향해 쓸듯이 뿌립니다.", "Itutok sa nasusunog na bagay, hindi sa apoy.", "ฉีดกวาดไปที่สิ่งที่ไหม้ ไม่ใช่เปลวไฟ", "Phun quét vào vật đang cháy, không phải ngọn lửa."))
+  ],
+  "p1-10": [
+    Q(L("위험성평가는 관리자만 하는 일이고 근로자는 참여하지 않는다.", "Manager lang ang gumagawa ng risk assessment.", "การประเมินความเสี่ยงเป็นงานของหัวหน้าเท่านั้น คนงานไม่เกี่ยว", "Đánh giá rủi ro chỉ là việc của quản lý, người lao động không tham gia."), false,
+      L("현장을 가장 잘 아는 근로자가 참여해야 합니다.", "Dapat kasali ang manggagawang pinakanakakaalam sa lugar.", "คนงานที่รู้หน้างานดีที่สุดต้องมีส่วนร่วม", "Người lao động hiểu hiện trường nhất phải tham gia.")),
+    Q(L("위험을 줄일 때 보호구는 가장 마지막 방법이다.", "Ang PPE ang huling paraan sa pagbawas ng panganib.", "อุปกรณ์ป้องกันส่วนบุคคลคือวิธีสุดท้ายในการลดความเสี่ยง", "Đồ bảo hộ là biện pháp cuối cùng để giảm rủi ro."), true,
+      L("제거 → 대체 → 덮개·장치 → 작업 방법 → 보호구 순서입니다.", "Alisin → palitan → takip at device → paraan ng trabaho → PPE.", "ขจัด → แทนที่ → ฝาครอบ/อุปกรณ์ → วิธีทำงาน → อุปกรณ์ป้องกัน", "Loại bỏ → thay thế → che chắn → cách làm → đồ bảo hộ."))
+  ],
+  "p1-4": [
+    Q(L("교육 내용을 이해하지 못했어도 일단 서명하면 된다.", "Pumirma na lang kahit hindi naintindihan ang training.", "แม้ไม่เข้าใจเนื้อหาอบรมก็เซ็นชื่อไปก่อน", "Dù không hiểu nội dung đào tạo cứ ký trước."), false,
+      L("다시 설명해 달라고 하세요. 알아듣는 언어로 교육받을 수 있습니다.", "Humingi ng ulit na paliwanag. Puwede kang sanayin sa wikang naiintindihan mo.", "ขอให้อธิบายใหม่ ได้รับการอบรมเป็นภาษาที่เข้าใจ", "Hãy xin giải thích lại. Được đào tạo bằng ngôn ngữ mình hiểu.")),
+    Q(L("작업 내용이 바뀌면 다시 교육을 받는다.", "May training ulit kapag nagbago ang trabaho.", "ถ้างานเปลี่ยนต้องได้รับการอบรมใหม่", "Đổi công việc thì được đào tạo lại."), true,
+      L("작업내용 변경 시 교육(2시간 이상)이 있습니다.", "May training sa pagbabago ng trabaho (2 oras pataas).", "มีการอบรมเมื่อเปลี่ยนงาน (2 ชั่วโมงขึ้นไป)", "Có đào tạo khi đổi công việc (từ 2 giờ)."))
+  ],
+  "p1-8": [
+    Q(L("시끄러운 곳에서 일하는 사람은 특수건강진단에서 청력검사를 받는다.", "May hearing test sa espesyal na check-up ang nagtatrabaho sa maingay.", "คนทำงานที่เสียงดังต้องตรวจการได้ยินในการตรวจสุขภาพพิเศษ", "Người làm nơi ồn được đo thính lực trong khám đặc biệt."), true,
+      L("소음은 특수건강진단 대상 유해인자입니다.", "Kasama ang ingay sa espesyal na check-up.", "เสียงดังเป็นปัจจัยเสี่ยงที่ต้องตรวจสุขภาพพิเศษ", "Tiếng ồn là yếu tố có hại thuộc diện khám đặc biệt.")),
+    Q(L("건강진단 결과 'D1'은 아무 문제가 없다는 뜻이다.", "Ang 'D1' ay walang problema.", "ผลตรวจ 'D1' หมายถึงไม่มีปัญหา", "Kết quả 'D1' nghĩa là không có vấn đề gì."), false,
+      L("D1은 직업병 소견이 있어 관리가 필요하다는 뜻입니다.", "May palatandaan ng sakit sa trabaho ang D1.", "D1 หมายถึงพบสัญญาณโรคจากการทำงาน ต้องดูแล", "D1 là có dấu hiệu bệnh nghề nghiệp, cần quản lý."))
+  ],
+  "c-noise": [
+    Q(L("귀마개는 시끄러울 때만 잠깐 끼고 조용하면 빼도 효과는 같다.", "Pareho ang epekto kahit saglit lang isuot ang ear plug.", "ใส่ที่อุดหูแค่ตอนเสียงดัง ถอดตอนเงียบ ผลเท่าเดิม", "Chỉ đeo nút tai lúc ồn, im thì tháo, hiệu quả như nhau."), false,
+      L("잠깐만 빼도 보호 효과가 크게 줄어듭니다.", "Malaki ang bawas sa proteksyon kahit saglit tanggalin.", "ถอดแป๊บเดียวการป้องกันก็ลดลงมาก", "Tháo chốc lát hiệu quả bảo vệ cũng giảm mạnh.")),
+    Q(L("퇴근 후에도 귀에서 '삐-' 소리가 나면 난청의 신호일 수 있다.", "Puwedeng palatandaan ng pagkabingi ang 'beep' sa tainga pagkatapos ng trabaho.", "เลิกงานแล้วยังมีเสียงวี้ในหู อาจเป็นสัญญาณหูตึง", "Tan ca tai vẫn kêu 'o o' có thể là dấu hiệu nghe kém."), true,
+      L("한번 나빠진 청력은 돌아오지 않습니다. 반장에게 알리세요.", "Hindi na bumabalik ang nasirang pandinig. Sabihin sa team leader.", "หูที่เสียแล้วไม่กลับมา แจ้งหัวหน้า", "Thính lực đã giảm không hồi phục. Hãy báo tổ trưởng."))
+  ],
+  "c-heat": [
+    Q(L("목이 마를 때만 물을 마시면 된다.", "Uminom lang kapag nauuhaw.", "ดื่มน้ำเฉพาะตอนกระหาย", "Chỉ uống nước khi khát."), false,
+      L("목마르지 않아도 15~20분마다 한 컵씩 마십니다.", "Isang baso bawat 15–20 minuto kahit hindi nauuhaw.", "ดื่มทุก 15–20 นาทีแม้ไม่กระหาย", "Dù không khát, cứ 15–20 phút uống một cốc.")),
+    Q(L("의식이 없는 열사병 환자에게는 물을 먹이지 않는다.", "Huwag painumin ang walang malay na may heat stroke.", "ผู้ป่วยลมแดดที่หมดสติห้ามให้ดื่มน้ำ", "Người say nắng bất tỉnh thì không cho uống nước."), true,
+      L("숨이 막힐 수 있습니다. 119에 신고하고 몸을 식힙니다.", "Puwedeng mabulunan. Tumawag sa 119 at palamigin ang katawan.", "อาจสำลัก โทร 119 และทำให้ตัวเย็น", "Có thể bị sặc. Gọi 119 và làm mát cơ thể."))
+  ],
+  "c-chem": [
+    Q(L("시너를 만질 때는 면장갑이면 충분하다.", "Sapat ang cotton gloves sa thinner.", "จับทินเนอร์ใส่ถุงมือผ้าก็พอ", "Chạm thinner đeo găng vải là đủ."), false,
+      L("면장갑은 스며듭니다. 니트릴 같은 화학물질용 장갑을 씁니다.", "Tumatagos sa cotton. Gumamit ng nitrile gloves.", "ถุงมือผ้าสารซึมผ่าน ใช้ถุงมือกันสารเคมีเช่นไนไตรล์", "Găng vải bị thấm. Dùng găng chống hóa chất như nitrile.")),
+    Q(L("기름 묻은 걸레를 쌓아 두면 저절로 불이 날 수 있다.", "Puwedeng kusang magliyab ang naipong basahang may langis.", "ผ้าเปื้อนน้ำมันกองไว้อาจลุกไหม้เอง", "Giẻ dính dầu chất đống có thể tự bốc cháy."), true,
+      L("뚜껑 있는 금속 통에 버립니다.", "Itapon sa metal na lalagyan na may takip.", "ทิ้งในถังโลหะมีฝาปิด", "Bỏ vào thùng kim loại có nắp."))
+  ],
+  "c-heart": [
+    Q(L("한쪽 팔에 힘이 빠지고 말이 어눌하면 쉬면서 지켜본다.", "Magpahinga lang at bantayan kapag nanghina ang isang braso at malabo ang salita.", "แขนข้างหนึ่งอ่อนแรงและพูดไม่ชัด ให้พักดูอาการ", "Một tay yếu và nói ngọng thì nghỉ và theo dõi."), false,
+      L("뇌졸중 신호입니다. 바로 119에 신고합니다.", "Palatandaan ng stroke. Tumawag agad sa 119.", "เป็นสัญญาณโรคหลอดเลือดสมอง โทร 119 ทันที", "Đó là dấu hiệu đột quỵ. Gọi 119 ngay.")),
+    Q(L("혈압 140/90 이상은 고혈압이다.", "Altapresyon ang 140/90 pataas.", "ความดัน 140/90 ขึ้นไปคือความดันสูง", "Huyết áp từ 140/90 là cao huyết áp."), true,
+      L("건강진단으로 확인하고 관리합니다.", "Suriin sa check-up at alagaan.", "ตรวจด้วยการตรวจสุขภาพและดูแล", "Kiểm tra qua khám sức khỏe và kiểm soát."))
+  ],
+  "c-stress": [
+    Q(L("마음이 지치면 기계 앞에서 실수가 늘어 사고 위험도 커진다.", "Kapag pagod ang isip, dumadami ang mali at panganib.", "ใจเหนื่อยทำให้ผิดพลาดหน้าเครื่องมากขึ้น เสี่ยงอุบัติเหตุ", "Tinh thần mệt mỏi thì lỗi trước máy tăng, nguy cơ tai nạn cũng tăng."), true,
+      L("스트레스 관리도 안전의 일부입니다.", "Bahagi rin ng kaligtasan ang pamamahala ng stress.", "การจัดการความเครียดเป็นส่วนหนึ่งของความปลอดภัย", "Quản lý căng thẳng cũng là một phần của an toàn.")),
+    Q(L("힘든 일은 혼자 참는 것이 가장 좋은 방법이다.", "Pinakamabuting tiisin nang mag-isa ang hirap.", "เรื่องหนักใจควรทนคนเดียว", "Chuyện khó khăn tốt nhất là chịu đựng một mình."), false,
+      L("동료·관리자·상담센터에 이야기하세요.", "Makipag-usap sa kasama, manager o counseling center.", "คุยกับเพื่อน หัวหน้า หรือศูนย์ปรึกษา", "Hãy nói với đồng nghiệp, quản lý hoặc trung tâm tư vấn."))
+  ],
+  "p1-11": [
+    Q(L("8시간 일하면 쉬는 시간은 1시간 이상이다.", "1 oras o higit ang pahinga sa 8 oras na trabaho.", "ทำงาน 8 ชั่วโมงพัก 1 ชั่วโมงขึ้นไป", "Làm 8 giờ thì nghỉ từ 1 giờ."), true,
+      L("4시간에 30분, 8시간에 1시간 이상입니다.", "30 minuto sa 4 oras, 1 oras sa 8 oras.", "4 ชั่วโมงพัก 30 นาที 8 ชั่วโมงพัก 1 ชั่วโมงขึ้นไป", "4 giờ nghỉ 30 phút, 8 giờ nghỉ từ 1 giờ.")),
+    Q(L("휴게실을 자재 창고로 같이 써도 된다.", "Puwedeng gawing bodega ng materyales ang rest area.", "ใช้ห้องพักเป็นโกดังเก็บวัสดุร่วมด้วยได้", "Có thể dùng phòng nghỉ làm kho vật liệu."), false,
+      L("휴게시설은 다른 용도로 쓰면 안 됩니다.", "Bawal gamitin sa ibang layunin.", "ห้ามใช้ห้องพักเพื่อการอื่น", "Không được dùng phòng nghỉ vào mục đích khác."))
+  ],
+  "p2-1": [
+    Q(L("중대재해처벌법은 상시근로자 5명 이상 사업장에 적용된다.", "Sakop ng batas ang 5 pataas na manggagawa.", "กฎหมายนี้ใช้กับสถานที่ที่มีลูกจ้าง 5 คนขึ้นไป", "Luật áp dụng cho nơi có từ 5 lao động thường xuyên."), true,
+      L("2024년 1월 27일부터 5인 이상 모든 사업장에 적용됩니다.", "Mula Enero 27, 2024.", "ตั้งแต่ 27 ม.ค. 2024", "Từ 27/1/2024.")),
+    Q(L("이 법은 회사 처벌이 목적이라 근로자와는 관계가 없다.", "Para lang parusahan ang kumpanya ang batas, walang kinalaman sa manggagawa.", "กฎหมายนี้มีไว้ลงโทษบริษัท ไม่เกี่ยวกับคนงาน", "Luật này để phạt công ty nên không liên quan người lao động."), false,
+      L("목적은 일하는 사람의 생명 보호입니다. 근로자 의견을 듣는 절차도 회사 의무입니다.", "Layunin ang protektahan ang buhay ng manggagawa. Tungkulin din ng kumpanya ang makinig sa kanila.", "จุดประสงค์คือปกป้องชีวิตคนทำงาน การรับฟังความเห็นคนงานก็เป็นหน้าที่บริษัท", "Mục đích là bảo vệ tính mạng người lao động. Lắng nghe ý kiến họ cũng là nghĩa vụ công ty."))
+  ],
+  "p2-2": [
+    Q(L("회사가 위험을 알고도 고치지 않으면 1350에 신고할 수 있다.", "Puwedeng iulat sa 1350 kapag hindi inaayos ang alam na panganib.", "บริษัทรู้ว่าอันตรายแต่ไม่แก้ไข แจ้ง 1350 ได้", "Công ty biết nguy hiểm mà không sửa thì có thể báo 1350."), true,
+      L("신고했다고 불이익을 주는 것은 금지되어 있습니다.", "Bawal ang parusa dahil nag-ulat.", "ห้ามลงโทษเพราะแจ้ง", "Cấm gây bất lợi vì đã báo cáo.")),
+    Q(L("중대재해 처벌을 받아도 회사 이름은 공개되지 않는다.", "Hindi isinasapubliko ang pangalan ng kumpanyang naparusahan.", "แม้ถูกลงโทษ ชื่อบริษัทก็ไม่ถูกเปิดเผย", "Dù bị phạt, tên công ty cũng không bị công bố."), false,
+      L("처벌이 확정되면 공표될 수 있습니다.", "Puwedeng isapubliko kapag pinal na.", "เมื่อการลงโทษถึงที่สุดอาจถูกประกาศ", "Khi án đã xác định có thể bị công bố."))
+  ],
+  "p4-1": [
+    Q(L("안전수칙을 지키라고 단호하게 말하는 것은 괴롭힘이다.", "Panliligalig ang mariing pagpapaalala sa safety rules.", "การพูดหนักแน่นให้ทำตามกฎความปลอดภัยเป็นการกลั่นแกล้ง", "Nói dứt khoát yêu cầu tuân thủ an toàn là quấy rối."), false,
+      L("업무상 필요한 정당한 지시입니다. 욕설·모욕이 섞이면 달라집니다.", "Makatwirang utos. Iba kapag may mura o insulto.", "เป็นคำสั่งงานที่ชอบธรรม ถ้ามีคำหยาบหรือดูถูกจะต่างไป", "Là chỉ thị chính đáng. Có chửi bới, xúc phạm thì khác.")),
+    Q(L("동료 여러 명이 한 사람을 따돌리는 것도 괴롭힘이 될 수 있다.", "Puwedeng panliligalig ang pambubukod ng grupo sa isang tao.", "เพื่อนหลายคนรุมกีดกันคนหนึ่งก็เป็นการกลั่นแกล้งได้", "Nhiều đồng nghiệp cô lập một người cũng có thể là quấy rối."), true,
+      L("인원수도 '관계의 우위'입니다.", "Ang dami ay 'kapangyarihan' din.", "จำนวนคนก็คือ 'ความได้เปรียบ'", "Số đông cũng là 'ưu thế quan hệ'."))
+  ],
+  "p4-2": [
+    Q(L("피해자가 그 자리에서 웃었다면 성희롱이 아니다.", "Hindi sexual harassment kung ngumiti ang biktima.", "ถ้าผู้เสียหายหัวเราะตอนนั้น ไม่ใช่การล่วงละเมิด", "Nạn nhân cười lúc đó thì không phải quấy rối."), false,
+      L("웃었다고 동의한 것이 아닙니다.", "Hindi pagpayag ang pagngiti.", "หัวเราะไม่ได้แปลว่ายินยอม", "Cười không có nghĩa là đồng ý.")),
+    Q(L("회식 자리나 업무 메신저에서 일어나도 직장 내 성희롱이다.", "Sexual harassment sa trabaho kahit sa company dinner o work chat.", "เกิดในงานเลี้ยงหรือแชทงานก็เป็นการล่วงละเมิดในที่ทำงาน", "Xảy ra ở liên hoan hay tin nhắn công việc cũng là quấy rối tình dục nơi làm việc."), true,
+      L("업무와 관련된 자리는 모두 '직장'입니다.", "Lahat ng may kinalaman sa trabaho ay 'trabaho'.", "ที่ที่เกี่ยวกับงานทั้งหมดคือ 'ที่ทำงาน'", "Mọi dịp liên quan công việc đều là 'nơi làm việc'."))
+  ],
+  "p4-3": [
+    Q(L("내가 참여한 대화를 녹음하는 것은 불법이다.", "Ilegal ang pag-record ng usapang kasali ka.", "อัดเสียงบทสนทนาที่ตัวเองร่วมอยู่ผิดกฎหมาย", "Ghi âm cuộc nói chuyện mình tham gia là phạm pháp."), false,
+      L("내가 참여한 대화 녹음은 불법이 아닙니다. 남들끼리의 대화를 몰래 녹음하면 안 됩니다.", "Hindi ilegal. Bawal ang lihim na pag-record ng usapan ng iba.", "ไม่ผิด แต่ห้ามแอบอัดบทสนทนาของคนอื่น", "Không phạm pháp. Không được lén ghi âm chuyện của người khác.")),
+    Q(L("피해자가 아닌 동료도 회사에 신고할 수 있다.", "Puwedeng mag-ulat kahit hindi biktima.", "เพื่อนที่ไม่ใช่ผู้เสียหายก็แจ้งบริษัทได้", "Đồng nghiệp không phải nạn nhân cũng có thể báo công ty."), true,
+      L("그 사실을 아는 사람은 누구든 신고할 수 있습니다.", "Sinumang nakakaalam ay puwedeng mag-ulat.", "ใครที่รู้เรื่องก็แจ้งได้", "Ai biết sự việc đều có thể báo."))
+  ],
+  "p4-4": [
+    Q(L("회사가 노동위원회 시정명령을 따르지 않으면 1억원 이하 과태료를 낸다.", "Multa hanggang 100 milyong won kapag hindi sinunod ang utos ng Labor Commission.", "ถ้าไม่ทำตามคำสั่งคณะกรรมการแรงงาน ถูกปรับไม่เกิน 100 ล้านวอน", "Không tuân lệnh khắc phục của Ủy ban lao động bị phạt đến 100 triệu won."), true,
+      L("성희롱 피해자 보호 의무를 지키게 하는 장치입니다.", "Para matiyak ang proteksyon sa biktima.", "เป็นกลไกให้บริษัทคุ้มครองผู้เสียหาย", "Là cơ chế buộc bảo vệ nạn nhân.")),
+    Q(L("성희롱 예방교육은 회사가 원할 때만 하면 된다.", "Ginagawa lang ang training kapag gusto ng kumpanya.", "การอบรมป้องกันการล่วงละเมิดทำเมื่อบริษัทต้องการเท่านั้น", "Đào tạo phòng chống quấy rối chỉ làm khi công ty muốn."), false,
+      L("1년에 1번 이상 해야 하고, 안 하면 과태료입니다.", "Kahit isang beses sa isang taon; may multa kapag hindi.", "ต้องทำอย่างน้อยปีละครั้ง ไม่ทำถูกปรับ", "Phải làm ít nhất 1 lần/năm, không làm bị phạt."))
+  ],
+  "p4-5": [
+    Q(L("쉬는 날 급하지 않은 일로 계속 연락하고 답을 강요하면 괴롭힘이 될 수 있다.", "Puwedeng panliligalig ang paulit-ulit na pagkontak sa day off para sa hindi agarang bagay.", "ติดต่อวันหยุดเรื่องไม่ด่วนซ้ำ ๆ และบังคับให้ตอบ อาจเป็นการกลั่นแกล้ง", "Liên tục liên lạc ngày nghỉ vì việc không gấp và ép trả lời có thể là quấy rối."), true,
+      L("업무상 필요한 범위를 넘었기 때문입니다.", "Lumampas sa kailangan sa trabaho.", "เพราะเกินขอบเขตที่จำเป็นต่องาน", "Vì vượt quá phạm vi cần thiết của công việc.")),
+    Q(L("회식에 빠졌다고 일을 몰아주는 것은 괜찮다.", "Okay lang dagdagan ang trabaho dahil hindi sumama sa dinner.", "ไม่ไปงานเลี้ยงแล้วถูกโยนงานให้ ไม่เป็นไร", "Không đi liên hoan thì bị dồn việc cũng được."), false,
+      L("회식은 강제가 아니며, 이를 이유로 한 불이익은 괴롭힘이 될 수 있습니다.", "Hindi sapilitan; puwedeng panliligalig ang parusa dahil dito.", "งานเลี้ยงไม่ใช่การบังคับ การลงโทษเพราะเหตุนี้อาจเป็นการกลั่นแกล้ง", "Liên hoan không bắt buộc; gây bất lợi vì lý do này có thể là quấy rối."))
+  ],
+  "p4-6": [
+    Q(L("남자끼리는 성희롱이 성립하지 않는다.", "Walang sexual harassment sa pagitan ng lalaki.", "ผู้ชายด้วยกันไม่เป็นการล่วงละเมิดทางเพศ", "Giữa nam với nam không thể là quấy rối tình dục."), false,
+      L("성별과 관계없이 성립합니다.", "Kahit anong kasarian.", "เกิดได้ไม่ว่าเพศใด", "Có thể xảy ra bất kể giới tính.")),
+    Q(L("퇴근 후 원하지 않는 개인 메시지를 계속 보내는 것은 성희롱이나 스토킹이 될 수 있다.", "Puwedeng sexual harassment o stalking ang paulit-ulit na hindi gustong mensahe pagkatapos ng trabaho.", "ส่งข้อความส่วนตัวที่ไม่ต้องการหลังเลิกงานซ้ำ ๆ อาจเป็นการล่วงละเมิดหรือสะกดรอยตาม", "Liên tục nhắn riêng khi người kia không muốn sau giờ làm có thể là quấy rối hoặc rình rập."), true,
+      L("메시지를 지우지 말고 저장해 두세요.", "Huwag burahin—i-save.", "อย่าลบ ให้เก็บไว้", "Đừng xóa, hãy lưu lại."))
+  ],
+  "p4-7": [
+    Q(L("거래처 직원에게 성희롱을 당하면 회사와는 상관없으니 혼자 해결해야 한다.", "Kapag sa kliyente galing, wala nang pakialam ang kumpanya.", "ถูกพนักงานคู่ค้าล่วงละเมิด ไม่เกี่ยวกับบริษัท ต้องแก้เอง", "Bị nhân viên đối tác quấy rối thì không liên quan công ty, phải tự giải quyết."), false,
+      L("회사는 근무 장소 변경 등 보호 조치를 해야 합니다.", "Dapat kang protektahan ng kumpanya.", "บริษัทต้องคุ้มครอง เช่น ย้ายที่ทำงาน", "Công ty phải có biện pháp bảo vệ như đổi chỗ làm.")),
+    Q(L("상대의 회사 이름, 차량 번호, 날짜를 기록해 두면 도움이 된다.", "Makakatulong ang pagtatala ng pangalan ng kumpanya, plate number at petsa.", "จดชื่อบริษัท ทะเบียนรถ วันที่ไว้จะช่วยได้", "Ghi lại tên công ty, biển số xe, ngày tháng sẽ có ích."), true,
+      L("회사가 상대 회사에 항의하고 재발을 막는 근거가 됩니다.", "Batayan ito ng reklamo ng kumpanya.", "เป็นหลักฐานให้บริษัทประท้วงและป้องกันซ้ำ", "Là căn cứ để công ty phản đối và ngăn tái diễn."))
+  ],
+  "p4-8": [
+    Q(L("누가 신고했는지 알아내서 소문내는 것은 2차 피해이다.", "Pangalawang pinsala ang pag-alam at pagkalat kung sino ang nag-ulat.", "สืบว่าใครแจ้งแล้วปล่อยข่าวคือความเสียหายซ้ำ", "Dò ai báo cáo rồi lan tin đồn là tổn hại thứ cấp."), true,
+      L("신고자를 지켜야 다음 피해를 막습니다.", "Kailangang protektahan ang nag-ulat para mapigilan ang susunod.", "ต้องปกป้องผู้แจ้งจึงป้องกันครั้งต่อไปได้", "Phải bảo vệ người báo cáo mới ngăn được lần sau.")),
+    Q(L("신고자를 원하지 않는 부서로 옮기는 것은 불리한 처우가 아니다.", "Hindi parusa ang ilipat ang nag-ulat sa hindi gustong departamento.", "ย้ายผู้แจ้งไปแผนกที่เขาไม่ต้องการ ไม่ใช่การปฏิบัติไม่เป็นธรรม", "Chuyển người báo cáo sang bộ phận họ không muốn không phải đối xử bất lợi."), false,
+      L("원하지 않는 이동은 불리한 처우이며 처벌 대상입니다.", "Parusa ito at may kaparusahan.", "การย้ายโดยไม่สมัครใจคือการปฏิบัติไม่เป็นธรรม และถูกลงโทษ", "Điều chuyển không mong muốn là đối xử bất lợi và bị phạt."))
+  ],
+  "p4-9": [
+    Q(L("조사 중에는 피해자를 보호할 수 없다.", "Hindi mapoprotektahan ang biktima habang iniimbestigahan.", "ระหว่างสอบสวนคุ้มครองผู้เสียหายไม่ได้", "Trong thời gian điều tra không thể bảo vệ nạn nhân."), false,
+      L("조사 중에도 피해자가 원하면 근무 장소 변경, 유급휴가 등을 해 줍니다.", "Kahit habang iniimbestigahan, puwedeng ilipat o bigyan ng bayad na leave.", "ระหว่างสอบสวนก็ย้ายที่ทำงานหรือให้ลาได้ ถ้าผู้เสียหายต้องการ", "Kể cả khi điều tra, nếu nạn nhân muốn thì đổi chỗ, cho nghỉ có lương.")),
+    Q(L("참고인으로 조사받았다면 들은 내용을 다른 사람에게 말하지 않는다.", "Huwag ikalat ang narinig kapag naging saksi.", "ถ้าเป็นพยาน อย่านำสิ่งที่ได้ยินไปบอกต่อ", "Đã làm người chứng kiến thì không kể lại cho người khác."), true,
+      L("비밀 유지는 피해자와 신고자를 지킵니다.", "Pinoprotektahan ng lihim ang biktima at nag-ulat.", "การรักษาความลับปกป้องผู้เสียหายและผู้แจ้ง", "Giữ bí mật bảo vệ nạn nhân và người báo cáo."))
+  ],
+  "p4-10": [
+    Q(L("동료를 \"야!\" 대신 이름으로 부르는 것도 존중의 시작이다.", "Simula ng respeto ang pagtawag sa pangalan sa halip na \"Hoy!\".", "เรียกชื่อแทน \"เฮ้ย!\" ก็เป็นจุดเริ่มต้นของการเคารพ", "Gọi tên thay vì \"Ê!\" cũng là khởi đầu của tôn trọng."), true,
+      L("작은 말 습관이 일터 분위기를 바꿉니다.", "Binabago ng maliit na ugali sa pananalita ang kapaligiran.", "นิสัยการพูดเล็ก ๆ เปลี่ยนบรรยากาศที่ทำงาน", "Thói quen nói nhỏ thay đổi không khí nơi làm việc.")),
+    Q(L("괴롭힘을 봤을 때 내가 할 수 있는 일은 없다.", "Walang magagawa kapag may nakitang panliligalig.", "เห็นการกลั่นแกล้งแล้วเราทำอะไรไม่ได้", "Thấy quấy rối thì mình không làm được gì."), false,
+      L("주의 돌리기, 알리기, 기록, 위로, 직접 말하기 — 5가지가 있습니다.", "Ibaling ang atensyon, iulat, itala, kumustahin, direktang sabihin.", "เบี่ยงความสนใจ แจ้ง บันทึก ปลอบใจ พูดตรง ๆ — มี 5 วิธี", "Đánh lạc hướng, báo, ghi lại, an ủi, nói thẳng — có 5 cách."))
+  ]
+  };
+  for (const id in OX) add(id, [{ t: "ox", items: OX[id] }]);
+})();
+
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
 const UI2 = {
   nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
@@ -3302,6 +3777,8 @@ const UI3 = {
 
 // 주간 교육(매주 6단원, 7주 반복) + 오늘의 안전 한마디
 const UI5 = {
+  oxTitle: L("스스로 확인해 보세요 — O일까, X일까?", "Subukan ang sarili — Tama (O) o Mali (X)?", "ทดสอบตัวเอง — ถูก (O) หรือผิด (X)", "Tự kiểm tra — Đúng (O) hay Sai (X)?"),
+  oxTap: L("생각한 뒤 눌러서 정답 보기", "Mag-isip, saka pindutin para sa sagot", "คิดก่อน แล้วแตะเพื่อดูคำตอบ", "Suy nghĩ rồi chạm để xem đáp án"),
   notWeek: L("이번 주 교육이 아닌 단원입니다. 자유롭게 읽어도 되지만, 이번 주 이수에는 들어가지 않습니다.",
     "Hindi ito aralin ngayong linggo. Puwede mong basahin, pero hindi ito bibilangin sa linggong ito.",
     "บทนี้ไม่ใช่บทเรียนของสัปดาห์นี้ อ่านได้ตามสบาย แต่จะไม่นับรวมการเรียนครบสัปดาห์นี้",
@@ -3316,10 +3793,10 @@ const UI4 = {
   dailyTitle: L("오늘의 안전 한마디", "Paalala sa kaligtasan ngayon", "คำเตือนความปลอดภัยวันนี้", "Lời nhắc an toàn hôm nay"),
   weekTitle: L("이번 주 교육", "Aralin ngayong linggo", "บทเรียนสัปดาห์นี้", "Bài học tuần này"),
   weekNo: L("제{n}주차", "Linggo {n}", "สัปดาห์ที่ {n}", "Tuần {n}"),
-  cycle: L("7주 동안 42단원을 배우고, 다시 처음부터 반복합니다. 매주 월요일에 새 단원이 열리고 체크가 초기화됩니다.",
-    "Sa 7 linggo, matututunan ang 42 aralin, at uulitin mula sa simula. Tuwing Lunes, may bagong aralin at nare-reset ang tsek.",
-    "เรียน 42 บทใน 7 สัปดาห์ แล้วเริ่มใหม่ตั้งแต่ต้น ทุกวันจันทร์จะเปิดบทใหม่และรีเซ็ตเครื่องหมายถูก",
-    "Học 42 bài trong 7 tuần rồi lặp lại từ đầu. Mỗi thứ Hai mở bài mới và đặt lại dấu tích."),
+  cycle: L("{w}주 동안 {n}단원을 배우고, 다시 처음부터 반복합니다. 매주 월요일에 새 단원이 열리고 체크가 초기화됩니다.",
+    "Sa {w} linggo, matututunan ang {n} aralin, at uulitin mula sa simula. Tuwing Lunes, may bagong aralin at nare-reset ang tsek.",
+    "เรียน {n} บทใน {w} สัปดาห์ แล้วเริ่มใหม่ตั้งแต่ต้น ทุกวันจันทร์จะเปิดบทใหม่และรีเซ็ตเครื่องหมายถูก",
+    "Học {n} bài trong {w} tuần rồi lặp lại từ đầu. Mỗi thứ Hai mở bài mới và đặt lại dấu tích."),
   today: L("오늘 읽을 단원", "Basahin ngayon", "บทที่ต้องอ่านวันนี้", "Bài đọc hôm nay"),
   perDay: L("하루 1단원, 2~3분이면 충분합니다.", "Isang aralin kada araw, 2–3 minuto lang.", "วันละ 1 บท ใช้เวลาแค่ 2–3 นาที", "Mỗi ngày 1 bài, chỉ 2–3 phút."),
   weekDone: L("이번 주 교육을 모두 마쳤습니다! 다음 주 월요일에 새 단원이 열립니다.", "Tapos na ang aralin ngayong linggo! May bagong aralin sa susunod na Lunes.", "เรียนครบสัปดาห์นี้แล้ว! วันจันทร์หน้าจะเปิดบทใหม่", "Đã hoàn thành bài tuần này! Thứ Hai tuần sau sẽ mở bài mới."),
@@ -3439,6 +3916,16 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .weekcard .hint{margin:8px 0 0}
 .weekcard .wdone{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--ok-soft);color:var(--ink);font-weight:700}
 .mark:disabled{border-color:var(--line);color:var(--ink-2);cursor:not-allowed}
+.oxbox{margin:22px 0 6px;padding:14px;border-radius:14px;background:var(--sunk);border:1px dashed var(--line)}
+.oxbox h4{margin:0 0 8px;font-size:15px}
+.oxq{background:var(--surface);border-radius:10px;margin:8px 0;padding:10px 12px;border:1px solid var(--line)}
+.oxq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr;gap:4px 8px}
+.oxq summary::-webkit-details-marker{display:none}
+.oxq summary b{color:var(--ink-2)}
+.oxq summary em{grid-column:2;font-style:normal;font-size:12.5px;color:var(--ink-2)}
+.oxq[open] summary em{display:none}
+.oxq p{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:var(--ok-soft)}
+.oxq p.x{background:var(--bad-soft)}
 .wtag{display:inline-block;margin:0 0 8px;padding:3px 10px;border-radius:999px;background:#F5B800;color:#15191F;font-weight:800;font-size:12.5px}
 </style>`);
 
@@ -3517,6 +4004,8 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       case "photo": return `<figure class="photo"><img src="img/${b.src}" alt="" width="900" height="597" loading="lazy"><figcaption><b>✓ ${T(b.x)}</b><ul>${b.items.map(i => `<li>${T(i)}</li>`).join("")}</ul><small class="ai">${T(UI.aiImg)}</small></figcaption></figure>`;
       case "src": return `<div class="srcbox"><b>${T(UI.srcLabel)}</b><ul>${b.items.map(i => `<li lang="ko">${esc(i)}</li>`).join("")}</ul></div>`;
       case "help": return `<div class="help"><div><b>1350</b><strong>${T(UI.h1350)}</strong><span>${T(UI.h1350s)}</span></div><div><b>1577-0071</b><strong>${T(UI.h0071)}</strong><span>${T(UI.h0071s)}</span></div></div>`;
+      case "ox": return `<section class="oxbox"><h4>✍ ${T(UI5.oxTitle)}</h4>${b.items.map(([q, o, why], k) =>
+        `<details class="oxq"><summary><b>Q${k + 1}</b><span>${T(q)}</span><em>${T(UI5.oxTap)}</em></summary><p class="${o ? "o" : "x"}"><b>${o ? "⭕ O" : "❌ X"}</b> ${T(why)}</p></details>`).join("")}</section>`;
       case "call": return `<div class="call" role="note"><b>119</b><strong>${T(UI.callText)}</strong><span>${T(UI.callSub)}</span></div>`;
     }
     return "";
@@ -3537,7 +4026,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       <div class="track"><span style="width:${(wn / wt) * 100}%"></span></div>
       <ul class="rows">${WK.lessons.map((a, k) => `<li><button type="button" data-go="${a.lesson.id}"><span class="n">${String(k + 1).padStart(2, "0")}</span><span class="t">${T(a.lesson.title)}${koSub(a.lesson.title)}</span><span class="chk ${done[a.lesson.id] ? "on" : ""}" aria-label="${done[a.lesson.id] ? T(UI.doneOn) : ""}"></span></button></li>`).join("")}</ul>
       ${nextA ? `<button class="cta" type="button" data-go="${nextA.lesson.id}">${T(UI4.today)} →</button><p class="hint">${T(UI4.perDay)}</p>` : `<p class="wdone">✓ ${T(UI4.weekDone)}</p>`}
-      <p class="hint">${T(UI4.cycle)}</p>
+      <p class="hint">${esc(tx(UI4.cycle).replace("{w}", WK.cycles).replace("{n}", ALL.length))}</p>
     </section>${nameCard()}
     <h2 style="margin:26px 0 2px">${T(UI4.allTitle)}</h2><p class="hint" style="margin:0 0 6px">${T(UI4.allSub)}</p>`;
     PARTS.forEach(p => {
