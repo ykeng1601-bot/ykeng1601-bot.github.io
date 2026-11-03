@@ -3992,21 +3992,34 @@ const TRACK = (() => {
   const url = () => (window.SAFETY_CONFIG && window.SAFETY_CONFIG.sheetUrl) || "";
 
   // ---- 전송 대기열 ----
+  // 같은 휴대폰에서 앱이 두 개(설치 앱 + 브라우저 탭 등) 열려 있어도 한 곳에서만 보내도록 잠금
   let flushing = false;
-  async function flush() {
-    if (flushing || !url() || !navigator.onLine) return;
-    flushing = true;
+  function withLock(name, fn) {
+    if (navigator.locks && navigator.locks.request) return navigator.locks.request(name, { ifAvailable: true }, l => l ? fn() : null);
+    const k = "lk_" + name, now = Date.now();
+    if (now - get(k, 0) < 20000) return Promise.resolve();
+    set(k, now);
+    return Promise.resolve(fn()).finally(() => set(k, 0));
+  }
+  async function flushNow() {
     let q;
     while ((q = get("queue", [])).length) {
       const item = q[0];
+      const sentIds = get("sentIds", []);
+      if (item.eid && sentIds.includes(item.eid)) { q.shift(); set("queue", q); continue; }   // 이미 보낸 기록은 건너뜀
       try {
         await fetch(url(), { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(item) });
+        if (item.eid) set("sentIds", sentIds.concat(item.eid).slice(-100));
         const now = get("queue", []);                       // 보내는 동안 새로 쌓인 기록은 지우지 않음
-        if (now.length && now[0].time === item.time && now[0].type === item.type) now.shift();
+        if (now.length && (now[0].eid ? now[0].eid === item.eid : now[0].time === item.time && now[0].type === item.type)) now.shift();
         set("queue", now);
       } catch (e) { break; }
     }
-    flushing = false;
+  }
+  async function flush() {
+    if (flushing || !url() || !navigator.onLine) return;
+    flushing = true;
+    try { await withLock("safety-flush", flushNow); } finally { flushing = false; }
   }
   addEventListener("online", flush);
   setTimeout(flush, 1500);
@@ -4014,7 +4027,11 @@ const TRACK = (() => {
     const n = get("name", "");
     if (!n) return;
     const q = get("queue", []);
-    q.push(Object.assign({ time: new Date().toISOString(), name: n, dev, lang: get("lang", "ko") }, window.WEEKINFO ? window.WEEKINFO() : {}, ev));
+    const item = Object.assign({ time: new Date().toISOString(), name: n, dev, lang: get("lang", "ko") }, window.WEEKINFO ? window.WEEKINFO() : {}, ev);
+    item.eid = dev + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 6);
+    const last = q[q.length - 1];
+    if (last && last.type === item.type && last.id === item.id && Date.parse(item.time) - Date.parse(last.time) < 2000) return;   // 같은 기록이 연달아 두 번 쌓이지 않게
+    q.push(item);
     set("queue", q.slice(-300));
     flush();
   }
@@ -4024,19 +4041,25 @@ const TRACK = (() => {
   let cur = null, curTitle = "", lastAct = Date.now();
   ["scroll", "touchstart", "pointerdown", "keydown", "wheel"].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));
   const secs = () => get("secs", {});
+  const me = Math.random().toString(36).slice(2, 8);
   setInterval(() => {
     if (!cur || document.hidden || Date.now() - lastAct > IDLE * 1000) return;
+    // 앱이 여러 개 열려 있어도 시간은 한 곳에서만 셈
+    const own = get("tickOwner", null), now = Date.now();
+    if (own && own.id !== me && now - own.t < TICK * 3000) return;
+    set("tickOwner", { id: me, t: now });
     const s = secs(); s[cur] = (s[cur] || 0) + TICK; set("secs", s);
     const w = get("wsecs", {}); w[cur] = (w[cur] || 0) + TICK; set("wsecs", w);   // 이번 주 읽은 시간
   }, TICK * 1000);
   const lessonMin = id => Math.round((secs()[id] || 0) / 60);
+  const weekMin = id => Math.round((get("wsecs", {})[id] || 0) / 60);        // 이 단원을 이번 주에 읽은 시간(분)
   const totalMin = () => Math.round(Object.values(secs()).reduce((a, b) => a + b, 0) / 60);
   function markSent(id) { const sent = get("sentSecs", {}); sent[id] = secs()[id] || 0; set("sentSecs", sent); }
   function leave(id, title) {
     // 단원을 떠날 때 아직 안 보낸 시간이 1분 이상이면 '학습' 기록으로 보냄
     if (!id || id === "quiz") return;
     const sent = get("sentSecs", {}), s = secs()[id] || 0;
-    if (s - (sent[id] || 0) >= 60) { markSent(id); send({ type: "time", id, title, min: Math.round(s / 60), totalMin: totalMin() }); }
+    if (s - (sent[id] || 0) >= 60) { markSent(id); send({ type: "time", id, title, min: weekMin(id), totalMin: totalMin() }); }
   }
   addEventListener("visibilitychange", () => { if (document.hidden) leave(cur, curTitle); });
 
@@ -4050,7 +4073,7 @@ const TRACK = (() => {
     enabled: () => !!url(),
     send,
     setCurrent(id, title) { if (cur && cur !== id) leave(cur, curTitle); cur = id; curTitle = title || ""; lastAct = Date.now(); },
-    lessonMin, totalMin, markSent,
+    lessonMin, weekMin, totalMin, markSent,
     lessonSecs: id => secs()[id] || 0,
     weekSecs: id => get("wsecs", {})[id] || 0
   };
@@ -4403,6 +4426,8 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       markEl.disabled = true; markEl.textContent = "⏱ " + tx(UI5.wait).replace("{t}", fmt(need())); hintEl.hidden = false; return false;
     };
     if (!paint()) lessonTimer = setInterval(() => { if (paint()) { clearInterval(lessonTimer); lessonTimer = null; } }, 1000);
+    // 2분을 채운 뒤 '다음'만 눌러도 '다 읽었어요'로 처리 (깜빡하고 넘어가는 경우 방지)
+    const autoDone = () => { if (!done[l.id] && !need()) { markEl.onclick(); return true; } return false; };
     markEl.onclick = () => {
       if (!done[l.id] && need()) return;
       if (done[l.id]) return;                                   // 이미 읽은 단원은 실수로 체크가 풀리지 않게 함
@@ -4415,7 +4440,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
           TRACK.send({ type: "week", week: PW.id, wno: PW.no, wdone: PW.lessons.length, wtotal: PW.lessons.length, weekMin: null, totalMin: TRACK.totalMin() });
           mkJustDone = true;
         }
-        TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length, min: TRACK.lessonMin(l.id), totalMin: TRACK.totalMin() }); }
+        TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length, min: TRACK.weekMin(l.id), totalMin: TRACK.totalMin() }); }
       store.set("done", done);
       if (done[l.id] && WSET.has(l.id)) {
         const nextA = WK.lessons.find(a => !done[a.lesson.id]);
@@ -4434,6 +4459,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       if (done[l.id] && ALL[k + 1]) go(ALL[k + 1].lesson.id); else lesson(id);
     };
     pager.hidden = false;
+    { const ib = document.getElementById("installBar"); if (ib) ib.hidden = true; }   // 설치 안내 막대가 '다음' 버튼을 가리지 않게
     const pv = document.getElementById("pv"), nx = document.getElementById("nx"), hm = document.getElementById("hm");
     pv.textContent = "← " + tx(UI.prev); hm.textContent = tx(UI.home);
     hm.onclick = () => go("");
@@ -4442,14 +4468,14 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       // 이번 주 교육 단원: 이전/다음은 이번 주 6단원 안에서만 이동
       const pw = WK.lessons[wi - 1], nw = WK.lessons[wi + 1];
       pv.disabled = !pw; pv.onclick = () => pw && go(pw.lesson.id);
-      if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(nw.lesson.id); }
-      else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => go(""); }
+      if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => autoDone() || go(nw.lesson.id); }
+      else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => autoDone() || go(""); }
     } else if (PSET.has(l.id) && mkOpen()) {
       // 지난주 보충 단원: 지난주 6단원 안에서 이동
       const pi = PW.lessons.findIndex(a => a.lesson.id === l.id), pw = PW.lessons[pi - 1], nw = PW.lessons[pi + 1];
       pv.disabled = !pw; pv.onclick = () => pw && go(pw.lesson.id);
-      if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(nw.lesson.id); }
-      else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => go(""); }
+      if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => autoDone() || go(nw.lesson.id); }
+      else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => autoDone() || go(""); }
     } else {
       pv.disabled = k === 0;
       pv.onclick = () => k > 0 && go(ALL[k - 1].lesson.id);
@@ -4606,7 +4632,10 @@ document.head.insertAdjacentHTML("beforeend", `<style>
   const bar = document.getElementById("installBar"), btn = document.getElementById("installBtn"), txt = document.getElementById("installTxt");
   let deferred = null, mode = "";
   window.INSTALL_PROMPT = () => deferred;
+  const onHome = () => !location.hash || location.hash === "#";
+  addEventListener("hashchange", () => { if (!onHome()) bar.hidden = true; });
   function show(m) {
+    if (!onHome()) return;                                   // 단원 화면에서는 아래 버튼을 가리지 않게 표시하지 않음
     const t = T[lang()] || T.ko; mode = m;
     if (m === "prompt") { txt.textContent = t[0]; btn.textContent = t[1]; }
     else if (m === "inapp") { txt.textContent = t[3]; btn.textContent = t[4]; }
