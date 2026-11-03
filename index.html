@@ -3646,6 +3646,311 @@ function scene(k) {
   for (const id in OX) add(id, [{ t: "ox", items: OX[id] }]);
 })();
 
+// "현장 이야기(예시)" — 판금 현장에서 있을 법한 상황을 직접 지어 쓴 예시 이야기 (실제 사건 아님)
+(() => {
+  const find = id => { for (const p of window.NEW_PARTS) for (const l of p.lessons) if (l.id === id) return l; return null; };
+  const K = L("현장 이야기 (예시)", "Kuwento sa trabaho (halimbawa)", "เรื่องเล่าจากหน้างาน (ตัวอย่าง)", "Câu chuyện hiện trường (ví dụ)");
+  const put = (id, blocks) => {
+    const l = find(id); if (!l) return;
+    let i = l.blocks.findIndex(b => b.t === "ox"); if (i < 0) i = l.blocks.findIndex(b => b.t === "src"); if (i < 0) i = l.blocks.length;
+    l.blocks.splice(i, 0, ...blocks);
+  };
+  const S = (id, ko, tl, th, vi) => put(id, [{ t: "def", k: K, v: L(ko, tl, th, vi) }]);
+  window.PUT_BEFORE_OX = put;
+
+  S("p1-1",
+    "입사 3개월 된 민수 씨는 절곡기 앞에서 손가락이 금형에 닿을 뻔했지만 '별일 없었으니까' 하고 말하지 않았습니다. 일주일 뒤 옆 라인의 동료가 같은 방식으로 일하다 손가락을 다쳤습니다. 민수 씨가 그때 말했다면 반장은 판재를 잡는 위치를 바꾸도록 모두에게 알렸을 것입니다. 아차사고를 말하는 것은 나를 위한 일이 아니라 동료를 지키는 일입니다.",
+    "Si Minsu, 3 buwan pa lang sa trabaho, muntik nang maipit ang daliri sa bending die pero hindi nagsabi dahil 'wala namang nangyari'. Isang linggo pagkatapos, nasaktan ang daliri ng kasama sa kabilang linya sa parehong paraan. Kung nagsabi si Minsu, sinabihan sana ng team leader ang lahat na baguhin ang paghawak sa sheet. Ang pagsasabi ng muntikang aksidente ay pagprotekta sa kasama.",
+    "มินซูทำงานได้ 3 เดือน เกือบโดนแม่พิมพ์เครื่องพับหนีบนิ้ว แต่ไม่บอกใครเพราะ 'ก็ไม่เป็นอะไร' หนึ่งสัปดาห์ต่อมา เพื่อนไลน์ข้าง ๆ ทำงานแบบเดียวกันแล้วนิ้วบาดเจ็บ ถ้ามินซูบอกตอนนั้น หัวหน้าคงแจ้งทุกคนให้เปลี่ยนตำแหน่งจับแผ่น การบอกเหตุเกือบเกิดคือการปกป้องเพื่อน",
+    "Anh Minsu mới vào làm 3 tháng, suýt bị khuôn máy chấn kẹp ngón tay nhưng không nói vì 'có sao đâu'. Một tuần sau, đồng nghiệp ở dây chuyền bên làm cùng cách và bị thương ngón tay. Nếu khi đó Minsu nói ra, tổ trưởng đã báo mọi người đổi vị trí cầm tấm. Nói ra sự cố suýt xảy ra là bảo vệ đồng nghiệp.");
+  S("p1-2",
+    "용접 작업자 A씨는 여름에 덥다며 보안면을 벗고 보안경만 쓴 채 작업했습니다. 며칠 뒤 밤에 눈이 모래가 들어간 것처럼 아파 잠을 못 잤습니다. 회사는 보호구를 지급했지만, 쓰는 것은 근로자의 의무입니다. 더운 날에는 반장에게 말해 쉬는 시간을 늘리거나 냉방 조끼를 요청하는 것이 맞는 방법입니다.",
+    "Inalis ni A, isang welder, ang face shield dahil mainit at goggles lang ang suot. Ilang araw pagkatapos, hindi siya makatulog sa gabi dahil masakit ang mata na parang may buhangin. Nagbigay ng PPE ang kumpanya, pero tungkulin ng manggagawa ang gamitin ito. Sa mainit na araw, sabihin sa team leader para dagdagan ang pahinga o humingi ng cooling vest.",
+    "ช่างเชื่อม A ถอดกระบังหน้าเพราะร้อน ใส่แค่แว่นตา ไม่กี่วันต่อมากลางคืนปวดตาเหมือนมีทรายจนนอนไม่หลับ บริษัทให้อุปกรณ์ป้องกันแล้ว แต่การสวมเป็นหน้าที่ของคนงาน วันที่ร้อนควรบอกหัวหน้าเพื่อเพิ่มเวลาพักหรือขอเสื้อกั๊กระบายความร้อน",
+    "Thợ hàn A tháo mặt nạ vì nóng, chỉ đeo kính. Vài ngày sau, ban đêm mắt đau như có cát, không ngủ được. Công ty đã cấp đồ bảo hộ nhưng đeo là nghĩa vụ của người lao động. Ngày nóng nên báo tổ trưởng để tăng giờ nghỉ hoặc xin áo làm mát.");
+  S("a-stop",
+    "크레인으로 판재 묶음을 옮기던 중 와이어로프에서 '틱' 하는 소리가 나고 가닥이 몇 개 끊어져 있었습니다. 작업자 B씨는 '조금만 더 옮기면 끝인데' 하는 생각이 들었지만 바로 내려놓고 작업을 멈췄습니다. 반장은 로프를 교체했고, 끊어진 로프는 폐기했습니다. 멈춘 5분이 큰 사고를 막았습니다.",
+    "Habang inililipat ang bundle gamit ang crane, may tumunog na 'tik' sa wire rope at may ilang hiblang putol. Naisip ni B na 'konti na lang, tapos na', pero ibinaba niya agad ito at huminto. Pinalitan ng team leader ang rope at itinapon ang sira. Ang 5 minutong paghinto ang pumigil sa malaking aksidente.",
+    "ระหว่างใช้เครนย้ายมัดแผ่นโลหะ มีเสียง 'ติ๊ก' จากลวดสลิงและเส้นลวดขาดไปหลายเส้น B คิดว่า 'อีกนิดเดียวก็เสร็จ' แต่ก็วางลงและหยุดงานทันที หัวหน้าเปลี่ยนลวดสลิงและทิ้งเส้นที่ขาด การหยุด 5 นาทีป้องกันอุบัติเหตุใหญ่ได้",
+    "Đang dùng cẩu chuyển bó tấm, cáp phát ra tiếng 'tách' và vài sợi bị đứt. Anh B nghĩ 'chỉ một chút nữa là xong' nhưng vẫn hạ xuống và dừng ngay. Tổ trưởng thay cáp, bỏ cáp hỏng. 5 phút dừng lại đã ngăn một tai nạn lớn.");
+  S("p1-6",
+    "새로 온 C씨는 귀마개를 귀 입구에만 살짝 꽂아 두었습니다. 반장이 손가락으로 귀마개를 말아서 귀를 위로 당기고 깊이 넣는 법을 보여 주자, 프레스 소리가 확 작아졌습니다. 보호구는 '쓰는 것'만큼 '바르게 쓰는 것'이 중요합니다. 모르면 부끄러워하지 말고 물어보세요.",
+    "Ang bagong si C ay bahagya lang na isinuksok ang ear plug sa bungad ng tainga. Nang ipakita ng team leader kung paano i-roll, hilahin pataas ang tainga at ipasok nang malalim, biglang humina ang ingay ng press. Kasinghalaga ng pagsuot ang tamang pagsuot. Magtanong kung hindi alam.",
+    "C พนักงานใหม่ เสียบที่อุดหูแค่ปากรูหู เมื่อหัวหน้าสาธิตวิธีคลึงให้เรียว ดึงใบหูขึ้น แล้วใส่ลึก ๆ เสียงเครื่องเพรสก็เบาลงทันที การ 'สวมให้ถูก' สำคัญพอ ๆ กับการ 'สวม' ไม่รู้ก็ถามได้ ไม่ต้องอาย",
+    "Anh C mới vào chỉ nhét nút tai ở miệng tai. Khi tổ trưởng chỉ cách vê nhỏ, kéo vành tai lên và nhét sâu, tiếng máy dập nhỏ hẳn đi. 'Đeo đúng' quan trọng như 'đeo'. Không biết thì cứ hỏi, đừng ngại.");
+  S("p1-5",
+    "레이저 가공기 옆 '레이저광선 경고' 표지가 자재에 가려 보이지 않았습니다. 처음 온 협력업체 직원이 문이 열린 가공기 안을 들여다보려 하자, 근처 작업자가 막았습니다. 그날 표지를 눈높이로 옮겨 다시 붙였습니다. 표지는 '모르는 사람'을 지키기 위해 있습니다. 가려진 표지를 보면 바로 치우거나 알려 주세요.",
+    "Natakpan ng materyales ang karatulang 'Babala sa laser' sa tabi ng laser machine. Nang sisilipin ng bagong tauhan ng subcontractor ang loob ng bukas na makina, pinigilan siya ng kalapit na manggagawa. Inilipat ang karatula sa taas ng mata noong araw ding iyon. Para sa 'hindi nakakaalam' ang karatula. Alisin o ipaalam kapag may natakpan.",
+    "ป้าย 'เตือนแสงเลเซอร์' ข้างเครื่องเลเซอร์ถูกวัสดุบังจนมองไม่เห็น พนักงานบริษัทรับเหมาที่มาครั้งแรกจะชะโงกดูข้างในเครื่องที่เปิดประตูอยู่ คนงานใกล้ ๆ ห้ามไว้ทัน วันนั้นย้ายป้ายไปติดระดับสายตา ป้ายมีไว้ปกป้อง 'คนที่ไม่รู้' เห็นป้ายถูกบังให้เก็บหรือแจ้งทันที",
+    "Biển 'Cảnh báo tia laser' cạnh máy laser bị vật liệu che khuất. Nhân viên nhà thầu phụ lần đầu đến định nhìn vào máy đang mở cửa thì người gần đó ngăn lại. Ngay hôm đó biển được dời lên ngang tầm mắt. Biển báo để bảo vệ 'người không biết'. Thấy biển bị che thì dọn hoặc báo ngay.");
+  S("p1-7",
+    "절곡기의 광선식 안전장치가 자꾸 멈춰서 작업이 느리다고, 누군가 감도를 낮춰 두었습니다. 다음 날 작업자의 장갑 끝이 광선을 지나쳤는데도 기계가 멈추지 않았고, 다행히 손가락은 빠졌습니다. 장치가 '자꾸 멈춘다'는 것은 고장이 아니라 위험을 알려 주는 신호일 수 있습니다. 설정을 바꾸지 말고 관리자에게 점검을 요청합니다.",
+    "Dahil madalas huminto ang light guard ng bending machine at bumabagal ang trabaho, may nagbaba ng sensitivity nito. Kinabukasan, dumaan ang dulo ng gloves sa liwanag pero hindi huminto ang makina—buti na lang nakaalis ang daliri. Hindi sira ang 'madalas huminto'; babala ito ng panganib. Huwag baguhin ang setting—ipasuri sa manager.",
+    "เพราะม่านแสงของเครื่องพับหยุดบ่อยจนงานช้า มีคนลดความไวลง วันรุ่งขึ้นปลายถุงมือผ่านลำแสงแต่เครื่องไม่หยุด โชคดีที่ดึงนิ้วออกทัน การที่อุปกรณ์ 'หยุดบ่อย' อาจไม่ใช่ของเสีย แต่เป็นสัญญาณเตือนอันตราย อย่าเปลี่ยนการตั้งค่า ให้แจ้งหัวหน้าตรวจ",
+    "Vì rèm quang máy chấn hay dừng làm chậm việc, ai đó đã giảm độ nhạy. Hôm sau đầu găng tay lướt qua tia sáng mà máy không dừng, may mà kịp rút ngón tay. 'Hay dừng' có thể không phải hỏng mà là tín hiệu nguy hiểm. Đừng đổi cài đặt, hãy báo quản lý kiểm tra.");
+  S("p1-9",
+    "탈지 작업을 하던 D씨가 시너를 작은 생수병에 덜어 작업대 위에 두었습니다. 점심 후 목이 마른 동료가 그 병을 집어 들었다가 냄새를 맡고 내려놓았습니다. 그날 회사는 전용 용기와 경고표지를 새로 붙였습니다. 화학물질은 원래 용기나 표지가 있는 전용 용기에만 담습니다.",
+    "Inilagay ni D ang thinner sa maliit na bote ng tubig habang nag-de-degrease at iniwan sa mesa. Pagkatapos ng tanghalian, kinuha ito ng uhaw na kasama pero naamoy at ibinaba. Noong araw ding iyon, naglagay ang kumpanya ng tamang lalagyan at babala. Sa orihinal o may label na lalagyan lang ilagay ang kemikal.",
+    "D แบ่งทินเนอร์ใส่ขวดน้ำดื่มเล็ก ๆ ระหว่างล้างไขมันแล้ววางบนโต๊ะ หลังพักเที่ยง เพื่อนที่กระหายน้ำหยิบขวดขึ้นมา แต่ได้กลิ่นจึงวางลง วันนั้นบริษัทจัดภาชนะเฉพาะและติดป้ายเตือนใหม่ สารเคมีต้องใส่ในภาชนะเดิมหรือภาชนะเฉพาะที่มีป้ายเท่านั้น",
+    "Anh D chiết thinner vào chai nước nhỏ khi tẩy dầu rồi để trên bàn. Sau giờ trưa, đồng nghiệp khát nước cầm chai lên, ngửi thấy mùi mới đặt xuống. Ngay hôm đó công ty cấp bình chuyên dụng và dán nhãn cảnh báo. Hóa chất chỉ được chứa trong bình gốc hoặc bình chuyên dụng có nhãn.");
+  S("w-0",
+    "어느 판금 공장의 하루를 돌아보면, 아침 지게차 하역에서 한 번, 오후 절곡기에서 한 번, 저녁 트럭 상차에서 한 번 '아찔한 순간'이 있었습니다. 모두 다른 작업이지만 공통점이 있었습니다. 바빠서 순서를 건너뛰었다는 것입니다. 5대 유형을 기억하는 이유는, 지금 하는 일이 어떤 위험에 속하는지 떠올리고 한 번 더 확인하기 위해서입니다.",
+    "Sa isang araw sa isang sheet metal factory, may 'muntikang sandali' sa forklift sa umaga, sa bending machine sa hapon at sa pagkarga ng trak sa gabi. Iba-iba ang trabaho, pero pareho ang dahilan: nilaktawan ang hakbang dahil nagmamadali. Inaalala natin ang 5 uri para maisip kung saang panganib kabilang ang ginagawa at suriin muli.",
+    "ย้อนดูหนึ่งวันในโรงงานแผ่นโลหะ มี 'ช่วงเสียว' ตอนรถยกลงของตอนเช้า ตอนพับโลหะช่วงบ่าย และตอนขึ้นของรถบรรทุกตอนเย็น งานต่างกันแต่มีจุดร่วม คือข้ามขั้นตอนเพราะรีบ การจำ 5 รูปแบบก็เพื่อนึกว่างานที่ทำอยู่เสี่ยงแบบไหน และตรวจอีกครั้ง",
+    "Nhìn lại một ngày ở xưởng tấm kim loại: sáng có 'giây phút thót tim' khi xe nâng dỡ hàng, chiều ở máy chấn, tối khi chất hàng lên xe tải. Việc khác nhau nhưng giống nhau ở chỗ: vì vội nên bỏ qua bước. Nhớ 5 loại để nghĩ xem việc mình đang làm thuộc nguy cơ nào và kiểm tra lại.");
+  S("w-1",
+    "레이저 팔레트 체인저에 스크랩이 걸려 멈췄습니다. E씨는 '금방 빼면 된다'며 문을 열고 손을 넣으려 했고, 그 순간 다른 사람이 조작반에서 재시작 버튼을 누르려 했습니다. 반장이 소리쳐 둘 다 멈췄습니다. 그 뒤로 이 공장은 체인저 안에 들어갈 때 각자 자물쇠를 거는 규칙을 만들었습니다.",
+    "Naipit ang scrap sa pallet changer ng laser at huminto ito. Binuksan ni E ang pinto para ipasok ang kamay dahil 'mabilis lang', at sa sandaling iyon, pipindutin na ng iba ang restart sa control panel. Sumigaw ang team leader at parehong huminto. Mula noon, may patakaran nang magkabit ng sariling kandado bago pumasok sa changer.",
+    "เศษโลหะติดที่พาเลทเชนเจอร์ของเครื่องเลเซอร์จนหยุด E บอกว่า 'เอาออกแป๊บเดียว' แล้วเปิดประตูจะยื่นมือเข้าไป ขณะนั้นอีกคนกำลังจะกดปุ่มรีสตาร์ทที่แผงควบคุม หัวหน้าตะโกนห้ามทั้งคู่ทัน หลังจากนั้นโรงงานนี้ตั้งกฎให้แต่ละคนคล้องกุญแจของตัวเองก่อนเข้าไปในเชนเจอร์",
+    "Phế liệu kẹt ở bộ đổi pallet máy laser làm máy dừng. Anh E nói 'gỡ nhanh thôi' rồi mở cửa định thò tay vào, đúng lúc người khác sắp nhấn nút khởi động lại ở bảng điều khiển. Tổ trưởng hét lên, cả hai dừng kịp. Từ đó xưởng có quy định mỗi người phải khóa ổ khóa của mình trước khi vào bộ đổi pallet.");
+  S("w-bend",
+    "2인 1조로 긴 판재를 절곡하던 중, 뒤쪽 작업자가 판재를 다시 맞추려고 손을 금형 근처로 넣었는데 앞쪽 작업자는 신호를 들은 줄 알고 페달을 밟으려 했습니다. 다행히 판재가 들리는 것을 보고 발을 뗐습니다. 그 뒤로 이 팀은 '손 떼!' 구호를 외치고, 상대가 '떼었음!'이라고 답한 뒤에만 페달을 밟기로 했습니다.",
+    "Habang nagbabaluktot ng mahabang sheet ang dalawang tao, ipinasok ng nasa likod ang kamay malapit sa die para ayusin ang sheet, pero inakala ng nasa harap na may senyas na at tatapak na sa pedal. Buti na lang nakita niyang gumagalaw ang sheet kaya inalis ang paa. Mula noon, sumisigaw sila ng 'Alis kamay!' at tumatapak lang pagkatapos sumagot ng 'Naalis na!'.",
+    "ระหว่างพับแผ่นยาวสองคน คนด้านหลังยื่นมือใกล้แม่พิมพ์เพื่อจัดแผ่นใหม่ แต่คนด้านหน้าคิดว่าได้ยินสัญญาณแล้วกำลังจะเหยียบแป้น โชคดีที่เห็นแผ่นขยับจึงยกเท้า หลังจากนั้นทีมนี้ตกลงตะโกน 'เอามือออก!' และเหยียบแป้นหลังอีกฝ่ายตอบ 'ออกแล้ว!' เท่านั้น",
+    "Khi hai người chấn tấm dài, người phía sau đưa tay gần khuôn để chỉnh lại tấm, còn người phía trước tưởng đã có tín hiệu nên định đạp bàn đạp. May thấy tấm động đậy nên nhấc chân. Từ đó đội này hô 'Bỏ tay ra!' và chỉ đạp sau khi người kia đáp 'Đã bỏ!'.");
+  S("w-2",
+    "금형을 교체하던 F씨는 슬라이드를 올린 채 안전블록 없이 금형 위치를 맞추고 있었습니다. 유압이 조금씩 새면서 슬라이드가 천천히 내려오는 것을 동료가 발견해 소리쳤습니다. 기계는 전원을 꺼도 유압·공기압·무게 때문에 움직일 수 있습니다. 그래서 금형 작업에는 안전블록이 반드시 필요합니다.",
+    "Inaayos ni F ang posisyon ng die nang nakataas ang slide at walang safety block. Napansin ng kasama na dahan-dahang bumababa ang slide dahil sa tumatagas na hydraulic at sumigaw siya. Kahit patay ang makina, puwede itong gumalaw dahil sa hydraulic, hangin o bigat. Kaya kailangan ang safety block sa trabaho sa die.",
+    "F จัดตำแหน่งแม่พิมพ์ขณะยกสไลด์ค้างไว้โดยไม่ใส่บล็อกนิรภัย เพื่อนเห็นสไลด์ค่อย ๆ ลดลงเพราะน้ำมันไฮดรอลิกรั่วจึงตะโกนเตือน แม้ตัดไฟ เครื่องก็อาจขยับได้จากไฮดรอลิก ลม หรือน้ำหนัก งานแม่พิมพ์จึงต้องใช้บล็อกนิรภัยเสมอ",
+    "Anh F chỉnh vị trí khuôn khi đầu trượt đang nâng mà không có khối an toàn. Đồng nghiệp thấy đầu trượt từ từ hạ xuống do dầu thủy lực rò nên hét lên. Dù tắt điện, máy vẫn có thể chuyển động do thủy lực, khí nén hay trọng lượng. Vì vậy làm khuôn bắt buộc phải có khối an toàn.");
+  S("w-weld",
+    "구석진 곳에서 CO2 용접을 하던 G씨가 30분쯤 지나자 머리가 아프고 어지러웠습니다. 흄 흡입기를 멀리 둔 채 작업하고 있었던 것입니다. 흡입기를 용접 부위 가까이 옮기고 출입문을 열어 환기하자 증상이 나아졌습니다. 용접 흄과 가스는 눈에 잘 보이지 않아도 쌓입니다.",
+    "Sa sulok, nag-CO₂ welding si G at pagkalipas ng 30 minuto, sumakit ang ulo at nahilo siya. Malayo pala ang fume extractor. Nang ilapit ito sa welding at buksan ang pinto para sa hangin, gumaan ang pakiramdam. Naiipon ang usok at gas kahit hindi gaanong nakikita.",
+    "G เชื่อม CO₂ ในมุมอับ ผ่านไปราว 30 นาทีก็ปวดหัวและเวียนหัว เพราะวางเครื่องดูดควันไว้ไกล เมื่อย้ายเครื่องดูดใกล้จุดเชื่อมและเปิดประตูระบายอากาศ อาการก็ดีขึ้น ควันและก๊าซจากการเชื่อมสะสมได้แม้มองไม่ค่อยเห็น",
+    "Anh G hàn CO₂ ở góc khuất, khoảng 30 phút sau đau đầu, chóng mặt. Hóa ra máy hút khói để ở xa. Khi dời máy hút lại gần mối hàn và mở cửa thông gió thì đỡ hơn. Khói và khí hàn tích tụ dù khó nhìn thấy.");
+  S("w-fork",
+    "점심시간 직후, 지게차가 긴 판재를 싣고 통로를 지나는데 휴게실에서 나온 H씨가 휴대폰을 보며 걸어 나왔습니다. 운전자가 경적을 울려 멈췄지만 판재 끝이 H씨 바로 앞에서 섰습니다. 이후 회사는 휴게실 출입구 앞에 보행자 안전선을 칠하고 볼록거울을 달았습니다. 통로에서는 휴대폰을 보지 않습니다.",
+    "Pagkatapos ng tanghalian, dumadaan ang forklift na may mahabang sheet nang lumabas si H sa rest area habang nakatingin sa cellphone. Bumusina at huminto ang driver, pero huminto ang dulo ng sheet sa mismong harap ni H. Pagkatapos, nagpinta ang kumpanya ng linya para sa naglalakad at naglagay ng convex mirror. Huwag gumamit ng cellphone sa daanan.",
+    "หลังพักเที่ยง รถยกบรรทุกแผ่นยาวผ่านทางเดิน H เดินออกจากห้องพักพลางดูโทรศัพท์ คนขับบีบแตรและหยุด แต่ปลายแผ่นหยุดตรงหน้า H พอดี หลังจากนั้นบริษัททาสีเส้นทางเดินหน้าห้องพักและติดกระจกโค้ง เดินในทางเดินห้ามดูโทรศัพท์",
+    "Ngay sau giờ trưa, xe nâng chở tấm dài đi qua lối đi thì anh H vừa ra khỏi phòng nghỉ vừa nhìn điện thoại. Tài xế bấm còi và dừng nhưng đầu tấm dừng ngay trước mặt H. Sau đó công ty sơn vạch an toàn và lắp gương cầu lồi trước cửa phòng nghỉ. Đi trên lối đi không nhìn điện thoại.");
+  S("w-crush",
+    "금형 대차를 끌고 가던 I씨가 뒤로 걷다 바닥의 턱에 걸려 넘어졌고, 무거운 대차가 계속 굴러와 발등을 눌렀습니다. 안전화 덕분에 발가락뼈는 무사했지만 발등이 크게 부었습니다. 대차는 앞에서 밀고, 경사나 턱이 있으면 두 사람이 함께 옮깁니다.",
+    "Habang hinihila ni I ang kariton ng die nang paatras, natisod siya sa gilid ng sahig at natumba; patuloy na gumulong ang mabigat na kariton at dinaganan ang paa niya. Dahil sa safety shoes, ligtas ang buto ng daliri, pero namaga nang husto ang paa. Itulak ang kariton mula sa likod nito, at dalawang tao kapag may dalisdis o gilid.",
+    "I เดินถอยหลังลากรถเข็นแม่พิมพ์ สะดุดขอบพื้นล้มลง รถเข็นหนักยังไหลมาทับหลังเท้า เพราะใส่รองเท้านิรภัย กระดูกนิ้วเท้าจึงไม่เป็นไร แต่หลังเท้าบวมมาก รถเข็นต้องเข็นจากด้านหลัง และถ้ามีทางลาดหรือขอบให้ช่วยกันสองคน",
+    "Anh I đi lùi kéo xe đẩy khuôn, vấp gờ sàn ngã xuống, chiếc xe nặng tiếp tục lăn tới đè lên mu bàn chân. Nhờ giày bảo hộ nên xương ngón chân không sao nhưng mu bàn chân sưng to. Xe đẩy phải đẩy từ phía sau, có dốc hoặc gờ thì hai người cùng chuyển.");
+  S("w-cut",
+    "레이저로 자른 부품을 맨손으로 정리하던 J씨는 버에 손바닥을 베였습니다. 상처는 작았지만 기름이 묻은 채 계속 일하다 이틀 뒤 손이 붓고 열이 났습니다. 작은 상처라도 바로 씻고 소독하고 알려야 하는 이유입니다. 그리고 버가 있는 부품은 반드시 베임방지 장갑을 끼고 만집니다.",
+    "Inaayos ni J nang walang gloves ang mga piyesang pinutol ng laser at nahiwa ang palad niya ng burr. Maliit ang sugat pero nagpatuloy siyang magtrabaho na may langis, at makalipas ang dalawang araw namaga at nilagnat ang kamay. Kaya hugasan, disimpektahan at ipaalam agad kahit maliit na sugat, at laging magsuot ng cut-resistant gloves sa may burr.",
+    "J จัดชิ้นงานที่ตัดด้วยเลเซอร์ด้วยมือเปล่า แล้วถูกครีบบาดฝ่ามือ แผลเล็กแต่ทำงานต่อทั้งที่เปื้อนน้ำมัน สองวันต่อมามือบวมและมีไข้ นี่คือเหตุผลที่แผลเล็กก็ต้องล้าง ฆ่าเชื้อ และแจ้งทันที และชิ้นงานที่มีครีบต้องใส่ถุงมือกันบาดเสมอ",
+    "Anh J sắp xếp chi tiết cắt laser bằng tay không và bị ba via cắt vào lòng bàn tay. Vết thương nhỏ nhưng vẫn làm tiếp khi tay dính dầu, hai ngày sau tay sưng và sốt. Vì vậy vết thương nhỏ cũng phải rửa, sát trùng và báo ngay; chi tiết có ba via luôn phải đeo găng chống cắt.");
+  S("w-3",
+    "드릴 작업을 하던 K씨의 면장갑 끝 실밥이 드릴날에 걸렸습니다. 순식간에 장갑이 감기며 손목이 꺾였고, 다른 손으로 비상정지를 눌러 겨우 멈췄습니다. 장갑을 벗고 일했다면 실밥이 걸릴 일도 없었습니다. 회전체 앞에서는 장갑을 끼지 않거나 몸에 꼭 맞는 전용 장갑만 씁니다.",
+    "Habang nag-da-drill si K, sumabit sa drill bit ang sinulid sa dulo ng cotton gloves niya. Biglang napulupot ang gloves at napilipit ang pulso; napindot niya ang emergency stop gamit ang kabilang kamay. Kung walang gloves, walang sinulid na sasabit. Sa umiikot na makina, walang gloves o sakto lang sa kamay na espesyal na gloves.",
+    "ระหว่างเจาะ ด้ายที่ปลายถุงมือผ้าของ K เกี่ยวกับดอกสว่าน ถุงมือพันเข้าไปในพริบตาจนข้อมือบิด เขาใช้มืออีกข้างกดปุ่มหยุดฉุกเฉินจึงหยุดได้ ถ้าไม่ใส่ถุงมือ ด้ายก็ไม่เกี่ยว หน้าเครื่องหมุนต้องไม่ใส่ถุงมือ หรือใส่เฉพาะถุงมือพิเศษที่พอดีมือ",
+    "Khi khoan, sợi chỉ ở đầu găng vải của anh K mắc vào mũi khoan. Găng bị cuốn vào trong tích tắc làm gãy gập cổ tay, anh phải dùng tay kia nhấn dừng khẩn cấp. Không đeo găng thì đã không có chỉ để mắc. Trước máy quay không đeo găng hoặc chỉ dùng găng chuyên dụng vừa khít tay.");
+  S("w-lift",
+    "L씨는 2mm 판재를 하루 종일 혼자 들어 옮기다 저녁에 허리를 펴지 못했습니다. 다음 날 반장은 진공 리프터를 쓰는 방법을 알려 주고, 큰 판재는 2인 1조로 바꾸었습니다. 한 번에 다치는 것이 아니라 매일 조금씩 쌓여서 생기는 것이 근골격계질환입니다. 아프기 시작하면 바로 말하세요.",
+    "Buong araw na mag-isang binuhat ni L ang 2mm na sheet at sa gabi hindi na niya maituwid ang likod. Kinabukasan, itinuro ng team leader ang paggamit ng vacuum lifter at ginawang 2 tao ang malaking sheet. Hindi isang beses nangyayari ang sakit sa kalamnan at buto—naiipon ito araw-araw. Sabihin agad kapag nagsimulang sumakit.",
+    "L ยกแผ่น 2 มม. คนเดียวทั้งวัน ตอนเย็นยืดหลังไม่ได้ วันรุ่งขึ้นหัวหน้าสอนใช้ที่ยกสุญญากาศ และให้แผ่นใหญ่ทำ 2 คน โรคกล้ามเนื้อและกระดูกไม่ได้เกิดครั้งเดียว แต่สะสมทีละน้อยทุกวัน เริ่มเจ็บให้บอกทันที",
+    "Anh L tự nâng tấm 2mm suốt cả ngày, đến tối không duỗi lưng được. Hôm sau tổ trưởng hướng dẫn dùng bộ nâng chân không và chuyển tấm lớn sang làm 2 người. Bệnh cơ xương không xảy ra một lần mà tích tụ từng chút mỗi ngày. Bắt đầu đau thì nói ngay.");
+  S("w-6",
+    "출하 날, M씨는 트럭 적재함 위에서 판재 묶음을 밧줄로 묶다가 뒷걸음질하며 적재함 끝을 밟았습니다. 동료가 팔을 잡아 떨어지지는 않았습니다. 1.5m 높이였지만 콘크리트 바닥에 머리부터 떨어졌다면 크게 다쳤을 것입니다. 상하차는 같은 높이의 상차장에서 하고, 적재함 끝에 등을 지지 않습니다.",
+    "Sa araw ng paghahatid, habang itinatali ni M ang bundle sa ibabaw ng trak, umatras siya at natapakan ang gilid. Nahawakan siya ng kasama kaya hindi nahulog. 1.5m lang, pero malubha sana kung ulo ang tumama sa semento. Magkarga sa kapantay na dock at huwag tumalikod sa gilid.",
+    "วันส่งของ M มัดเชือกมัดแผ่นโลหะบนกระบะรถ แล้วถอยหลังไปเหยียบขอบกระบะ เพื่อนคว้าแขนไว้ทันจึงไม่ตก สูงแค่ 1.5 ม. แต่ถ้าหัวกระแทกพื้นคอนกรีตคงบาดเจ็บหนัก ขึ้นลงของต้องทำที่ลานที่สูงเท่ากัน และอย่าหันหลังให้ขอบกระบะ",
+    "Hôm xuất hàng, anh M buộc dây bó tấm trên thùng xe tải, lùi lại và giẫm hụt mép thùng. Đồng nghiệp kịp nắm tay nên không ngã. Chỉ cao 1,5m nhưng nếu đập đầu xuống nền bê tông thì đã bị thương nặng. Bốc xếp ở bến cao bằng thùng xe, không quay lưng ra mép thùng.");
+  S("w-7",
+    "비 오는 날, 창고 바닥의 물웅덩이 위에 연장선 멀티탭이 놓여 있었습니다. N씨가 그라인더를 꽂으려다 '찌릿' 하는 느낌에 손을 뗐습니다. 누전차단기가 바로 떨어져 큰 사고는 없었습니다. 그날 멀티탭은 벽에 걸고 누전차단기 시험 버튼을 매달 누르기로 정했습니다.",
+    "Sa araw ng ulan, may extension cord sa ibabaw ng tubig sa sahig ng bodega. Habang isasaksak ni N ang grinder, naramdaman niya ang 'kuryente' at binitawan. Agad na pumutok ang breaker kaya walang malaking aksidente. Noong araw ding iyon, isinabit ang extension sa pader at napagkasunduang pindutin buwan-buwan ang test button ng breaker.",
+    "วันฝนตก ปลั๊กพ่วงวางอยู่บนแอ่งน้ำบนพื้นโกดัง N จะเสียบเครื่องเจียรแล้วรู้สึก 'ซ่า' จึงปล่อยมือ เบรกเกอร์กันไฟรั่วตัดทันทีจึงไม่เกิดอุบัติเหตุใหญ่ วันนั้นตกลงแขวนปลั๊กพ่วงไว้ที่ผนัง และกดปุ่มทดสอบเบรกเกอร์ทุกเดือน",
+    "Ngày mưa, ổ cắm kéo dài nằm trên vũng nước ở sàn kho. Anh N định cắm máy mài thì thấy 'tê tê' nên buông tay. Aptomat chống giật ngắt ngay nên không có tai nạn lớn. Hôm đó quyết định treo ổ cắm lên tường và mỗi tháng nhấn nút thử aptomat.");
+  S("w-8",
+    "용접하던 곳 뒤편 3m 거리에 기름걸레가 담긴 종이상자가 있었습니다. 작업을 마치고 퇴근한 지 1시간 뒤, 상자에서 연기가 나는 것을 경비원이 발견했습니다. 불티가 걸레 속에서 천천히 타고 있었던 것입니다. 용접이 끝난 뒤에도 30분 이상 주변에 불씨가 없는지 확인합니다.",
+    "May kahong papel na may basahang may langis 3m sa likod ng lugar ng welding. Isang oras matapos umuwi ang manggagawa, nakita ng guard na umuusok ang kahon. Dahan-dahang nagliliyab pala ang spark sa loob ng basahan. Pagkatapos mag-weld, tingnan ang paligid nang hindi bababa sa 30 minuto kung may baga.",
+    "ห่างจากจุดเชื่อมไปข้างหลัง 3 ม. มีกล่องกระดาษใส่ผ้าเปื้อนน้ำมัน หนึ่งชั่วโมงหลังเลิกงาน ยามเห็นควันออกจากกล่อง ประกายไฟไหม้อยู่ในผ้าอย่างช้า ๆ หลังเชื่อมเสร็จต้องตรวจรอบ ๆ อย่างน้อย 30 นาทีว่าไม่มีถ่านไฟ",
+    "Cách chỗ hàn 3m phía sau có thùng giấy đựng giẻ dầu. Một giờ sau khi tan ca, bảo vệ thấy khói bốc ra từ thùng. Tia lửa đã âm ỉ cháy trong giẻ. Hàn xong phải kiểm tra xung quanh ít nhất 30 phút xem còn tàn lửa không.");
+  S("w-confined",
+    "집수조 펌프를 고치러 들어간 작업자가 쓰러지자, 위에 있던 동료가 이름을 부르며 사다리를 내려가려 했습니다. 감시인으로 있던 반장이 붙잡고 119에 먼저 신고했고, 구조대가 공기호흡기를 쓰고 들어갔습니다. 동료를 구하려는 마음은 귀하지만, 맨몸으로 들어가면 두 사람 모두 쓰러집니다.",
+    "Nang bumagsak ang manggagawang pumasok para ayusin ang pump ng sump, sinubukan ng kasama sa itaas na bumaba sa hagdan habang tinatawag ang pangalan niya. Pinigilan siya ng team leader na tagabantay at tumawag muna sa 119; pumasok ang rescue team na may breathing apparatus. Mahalaga ang kagustuhang tumulong, pero kapag pumasok nang walang proteksyon, pareho kayong babagsak.",
+    "คนงานที่ลงไปซ่อมปั๊มในบ่อพักน้ำล้มลง เพื่อนข้างบนเรียกชื่อแล้วจะลงบันไดไป หัวหน้าที่เป็นผู้เฝ้าระวังรั้งไว้และโทร 119 ก่อน ทีมกู้ภัยใส่เครื่องช่วยหายใจลงไปช่วย ความตั้งใจจะช่วยเพื่อนมีค่า แต่ถ้าลงไปตัวเปล่าจะล้มทั้งสองคน",
+    "Công nhân xuống sửa bơm trong hố thu nước bị ngã quỵ, đồng nghiệp phía trên vừa gọi tên vừa định leo xuống thang. Tổ trưởng làm người giám sát giữ lại và gọi 119 trước; đội cứu hộ đeo bình thở xuống cứu. Ý muốn cứu đồng nghiệp rất quý, nhưng xuống không bảo hộ thì cả hai sẽ cùng ngã.");
+  S("p1-3",
+    "프레스 작업 중 손가락을 다친 동료를 보고 모두 당황해 우왕좌왕했습니다. 그때 응급처치 교육을 받은 O씨가 깨끗한 수건으로 상처를 누르고, 다른 사람에게 119와 반장에게 연락하라고 정확히 지시했습니다. 잘린 손가락은 거즈로 싸서 비닐에 넣고 얼음물에 담가 함께 보냈습니다. 침착한 한 사람이 결과를 바꿉니다.",
+    "Nang masaktan ang daliri ng kasama sa press, nataranta ang lahat. Si O, na may first aid training, ay diniinan ang sugat ng malinis na tuwalya at malinaw na inutusan ang iba na tumawag sa 119 at sa team leader. Binalot ng gasa ang naputol na daliri, inilagay sa plastik at sa tubig na may yelo, at isinama. Isang kalmadong tao ang nagbabago ng resulta.",
+    "เมื่อเพื่อนบาดเจ็บที่นิ้วจากเครื่องเพรส ทุกคนตกใจทำอะไรไม่ถูก O ที่เคยอบรมปฐมพยาบาลใช้ผ้าสะอาดกดแผล และสั่งให้คนอื่นโทร 119 และแจ้งหัวหน้าอย่างชัดเจน นิ้วที่ขาดห่อผ้าก๊อซใส่ถุงแช่น้ำแข็งส่งไปด้วย คนที่ใจเย็นเพียงคนเดียวเปลี่ยนผลลัพธ์ได้",
+    "Khi đồng nghiệp bị thương ngón tay ở máy dập, ai cũng hoảng loạn. Anh O từng học sơ cứu đã dùng khăn sạch ấn vết thương và chỉ rõ người khác gọi 119, báo tổ trưởng. Ngón tay đứt được bọc gạc, cho vào túi, ngâm nước đá và gửi theo. Một người bình tĩnh có thể thay đổi kết quả.");
+  S("c-fire",
+    "레이저 가공기 집진기 쪽에서 연기가 나자 P씨는 소화기를 들고 갔지만 안전핀이 잘 안 빠져 시간을 놓쳤습니다. 다른 동료가 비상정지를 누르고 소화기를 다시 가져와 껐습니다. 그 뒤 이 공장은 분기마다 소화기를 실제로 들어 보고 핀을 뽑는 연습을 합니다. 한 번 해 본 사람은 실제 상황에서 몸이 먼저 움직입니다.",
+    "Nang umusok ang dust collector ng laser, dinala ni P ang extinguisher pero hindi agad natanggal ang safety pin kaya nasayang ang oras. Pinindot ng kasama ang emergency stop, kumuha ng isa pang extinguisher at pinatay ang apoy. Mula noon, tuwing quarter nagsasanay sila sa pag-angat ng extinguisher at pagtanggal ng pin. Ang nakasubok na ay mabilis kumilos sa totoong sitwasyon.",
+    "เมื่อมีควันจากเครื่องดูดฝุ่นของเครื่องเลเซอร์ P ถือถังดับเพลิงไป แต่ดึงสลักไม่ออกจนเสียเวลา เพื่อนอีกคนกดหยุดฉุกเฉินและนำถังอีกใบมาดับ หลังจากนั้นโรงงานนี้ซ้อมยกถังดับเพลิงและดึงสลักจริงทุกไตรมาส คนที่เคยลองแล้วจะลงมือได้ทันทีในเหตุการณ์จริง",
+    "Khi máy hút bụi của máy laser bốc khói, anh P cầm bình chữa cháy chạy tới nhưng rút chốt mãi không ra nên mất thời gian. Đồng nghiệp khác nhấn dừng khẩn cấp, lấy bình khác dập tắt. Từ đó xưởng tập cầm bình thật và rút chốt mỗi quý. Người đã từng thử sẽ phản xạ nhanh khi gặp thật.");
+  S("p1-10",
+    "Q씨가 '절곡기 뒤 백게이지 쪽 바닥이 미끄럽다'고 TBM에서 말했습니다. 반장은 위험성평가 표에 적고, 원인을 찾아보니 유압유가 조금씩 새고 있었습니다. 호스를 바꾸고 미끄럼 방지 매트를 깔았습니다. 근로자의 한마디가 위험성평가의 시작이고, 회사의 개선으로 끝납니다.",
+    "Sinabi ni Q sa TBM na 'madulas ang sahig sa likod ng bending machine, sa may backgauge'. Isinulat ito ng team leader sa risk assessment at nalamang tumatagas ang hydraulic oil. Pinalitan ang hose at naglagay ng anti-slip mat. Nagsisimula ang risk assessment sa salita ng manggagawa at nagtatapos sa pagpapabuti ng kumpanya.",
+    "Q พูดใน TBM ว่า 'พื้นด้านหลังเครื่องพับตรงแบ็กเกจลื่น' หัวหน้าจดลงในแบบประเมินความเสี่ยง ตรวจหาสาเหตุพบว่าน้ำมันไฮดรอลิกรั่วทีละน้อย จึงเปลี่ยนสายและปูแผ่นกันลื่น การประเมินความเสี่ยงเริ่มจากคำพูดของคนงาน และจบที่การปรับปรุงของบริษัท",
+    "Anh Q nói trong TBM 'sàn phía sau máy chấn, chỗ cữ sau, bị trơn'. Tổ trưởng ghi vào bảng đánh giá rủi ro, tìm nguyên nhân thì thấy dầu thủy lực rò từng chút. Đã thay ống và trải thảm chống trơn. Đánh giá rủi ro bắt đầu từ một lời của người lao động và kết thúc bằng cải tiến của công ty.");
+  S("p1-4",
+    "베트남에서 온 R씨는 입사 교육 때 한국어 설명을 반만 알아들었지만 서명했습니다. 첫날 지게차 통로를 모르고 걷다 경적 소리에 놀랐습니다. 그 뒤 회사는 그림과 베트남어 자료로 다시 교육했습니다. 이해하지 못한 교육은 받지 않은 것과 같습니다. 모르면 '다시 설명해 주세요'라고 말하세요.",
+    "Si R, mula Vietnam, kalahati lang ang naintindihan sa orientation sa Korean pero pumirma. Sa unang araw, hindi niya alam ang daanan ng forklift at nagulat sa busina. Pagkatapos, muling nagsanay ang kumpanya gamit ang larawan at materyales sa Vietnamese. Ang hindi naintindihang training ay parang hindi natanggap. Sabihin: 'Pakiulit po.'",
+    "R จากเวียดนามเข้าใจการอบรมแรกเข้าที่อธิบายเป็นภาษาเกาหลีแค่ครึ่งเดียวแต่ก็เซ็นชื่อ วันแรกเดินในทางรถยกโดยไม่รู้ตัวจนตกใจเสียงแตร หลังจากนั้นบริษัทอบรมใหม่ด้วยรูปภาพและเอกสารภาษาเวียดนาม การอบรมที่ไม่เข้าใจก็เหมือนไม่ได้รับ ไม่เข้าใจให้พูดว่า 'ช่วยอธิบายอีกครั้ง'",
+    "Anh R đến từ Việt Nam chỉ hiểu một nửa buổi đào tạo đầu vào bằng tiếng Hàn nhưng vẫn ký. Ngày đầu đi vào lối xe nâng mà không biết, giật mình vì tiếng còi. Sau đó công ty đào tạo lại bằng hình ảnh và tài liệu tiếng Việt. Đào tạo mà không hiểu thì như chưa được đào tạo. Không hiểu hãy nói 'Xin giải thích lại'.");
+  S("p1-8",
+    "용접을 10년 한 S씨는 특수건강진단에서 청력이 떨어졌다는 결과(C1)를 받았습니다. 처음엔 별것 아니라고 생각했지만, 의사의 권고에 따라 귀마개를 바꾸고 소음이 덜한 공정과 번갈아 일하게 되었습니다. 1년 뒤 검사에서 더 나빠지지 않았습니다. 건강진단 결과는 '나를 위한 경고등'입니다.",
+    "Si S, 10 taon nang welder, ay nakakuha ng resultang C1 sa special check-up—humina ang pandinig. Noong una, inakala niyang wala lang, pero sinunod niya ang doktor: pinalitan ang ear plug at nagpapalit-palit sa mas tahimik na proseso. Pagkalipas ng isang taon, hindi na lumala. Ang resulta ng check-up ay 'babalang ilaw para sa iyo'.",
+    "S เป็นช่างเชื่อมมา 10 ปี ได้ผลตรวจสุขภาพพิเศษ C1 ว่าการได้ยินลดลง ตอนแรกคิดว่าไม่เป็นไร แต่ทำตามคำแนะนำแพทย์ เปลี่ยนที่อุดหูและสลับไปทำงานที่เสียงเบากว่า ผลตรวจปีถัดมาไม่แย่ลง ผลตรวจสุขภาพคือ 'ไฟเตือนเพื่อตัวเรา'",
+    "Anh S làm thợ hàn 10 năm, nhận kết quả khám đặc biệt C1 — thính lực giảm. Lúc đầu nghĩ không sao, nhưng làm theo khuyến nghị của bác sĩ: đổi nút tai và luân phiên làm công đoạn ít ồn hơn. Một năm sau khám lại không xấu thêm. Kết quả khám sức khỏe là 'đèn cảnh báo cho chính mình'.");
+  S("c-noise",
+    "T씨는 '귀마개를 끼면 신호를 못 듣는다'며 끼지 않았습니다. 반장은 귀마개를 껴도 사람 목소리와 경적은 들린다는 것을 함께 확인시켜 주었고, 대신 중요한 신호는 손짓으로도 하기로 정했습니다. 소음성 난청은 아프지 않게, 몇 년에 걸쳐 조용히 찾아옵니다.",
+    "Hindi nagsusuot ng ear plug si T dahil 'hindi ko maririnig ang senyas'. Ipinakita ng team leader na naririnig pa rin ang boses at busina kahit may ear plug, at napagkasunduang gamitin din ang hand signal para sa mahahalagang senyas. Dahan-dahan at walang sakit na dumarating ang pagkabingi dahil sa ingay sa loob ng ilang taon.",
+    "T ไม่ใส่ที่อุดหูเพราะ 'ใส่แล้วไม่ได้ยินสัญญาณ' หัวหน้าพาลองว่าใส่แล้วยังได้ยินเสียงคนและแตร และตกลงใช้สัญญาณมือสำหรับสัญญาณสำคัญด้วย หูตึงจากเสียงดังมาอย่างเงียบ ๆ ไม่เจ็บ ใช้เวลาหลายปี",
+    "Anh T không đeo nút tai vì 'đeo vào không nghe được tín hiệu'. Tổ trưởng cho thử thấy đeo vẫn nghe được giọng người và tiếng còi, đồng thời thống nhất dùng thêm ký hiệu tay cho tín hiệu quan trọng. Điếc do tiếng ồn đến lặng lẽ, không đau, qua nhiều năm.");
+  S("c-heat",
+    "8월 오후, 철판 지붕 아래에서 용접하던 U씨가 갑자기 말이 어눌해지고 비틀거렸습니다. 동료가 바로 시원한 휴게실로 옮기고 119에 신고한 뒤, 옷을 느슨하게 하고 몸에 물을 뿌리며 부채질했습니다. 병원에서는 빨리 몸을 식힌 덕분에 회복이 빨랐다고 했습니다. 더운 날에는 서로의 얼굴을 살펴 주세요.",
+    "Isang hapon ng Agosto, habang nagwe-weld sa ilalim ng bubong na bakal, biglang lumabo ang pagsasalita ni U at sumuray. Agad siyang dinala ng kasama sa malamig na rest area, tumawag sa 119, niluwagan ang damit, binasa ng tubig at pinaypayan. Sabi ng ospital, mabilis siyang gumaling dahil agad napalamig. Sa mainit na araw, bantayan ang isa't isa.",
+    "บ่ายวันหนึ่งในเดือนสิงหาคม U เชื่อมอยู่ใต้หลังคาเหล็ก จู่ ๆ พูดไม่ชัดและเดินเซ เพื่อนพาไปห้องพักที่เย็นทันที โทร 119 คลายเสื้อผ้า ราดน้ำและพัดให้ โรงพยาบาลบอกว่าฟื้นเร็วเพราะลดอุณหภูมิได้เร็ว วันที่ร้อนให้คอยดูหน้าตาของกันและกัน",
+    "Một buổi chiều tháng 8, anh U đang hàn dưới mái tôn bỗng nói líu lưỡi và loạng choạng. Đồng nghiệp lập tức đưa vào phòng nghỉ mát, gọi 119, nới lỏng quần áo, tưới nước và quạt. Bệnh viện nói nhờ làm mát nhanh nên hồi phục nhanh. Ngày nóng hãy để ý sắc mặt của nhau.");
+  S("c-chem",
+    "V씨는 세척제를 다룰 때 장갑이 불편하다며 맨손으로 일했습니다. 몇 주 뒤 손이 갈라지고 가려운 피부염이 생겼습니다. 화학물질용 장갑으로 바꾸고 일이 끝나면 보습제를 바르자 나아졌습니다. 피부로 스며드는 물질은 냄새가 없어도 몸에 쌓일 수 있습니다.",
+    "Nagtrabaho si V nang walang gloves sa panlinis dahil hindi komportable. Pagkalipas ng ilang linggo, nagkaroon siya ng dermatitis—bitak at makati ang kamay. Gumaling ito nang gumamit ng chemical gloves at moisturizer pagkatapos ng trabaho. Naiipon sa katawan ang kemikal na tumatagos sa balat kahit walang amoy.",
+    "V จับน้ำยาล้างด้วยมือเปล่าเพราะใส่ถุงมือไม่สะดวก ไม่กี่สัปดาห์ต่อมามือแตกและคันเป็นผิวหนังอักเสบ เมื่อเปลี่ยนเป็นถุงมือกันสารเคมีและทาครีมหลังเลิกงานก็ดีขึ้น สารที่ซึมผ่านผิวสะสมในร่างกายได้แม้ไม่มีกลิ่น",
+    "Anh V làm với chất tẩy rửa bằng tay không vì thấy găng vướng víu. Vài tuần sau tay nứt nẻ, ngứa, bị viêm da. Đổi sang găng chống hóa chất và bôi kem dưỡng sau giờ làm thì đỡ. Chất thấm qua da có thể tích tụ trong cơ thể dù không có mùi.");
+  S("c-heart",
+    "야간 근무를 마친 W씨가 아침에 가슴이 조이는 느낌이 있었지만 '피곤해서 그렇다'며 참았습니다. 동료가 얼굴이 창백한 것을 보고 바로 119를 불렀고, 병원에서 심근경색 초기라는 진단을 받았습니다. 빨리 치료를 받아 회복할 수 있었습니다. 가슴 통증은 참지 말고 바로 알립니다.",
+    "Pagkatapos ng night shift, nakaramdam si W ng paninikip ng dibdib sa umaga pero tiniis dahil 'pagod lang'. Nakita ng kasama na maputla siya kaya tumawag agad sa 119; sa ospital, maagang heart attack ang diagnosis. Dahil maagang nagamot, gumaling siya. Huwag tiisin ang sakit sa dibdib—sabihin agad.",
+    "หลังจบกะกลางคืน W รู้สึกแน่นหน้าอกตอนเช้า แต่ทนไว้เพราะคิดว่า 'แค่เหนื่อย' เพื่อนเห็นหน้าซีดจึงโทร 119 ทันที โรงพยาบาลวินิจฉัยว่าเป็นกล้ามเนื้อหัวใจขาดเลือดระยะแรก ได้รักษาเร็วจึงหายได้ เจ็บหน้าอกอย่าทน ให้บอกทันที",
+    "Sau ca đêm, sáng ra anh W thấy tức ngực nhưng cố chịu vì nghĩ 'chỉ mệt thôi'. Đồng nghiệp thấy mặt tái nên gọi 119 ngay; bệnh viện chẩn đoán nhồi máu cơ tim giai đoạn đầu. Nhờ chữa trị sớm nên hồi phục. Đau ngực đừng chịu đựng, hãy báo ngay.");
+  S("c-stress",
+    "한국에 온 지 6개월 된 X씨는 말이 잘 통하지 않아 혼자 밥을 먹고, 밤에 잠을 잘 못 잤습니다. 작업 중 실수가 잦아지자 반장이 따로 불러 이야기를 들었습니다. 같은 나라 출신 선배와 점심을 함께 먹게 하고, 외국인력상담센터 번호를 알려 주었습니다. 힘들다는 말은 약한 것이 아니라 나를 지키는 용기입니다.",
+    "Si X, 6 buwan pa lang sa Korea, ay mag-isang kumakain dahil hirap makipag-usap at hindi makatulog sa gabi. Nang dumami ang mali sa trabaho, kinausap siya ng team leader. Pinasabay siya sa tanghalian sa senior na kababayan at binigyan ng numero ng Foreign Workforce Counseling Center. Hindi kahinaan ang pagsasabing nahihirapan ka—tapang iyon.",
+    "X มาเกาหลีได้ 6 เดือน สื่อสารไม่ค่อยได้จึงกินข้าวคนเดียวและนอนไม่ค่อยหลับ เมื่อทำงานผิดพลาดบ่อยขึ้น หัวหน้าเรียกมาคุยแยก ให้ไปกินข้าวกับรุ่นพี่ชาติเดียวกัน และให้เบอร์ศูนย์ให้คำปรึกษาแรงงานต่างชาติ การบอกว่าลำบากไม่ใช่ความอ่อนแอ แต่เป็นความกล้าที่ปกป้องตัวเอง",
+    "Anh X sang Hàn được 6 tháng, khó giao tiếp nên ăn cơm một mình, đêm khó ngủ. Khi làm việc hay mắc lỗi, tổ trưởng gọi riêng ra nói chuyện, xếp cho ăn trưa cùng đàn anh đồng hương và cho số Trung tâm tư vấn lao động nước ngoài. Nói ra mình đang khó khăn không phải yếu đuối mà là dũng khí bảo vệ bản thân.");
+  S("p1-11",
+    "한여름, 휴게실 에어컨이 고장 나 근로자들이 기계 옆 그늘에서 쉬었습니다. 쉬는 시간에도 소음과 열에서 벗어나지 못하자 오후 실수가 늘었습니다. 근로자 대표가 회사에 알렸고, 회사는 바로 수리하고 정수기도 새로 놓았습니다. 제대로 쉬는 것도 안전입니다.",
+    "Sa kalagitnaan ng tag-init, nasira ang aircon ng rest area kaya nagpahinga ang mga manggagawa sa lilim sa tabi ng makina. Hindi sila nakaalis sa ingay at init kahit pahinga kaya dumami ang mali sa hapon. Ipinaalam ito ng kinatawan ng manggagawa at agad itong inayos ng kumpanya at naglagay ng water dispenser. Kaligtasan din ang maayos na pahinga.",
+    "กลางฤดูร้อน แอร์ห้องพักเสีย คนงานจึงพักในที่ร่มข้างเครื่องจักร ช่วงพักก็หนีเสียงดังและความร้อนไม่พ้น ช่วงบ่ายจึงผิดพลาดบ่อยขึ้น ตัวแทนคนงานแจ้งบริษัท บริษัทซ่อมทันทีและติดตั้งเครื่องกรองน้ำใหม่ การพักอย่างถูกต้องก็คือความปลอดภัย",
+    "Giữa mùa hè, điều hòa phòng nghỉ hỏng nên công nhân nghỉ dưới bóng râm cạnh máy. Giờ nghỉ vẫn không thoát được tiếng ồn và nhiệt nên chiều lỗi tăng lên. Đại diện người lao động báo công ty, công ty sửa ngay và lắp thêm máy lọc nước. Nghỉ ngơi đúng cách cũng là an toàn.");
+  S("p2-1",
+    "한 공장에서 근로자가 '프레스 안전장치가 자주 고장 난다'고 여러 번 말했지만 고쳐지지 않았고, 결국 끼임 사고로 사망자가 생겼습니다. 조사에서 회사가 위험을 알고도 예산과 인력을 쓰지 않은 것이 드러났습니다. 중대재해처벌법은 바로 이런 일을 막기 위해, 경영책임자가 미리 위험을 없애도록 책임을 지운 법입니다.",
+    "Sa isang pabrika, ilang beses sinabi ng manggagawa na 'madalas masira ang safety device ng press' pero hindi naayos, at may namatay sa pagkaipit. Lumabas sa imbestigasyon na alam ng kumpanya ang panganib pero hindi naglaan ng badyet at tauhan. Ginawa ang Serious Accidents Punishment Act para pigilan ito—pinananagot ang namamahala na alisin muna ang panganib.",
+    "ในโรงงานแห่งหนึ่ง คนงานบอกหลายครั้งว่า 'อุปกรณ์นิรภัยของเครื่องเพรสเสียบ่อย' แต่ไม่ได้รับการแก้ไข สุดท้ายมีผู้เสียชีวิตจากการถูกหนีบ การสอบสวนพบว่าบริษัทรู้ถึงอันตรายแต่ไม่ใช้งบและคน พ.ร.บ.ลงโทษอุบัติเหตุร้ายแรงมีไว้ป้องกันเรื่องแบบนี้ โดยให้ผู้บริหารรับผิดชอบขจัดอันตรายล่วงหน้า",
+    "Ở một nhà máy, công nhân nhiều lần nói 'thiết bị an toàn máy dập hay hỏng' nhưng không được sửa, cuối cùng có người chết vì bị kẹp. Điều tra cho thấy công ty biết nguy hiểm mà không chi ngân sách, nhân lực. Luật Xử phạt tai nạn nghiêm trọng ra đời để ngăn chuyện như vậy, buộc người đứng đầu loại bỏ nguy hiểm từ trước.");
+  S("p2-2",
+    "Y씨는 TBM에서 '크레인 리모컨의 비상정지 버튼이 눌려도 바로 안 멈춘다'고 말했습니다. 반장은 그날 크레인 사용을 멈추고 업체를 불러 수리했으며, 이 내용을 안전 점검표에 기록했습니다. 근로자의 의견을 듣고, 고치고, 기록하는 것 — 이것이 회사가 해야 하는 안전보건관리체계의 모습입니다.",
+    "Sinabi ni Y sa TBM na 'hindi agad humihinto ang crane kapag pinindot ang emergency stop sa remote'. Itinigil ng team leader ang paggamit ng crane noong araw ding iyon, nagpatawag ng technician, at itinala ito sa safety checklist. Makinig, ayusin, itala—iyan ang sistemang pangkaligtasan na dapat gawin ng kumpanya.",
+    "Y พูดใน TBM ว่า 'กดปุ่มหยุดฉุกเฉินที่รีโมตเครนแล้วไม่หยุดทันที' หัวหน้าหยุดใช้เครนวันนั้นเลย เรียกช่างมาซ่อม และบันทึกลงแบบตรวจความปลอดภัย ฟังความเห็นคนงาน แก้ไข และบันทึก — นี่คือระบบการจัดการความปลอดภัยที่บริษัทต้องทำ",
+    "Anh Y nói trong TBM 'nhấn nút dừng khẩn cấp trên điều khiển cẩu mà không dừng ngay'. Tổ trưởng ngừng dùng cẩu ngay hôm đó, gọi đơn vị sửa chữa và ghi vào phiếu kiểm tra an toàn. Lắng nghe, sửa chữa, ghi chép — đó là hệ thống quản lý an toàn công ty phải làm.");
+  S("p4-4",
+    "Z씨가 상사의 폭언을 회사에 신고했지만 두 달이 지나도 조사가 시작되지 않았고, 오히려 야간조로 옮겨졌습니다. Z씨는 기록과 동료의 진술을 모아 지방고용노동관서에 진정했습니다. 근로감독관이 조사해 회사에 과태료가 부과되었고, Z씨는 원래 근무조로 돌아왔습니다.",
+    "Iniulat ni Z sa kumpanya ang pagmumura ng boss, pero kahit dalawang buwan na, walang imbestigasyon at inilipat pa siya sa night shift. Inipon ni Z ang tala at pahayag ng kasama at nagreklamo sa labor office. Nag-imbestiga ang labor inspector, pinagmulta ang kumpanya, at naibalik si Z sa dati niyang shift.",
+    "Z แจ้งบริษัทเรื่องหัวหน้าด่าว่า แต่ผ่านไปสองเดือนก็ยังไม่สอบสวน กลับถูกย้ายไปกะกลางคืน Z รวบรวมบันทึกและคำให้การของเพื่อน แล้วยื่นคำร้องที่สำนักงานแรงงาน เจ้าหน้าที่ตรวจแรงงานสอบสวนและปรับบริษัท Z ได้กลับไปทำกะเดิม",
+    "Chị Z báo công ty về việc cấp trên chửi mắng nhưng hai tháng vẫn chưa điều tra, còn bị chuyển sang ca đêm. Z thu thập ghi chép và lời khai đồng nghiệp rồi khiếu nại lên văn phòng lao động. Thanh tra lao động điều tra, công ty bị phạt, Z được trở lại ca cũ.");
+  S("p4-5",
+    "필리핀에서 온 AA씨는 선배가 매일 '야, 필리핀!'이라고 부르는 것이 싫었지만 참았습니다. 동료가 이를 반장에게 알렸고, 반장은 선배와 따로 이야기한 뒤 모두에게 이름을 부르자고 TBM에서 말했습니다. 작은 호칭 하나가 사람을 존중하는지 보여 줍니다.",
+    "Ayaw ni AA, mula Pilipinas, na tinatawag siya ng senior araw-araw ng 'Hoy, Pilipino!' pero tiniis niya. Ipinaalam ito ng kasama sa team leader, na kinausap ang senior at sinabi sa TBM na tawagin ang lahat sa pangalan. Ang simpleng pagtawag ay nagpapakita kung iginagalang ang tao.",
+    "AA จากฟิลิปปินส์ไม่ชอบที่รุ่นพี่เรียกทุกวันว่า 'เฮ้ย ฟิลิปปินส์!' แต่ก็ทนไว้ เพื่อนแจ้งหัวหน้า หัวหน้าคุยกับรุ่นพี่แยก และบอกใน TBM ให้ทุกคนเรียกชื่อกัน คำเรียกเล็ก ๆ แสดงว่าเราเคารพคนหรือไม่",
+    "Chị AA từ Philippines không thích bị đàn anh gọi mỗi ngày là 'Ê, Philippines!' nhưng vẫn chịu đựng. Đồng nghiệp báo tổ trưởng, tổ trưởng nói chuyện riêng với đàn anh rồi nhắc trong TBM mọi người gọi nhau bằng tên. Một cách xưng hô nhỏ cho thấy có tôn trọng con người hay không.");
+  S("p4-6",
+    "단체 채팅방에서 한 직원이 여성 동료의 사진에 몸매를 평가하는 글을 올렸고, 몇 명이 웃는 이모티콘을 달았습니다. 다른 동료가 '이건 아닌 것 같아요'라고 짧게 쓰고 관리자에게 알렸습니다. 회사는 글을 삭제하고 조사해 징계했습니다. 웃는 이모티콘 하나도 2차 피해가 될 수 있습니다.",
+    "Sa group chat, nag-post ang isang empleyado ng komento tungkol sa katawan ng babaeng kasama sa litrato niya, at may ilang naglagay ng tumatawang emoji. Maikling isinulat ng isa pang kasama na 'Hindi tama ito' at iniulat sa manager. Binura ng kumpanya ang post, nag-imbestiga at nagdisiplina. Puwedeng pangalawang pinsala kahit isang tumatawang emoji.",
+    "ในกลุ่มแชท พนักงานคนหนึ่งโพสต์วิจารณ์รูปร่างในรูปของเพื่อนผู้หญิง และมีหลายคนใส่อีโมจิหัวเราะ เพื่อนอีกคนพิมพ์สั้น ๆ ว่า 'แบบนี้ไม่ถูกนะ' แล้วแจ้งผู้จัดการ บริษัทลบโพสต์ สอบสวน และลงโทษ อีโมจิหัวเราะแค่อันเดียวก็เป็นความเสียหายซ้ำได้",
+    "Trong nhóm chat, một nhân viên đăng lời bình phẩm cơ thể trên ảnh của nữ đồng nghiệp, vài người thả biểu tượng cười. Một đồng nghiệp khác viết ngắn 'Thế này không đúng đâu' và báo quản lý. Công ty xóa bài, điều tra và kỷ luật. Một biểu tượng cười cũng có thể là tổn hại thứ cấp.");
+  S("p4-7",
+    "납품하러 온 거래처 기사가 사무실 여직원에게 반복해서 사적인 질문을 하고 손을 잡으려 했습니다. 직원이 관리자에게 알리자, 회사는 그 기사의 납품 시간에 남자 직원이 응대하도록 바꾸고 거래처에 공식 항의했습니다. 거래처는 기사를 교체했습니다.",
+    "Paulit-ulit na nagtanong ng personal ang delivery driver ng kliyente sa babaeng staff sa opisina at sinubukang hawakan ang kamay niya. Nang iulat niya ito, binago ng kumpanya ang tumatanggap sa oras ng delivery at pormal na nagreklamo sa kliyente. Pinalitan ng kliyente ang driver.",
+    "คนขับส่งของจากบริษัทคู่ค้าถามเรื่องส่วนตัวพนักงานหญิงในออฟฟิศซ้ำ ๆ และพยายามจับมือ เมื่อพนักงานแจ้งผู้จัดการ บริษัทให้พนักงานชายรับของในช่วงเวลาส่งของของคนขับคนนั้น และประท้วงคู่ค้าอย่างเป็นทางการ คู่ค้าเปลี่ยนคนขับ",
+    "Tài xế giao hàng của đối tác liên tục hỏi chuyện riêng tư nữ nhân viên văn phòng và định nắm tay. Khi chị báo quản lý, công ty đổi sang nhân viên nam tiếp nhận vào giờ giao hàng của tài xế đó và phản đối chính thức với đối tác. Đối tác đã thay tài xế.");
+  S("p4-8",
+    "BB씨가 괴롭힘을 신고한 뒤, 일부 동료가 '회사 분위기를 망쳤다'며 BB씨에게 말을 걸지 않았습니다. 회사는 이것도 2차 피해로 보고 해당 직원들에게 주의를 주고 다시 교육했습니다. 신고한 사람이 외롭지 않게 하는 것, 그것이 동료가 할 수 있는 가장 큰 도움입니다.",
+    "Pagkatapos iulat ni BB ang panliligalig, hindi na siya kinakausap ng ilang kasama dahil 'sinira niya ang samahan'. Itinuring ito ng kumpanya na pangalawang pinsala, binigyan ng babala ang mga ito at muling sinanay. Ang hindi pag-iwan sa nag-ulat ang pinakamalaking tulong ng kasama.",
+    "หลังจาก BB แจ้งเรื่องการกลั่นแกล้ง เพื่อนบางคนไม่คุยด้วยเพราะ 'ทำให้บรรยากาศบริษัทเสีย' บริษัทถือว่าเป็นความเสียหายซ้ำ ตักเตือนและอบรมพนักงานเหล่านั้นใหม่ การไม่ปล่อยให้ผู้แจ้งโดดเดี่ยว คือความช่วยเหลือที่ยิ่งใหญ่ที่สุดที่เพื่อนทำได้",
+    "Sau khi chị BB báo cáo quấy rối, vài đồng nghiệp không nói chuyện với chị vì 'làm hỏng không khí công ty'. Công ty xem đây cũng là tổn hại thứ cấp, nhắc nhở và đào tạo lại những người đó. Không để người báo cáo cô đơn là sự giúp đỡ lớn nhất đồng nghiệp có thể làm.");
+  S("p4-9",
+    "CC씨가 성희롱을 신고하자 회사는 다음 날 가해자와 다른 조로 근무를 나누고, 담당자가 CC씨, 가해자, 본 사람을 각각 따로 면담했습니다. 2주 안에 조사를 마치고 결과를 CC씨에게 알린 뒤, 의견을 들어 징계를 정했습니다. 조사 내용은 관계자 외에는 알리지 않았습니다.",
+    "Nang iulat ni CC ang sexual harassment, kinabukasan ay inihiwalay ng kumpanya ang shift niya sa gumawa, at hiwalay na kinapanayam ng tagapangasiwa si CC, ang gumawa at ang saksi. Sa loob ng 2 linggo, natapos ang imbestigasyon, ipinaalam kay CC ang resulta, at pinakinggan siya bago magpasya sa disiplina. Hindi ipinaalam ang detalye sa iba.",
+    "เมื่อ CC แจ้งเรื่องล่วงละเมิดทางเพศ วันรุ่งขึ้นบริษัทแยกกะทำงานของผู้กระทำ ผู้รับผิดชอบสัมภาษณ์ CC ผู้กระทำ และพยานแยกกัน สอบสวนเสร็จใน 2 สัปดาห์ แจ้งผลให้ CC และรับฟังความเห็นก่อนกำหนดโทษ ไม่เปิดเผยเนื้อหาแก่ผู้ไม่เกี่ยวข้อง",
+    "Khi chị CC báo cáo quấy rối tình dục, hôm sau công ty tách ca làm của người gây ra, người phụ trách phỏng vấn riêng CC, người gây ra và người chứng kiến. Trong 2 tuần hoàn tất điều tra, báo kết quả cho CC, nghe ý kiến rồi mới quyết định kỷ luật. Nội dung không tiết lộ cho người ngoài cuộc.");
+  S("p4-10",
+    "다국적 직원이 함께 일하는 절곡 라인에서는 매주 TBM 때 서로의 나라 말로 '고마워요', '조심해요'를 한 단어씩 배우기로 했습니다. 처음엔 어색했지만 웃음이 늘고, 위험할 때 서로의 말로 '조심!'을 외치게 되었습니다. 존중은 안전 신호를 더 빠르게 만듭니다.",
+    "Sa bending line na may iba't ibang nasyonalidad, napagkasunduang matuto ng isang salita bawat TBM sa wika ng isa't isa, gaya ng 'salamat' at 'ingat'. Noong una nakakailang, pero dumami ang tawanan at sumisigaw na sila ng 'Ingat!' sa wika ng kasama kapag delikado. Pinabibilis ng respeto ang senyas ng kaligtasan.",
+    "ในไลน์พับโลหะที่มีพนักงานหลายชาติ ตกลงกันว่าทุก TBM จะเรียนคำในภาษาของกันและกันวันละคำ เช่น 'ขอบคุณ' 'ระวัง' ตอนแรกเขิน แต่เสียงหัวเราะมากขึ้น และเวลามีอันตรายก็ตะโกน 'ระวัง!' เป็นภาษาของเพื่อน ความเคารพทำให้สัญญาณความปลอดภัยเร็วขึ้น",
+    "Ở dây chuyền chấn có nhân viên nhiều nước, mọi người thống nhất mỗi buổi TBM học một từ tiếng của nhau như 'cảm ơn', 'cẩn thận'. Ban đầu ngượng ngùng nhưng tiếng cười nhiều hơn, khi nguy hiểm còn hô 'Cẩn thận!' bằng tiếng của đồng nghiệp. Tôn trọng làm tín hiệu an toàn nhanh hơn.");
+})();
+
+// 가장 짧은 단원 추가 보강
+(() => {
+  const put = window.PUT_BEFORE_OX;
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+
+  put("p4-8", [
+    H("피해를 말한 동료에게 이렇게 말해 주세요", "Ganito ang sabihin sa kasamang nagsalita", "พูดกับเพื่อนที่กล้าบอกแบบนี้", "Hãy nói với đồng nghiệp đã lên tiếng như thế này", "do"),
+    { t: "ol", tone: "do", items: [
+      L("\"말해 줘서 고마워. 네 잘못이 아니야.\"", "\"Salamat at nagsabi ka. Hindi mo kasalanan.\"", "\"ขอบคุณที่บอกนะ ไม่ใช่ความผิดของเธอ\"", "\"Cảm ơn đã nói ra. Không phải lỗi của bạn.\""),
+      L("\"필요하면 내가 본 것을 말해 줄게.\"", "\"Kung kailangan, sasabihin ko ang nakita ko.\"", "\"ถ้าจำเป็น ฉันจะเล่าสิ่งที่เห็นให้\"", "\"Nếu cần, tôi sẽ kể những gì tôi thấy.\""),
+      L("\"점심 같이 먹을래?\" — 평소처럼 대해 주는 것이 큰 힘이 됩니다.", "\"Sabay tayong kumain?\" — malaking tulong ang pakikitungo nang normal.", "\"กินข้าวด้วยกันไหม\" — การปฏิบัติตามปกติเป็นกำลังใจใหญ่", "\"Ăn trưa cùng nhé?\" — đối xử như bình thường là sự động viên lớn.")
+    ]}
+  ]);
+
+  put("p4-9", [
+    { t: "kv", rows: [
+      [L("신고 방법", "Paraan ng pag-uulat", "วิธีแจ้ง", "Cách báo cáo"), L("말로, 문서로, 문자·메신저로 모두 가능. 익명 상담도 먼저 해 볼 수 있습니다.", "Sa salita, sulat, text o messenger. Puwede munang anonymous na konsultasyon.", "พูด เอกสาร ข้อความ แชท ได้ทั้งหมด ปรึกษาแบบไม่ระบุชื่อก่อนก็ได้", "Bằng lời, văn bản, tin nhắn đều được. Có thể tư vấn ẩn danh trước.")],
+      [L("누구에게", "Kanino", "แจ้งใคร", "Báo cho ai"), L("취업규칙에 정한 담당자, 관리자, 대표. 가해자가 상사면 그 윗사람이나 대표에게 직접.", "Itinakdang tao sa rules, manager o may-ari. Kung boss ang gumawa, sa nakatataas o direkta sa may-ari.", "ผู้รับผิดชอบตามข้อบังคับ หัวหน้า หรือเจ้าของ ถ้าผู้กระทำเป็นหัวหน้า ให้แจ้งผู้ที่สูงกว่าหรือเจ้าของโดยตรง", "Người phụ trách theo nội quy, quản lý, chủ. Nếu người gây ra là cấp trên thì báo thẳng cấp cao hơn hoặc chủ.")],
+      [L("통역", "Interpreter", "ล่าม", "Phiên dịch"), L("한국어가 어려우면 통역을 요청하거나 1577-0071 상담을 함께 이용합니다.", "Humingi ng interpreter o gamitin ang 1577-0071.", "ถ้าภาษาเกาหลียาก ขอล่ามหรือใช้บริการ 1577-0071 ร่วมด้วย", "Khó tiếng Hàn thì xin phiên dịch hoặc dùng thêm tư vấn 1577-0071.")]
+    ]}
+  ]);
+
+  put("p4-10", [
+    { t: "p", x: L("문화가 다르면 같은 행동도 다르게 받아들여집니다. 어깨를 툭 치거나, 머리를 쓰다듬거나, 큰 소리로 부르는 것이 어떤 나라에서는 무례하게 느껴집니다. 모르면 '이렇게 해도 괜찮아요?'라고 물어보는 것이 가장 좋은 존중입니다.",
+      "Kapag iba ang kultura, iba ang pagtanggap sa parehong kilos. Ang pagtapik sa balikat, paghaplos sa ulo o malakas na pagtawag ay bastos sa ibang bansa. Kung hindi sigurado, itanong: 'Okay lang ba ito?'—iyan ang pinakamabuting respeto.",
+      "วัฒนธรรมต่างกัน การกระทำเดียวกันก็รับรู้ต่างกัน การตบไหล่ ลูบหัว หรือเรียกเสียงดัง ในบางประเทศถือว่าไม่สุภาพ ถ้าไม่แน่ใจ ถามว่า 'ทำแบบนี้ได้ไหม' คือการเคารพที่ดีที่สุด",
+      "Văn hóa khác nhau thì cùng một hành động được hiểu khác nhau. Vỗ vai, xoa đầu, gọi to ở một số nước bị coi là bất lịch sự. Không chắc thì hỏi 'Làm thế này có được không?' — đó là cách tôn trọng tốt nhất.") }
+  ]);
+
+  put("p4-7", [
+    { t: "note", x: L("거래처 사람이 위험한 행동을 할 때도 같습니다. 크레인 아래로 들어오거나 지게차 통로에 차를 세우면, 정중하지만 분명하게 멈춰 달라고 말하고 반장에게 알립니다.",
+      "Ganoon din kapag delikado ang kilos ng taga-ibang kumpanya. Kapag pumasok sa ilalim ng crane o pumarada sa daanan ng forklift, magalang pero malinaw na pakiusapang huminto at ipaalam sa team leader.",
+      "เช่นเดียวกันเมื่อคนบริษัทคู่ค้าทำสิ่งที่อันตราย ถ้าเข้าใต้เครนหรือจอดรถในทางรถยก ให้บอกอย่างสุภาพแต่ชัดเจนให้หยุด และแจ้งหัวหน้า",
+      "Khi người của đối tác làm điều nguy hiểm cũng vậy. Nếu họ đi vào dưới cẩu hay đỗ xe trên lối xe nâng, hãy lịch sự nhưng rõ ràng nhờ họ dừng lại và báo tổ trưởng.") }
+  ]);
+
+  put("p1-11", [
+    H("쉬는 시간을 잘 쓰는 법", "Paano gamitin nang maayos ang pahinga", "ใช้เวลาพักให้ดี", "Cách dùng giờ nghỉ hiệu quả", "do"),
+    { t: "ol", tone: "do", items: [
+      L("기계 옆을 떠나 조용한 곳으로 갑니다. 귀와 눈도 쉬어야 합니다.", "Lumayo sa makina at pumunta sa tahimik na lugar. Kailangan ding magpahinga ang tainga at mata.", "ออกจากข้างเครื่องไปที่เงียบ หูและตาก็ต้องพัก", "Rời khỏi máy, đến chỗ yên tĩnh. Tai và mắt cũng cần nghỉ."),
+      L("물을 마시고, 서서 일했다면 앉고, 앉아서 일했다면 걷습니다.", "Uminom ng tubig; kung nakatayo ka sa trabaho, umupo; kung nakaupo, maglakad.", "ดื่มน้ำ ถ้ายืนทำงานให้นั่ง ถ้านั่งทำงานให้เดิน", "Uống nước; đứng làm thì ngồi, ngồi làm thì đi lại."),
+      L("휴대폰 게임보다 눈을 감고 3분 쉬는 것이 피로 회복에 더 좋습니다.", "Mas nakakatanggal ng pagod ang 3 minutong pagpikit kaysa cellphone game.", "หลับตาพัก 3 นาทีช่วยหายเหนื่อยดีกว่าเล่นเกมในมือถือ", "Nhắm mắt nghỉ 3 phút giúp hồi sức tốt hơn chơi game điện thoại.")
+    ]}
+  ]);
+
+  put("c-stress", [
+    { t: "kv", rows: [
+      [L("4초", "4 segundo", "4 วินาที", "4 giây"), L("코로 천천히 숨을 들이쉽니다", "Dahan-dahang huminga papasok sa ilong", "หายใจเข้าทางจมูกช้า ๆ", "Hít vào chậm bằng mũi")],
+      [L("4초", "4 segundo", "4 วินาที", "4 giây"), L("숨을 잠깐 멈춥니다", "Pigilan sandali ang hininga", "กลั้นหายใจครู่หนึ่ง", "Nín thở một chút")],
+      [L("6초", "6 segundo", "6 วินาที", "6 giây"), L("입으로 길게 내쉽니다 — 5번 반복", "Huminga palabas nang mahaba sa bibig—ulitin nang 5 beses", "หายใจออกทางปากยาว ๆ — ทำซ้ำ 5 ครั้ง", "Thở ra dài bằng miệng — lặp lại 5 lần")]
+    ]},
+    { t: "p", x: L("화가 나거나 긴장될 때 위 호흡을 1분만 해도 심장이 차분해집니다. 흥분한 상태로 기계를 다루지 말고, 잠깐 호흡을 고른 뒤 일을 다시 시작하세요.",
+      "Kapag galit o kinakabahan, kahit 1 minuto ng ganitong paghinga ay nagpapakalma sa puso. Huwag gumamit ng makina habang galit—ayusin muna ang hininga.",
+      "เวลาโกรธหรือเครียด หายใจแบบนี้แค่ 1 นาทีหัวใจก็สงบลง อย่าใช้เครื่องจักรขณะอารมณ์พลุ่งพล่าน หายใจให้ช้าลงก่อนแล้วค่อยทำงานต่อ",
+      "Khi tức giận hay căng thẳng, thở như trên chỉ 1 phút tim cũng dịu lại. Đừng vận hành máy khi đang kích động, hãy điều hòa hơi thở rồi mới làm tiếp.") }
+  ]);
+
+  put("c-chem", [
+    { t: "p", x: L("화학물질 사고가 나면 MSDS를 들고 병원에 가거나 사진을 찍어 의사에게 보여 주세요. 어떤 물질인지 알아야 의사가 맞는 치료를 할 수 있습니다. 그래서 MSDS가 어디 있는지 평소에 알아 두어야 합니다.",
+      "Kapag may aksidente sa kemikal, dalhin ang MSDS sa ospital o kunan ng litrato para ipakita sa doktor. Kailangang malaman ang kemikal para sa tamang lunas. Kaya alamin kung nasaan ang MSDS.",
+      "ถ้าเกิดอุบัติเหตุจากสารเคมี ให้นำ MSDS ไปโรงพยาบาลหรือถ่ายรูปให้แพทย์ดู แพทย์ต้องรู้ว่าเป็นสารอะไรจึงรักษาได้ถูก จึงควรรู้ไว้ว่า MSDS อยู่ที่ไหน",
+      "Khi có sự cố hóa chất, mang MSDS đến bệnh viện hoặc chụp ảnh cho bác sĩ xem. Biết là chất gì thì bác sĩ mới chữa đúng. Vì vậy thường ngày phải biết MSDS để ở đâu.") }
+  ]);
+
+  put("c-heart", [
+    { t: "p", x: L("뇌졸중과 심근경색은 '골든타임'이 있습니다. 뇌졸중은 증상이 생긴 뒤 4시간 30분 안에, 심근경색은 2시간 안에 치료를 시작해야 결과가 좋습니다. '좀 쉬면 낫겠지' 하고 기다리는 시간이 가장 위험합니다.",
+      "May 'golden time' ang stroke at heart attack. Sa stroke, dapat magamot sa loob ng 4 na oras at 30 minuto; sa heart attack, sa loob ng 2 oras. Pinakadelikado ang paghihintay na 'gagaling din pagkapahinga'.",
+      "โรคหลอดเลือดสมองและกล้ามเนื้อหัวใจขาดเลือดมี 'ช่วงเวลาทอง' หลอดเลือดสมองต้องรักษาภายใน 4 ชั่วโมง 30 นาทีหลังมีอาการ หัวใจภายใน 2 ชั่วโมงจึงจะได้ผลดี การรอว่า 'พักแล้วคงหาย' อันตรายที่สุด",
+      "Đột quỵ và nhồi máu cơ tim có 'thời gian vàng'. Đột quỵ phải điều trị trong 4 giờ 30 phút sau khi có triệu chứng, nhồi máu cơ tim trong 2 giờ thì kết quả mới tốt. Chờ 'nghỉ chút chắc khỏi' là nguy hiểm nhất.") }
+  ]);
+
+  put("w-7", [
+    { t: "p", x: L("전기는 눈에 보이지 않고 소리도 없습니다. 판금 공장은 쇠가 많고 바닥에 물·기름이 있어 전기가 몸을 지나 땅으로 흐르기 쉽습니다. 작은 '찌릿' 느낌도 누전의 신호이니 그 기계는 쓰지 말고 바로 알립니다.",
+      "Walang nakikita at walang tunog ang kuryente. Sa sheet metal factory, maraming bakal at may tubig at langis sa sahig kaya madaling dumaan ang kuryente sa katawan papunta sa lupa. Kahit maliit na 'kirot' ay palatandaan ng leakage—huwag gamitin ang makina at ipaalam agad.",
+      "ไฟฟ้ามองไม่เห็นและไม่มีเสียง โรงงานแผ่นโลหะมีเหล็กมาก พื้นมีน้ำและน้ำมัน ไฟจึงไหลผ่านร่างกายลงดินได้ง่าย แม้รู้สึก 'ซ่า' เล็กน้อยก็เป็นสัญญาณไฟรั่ว อย่าใช้เครื่องนั้นและแจ้งทันที",
+      "Điện không nhìn thấy, không có tiếng. Xưởng tấm kim loại nhiều sắt, sàn có nước, dầu nên điện dễ đi qua cơ thể xuống đất. Cảm giác 'tê' nhỏ cũng là dấu hiệu rò điện, đừng dùng máy đó và báo ngay.") }
+  ]);
+
+  put("c-noise", [
+    { t: "p", x: L("귀마개는 개인 것을 쓰고, 더러워지면 바꿉니다. 손이 더러운 채 귀마개를 만지면 귓병이 생길 수 있습니다. 귀덮개는 머리카락이나 안경다리 때문에 틈이 생기면 효과가 줄어드니, 귀를 완전히 덮도록 씁니다.",
+      "Gumamit ng sariling ear plug at palitan kapag marumi. Puwedeng magka-impeksyon kapag hinawakan nang maruming kamay. Bumababa ang bisa ng earmuff kapag may puwang dahil sa buhok o salamin—takpan nang buo ang tainga.",
+      "ใช้ที่อุดหูของตัวเอง สกปรกให้เปลี่ยน จับด้วยมือสกปรกอาจทำให้หูอักเสบ ที่ครอบหูถ้ามีช่องเพราะผมหรือขาแว่นจะได้ผลน้อยลง ต้องครอบให้มิดหู",
+      "Dùng nút tai của riêng mình, bẩn thì thay. Cầm nút tai bằng tay bẩn có thể gây bệnh tai. Chụp tai nếu có khe hở vì tóc hay gọng kính thì giảm hiệu quả, phải che kín tai.") }
+  ]);
+})();
+
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
 const UI2 = {
   nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
@@ -3776,6 +4081,15 @@ const UI3 = {
 };
 
 // 주간 교육(매주 6단원, 7주 반복) + 오늘의 안전 한마디
+const UI6 = {
+  title: L("지난주 보충 교육", "Make-up: aralin noong nakaraang linggo", "เรียนชดเชยของสัปดาห์ที่แล้ว", "Học bù tuần trước"),
+  sub: L("지난주 교육을 다 마치지 못했다면 이번 주 일요일까지 보충할 수 있습니다. 다 마치면 지난주 이수로 기록됩니다.",
+    "Kung hindi natapos ang aralin noong nakaraang linggo, puwedeng humabol hanggang Linggo ngayong linggo. Kapag natapos, itatala bilang natapos noong nakaraang linggo.",
+    "ถ้าเรียนของสัปดาห์ที่แล้วไม่ครบ เรียนชดเชยได้ถึงวันอาทิตย์นี้ เมื่อครบจะบันทึกว่าเรียนครบสัปดาห์ที่แล้ว",
+    "Nếu chưa học xong bài tuần trước, có thể học bù đến Chủ nhật tuần này. Học xong sẽ được ghi là hoàn thành tuần trước."),
+  start: L("보충 교육 하기", "Simulan ang make-up", "เริ่มเรียนชดเชย", "Bắt đầu học bù"),
+  tag: L("지난주 보충", "Make-up", "เรียนชดเชย", "Học bù")
+};
 const UI5 = {
   oxTitle: L("스스로 확인해 보세요 — O일까, X일까?", "Subukan ang sarili — Tama (O) o Mali (X)?", "ทดสอบตัวเอง — ถูก (O) หรือผิด (X)", "Tự kiểm tra — Đúng (O) hay Sai (X)?"),
   oxTap: L("생각한 뒤 눌러서 정답 보기", "Mag-isip, saka pindutin para sa sagot", "คิดก่อน แล้วแตะเพื่อดูคำตอบ", "Suy nghĩ rồi chạm để xem đáp án"),
@@ -3801,7 +4115,7 @@ const UI4 = {
   perDay: L("하루 1단원, 2~3분이면 충분합니다.", "Isang aralin kada araw, 2–3 minuto lang.", "วันละ 1 บท ใช้เวลาแค่ 2–3 นาที", "Mỗi ngày 1 bài, chỉ 2–3 phút."),
   weekDone: L("이번 주 교육을 모두 마쳤습니다! 다음 주 월요일에 새 단원이 열립니다.", "Tapos na ang aralin ngayong linggo! May bagong aralin sa susunod na Lunes.", "เรียนครบสัปดาห์นี้แล้ว! วันจันทร์หน้าจะเปิดบทใหม่", "Đã hoàn thành bài tuần này! Thứ Hai tuần sau sẽ mở bài mới."),
   allTitle: L("전체 단원", "Lahat ng aralin", "บทเรียนทั้งหมด", "Tất cả bài học"),
-  allSub: L("이번 주 교육이 아니어도 언제든 읽을 수 있습니다.", "Puwedeng basahin anumang oras kahit hindi aralin ngayong linggo.", "อ่านได้ทุกเมื่อแม้ไม่ใช่บทของสัปดาห์นี้", "Có thể đọc bất cứ lúc nào dù không phải bài tuần này."),
+  allSub: L("이번 주 교육이 아니어도 언제든 읽을 수 있습니다. 초록 체크는 이번 주에 읽은 단원, 회색 체크는 예전에 읽은 단원입니다.", "Puwedeng basahin anumang oras. Berdeng tsek: nabasa ngayong linggo; abong tsek: nabasa dati.", "อ่านได้ทุกเมื่อ เครื่องหมายถูกสีเขียวคืออ่านสัปดาห์นี้ สีเทาคืออ่านก่อนหน้านี้", "Có thể đọc bất cứ lúc nào. Dấu tích xanh: đã đọc tuần này; dấu tích xám: đã đọc trước đây."),
   tag: L("이번 주 교육", "Ngayong linggo", "สัปดาห์นี้", "Tuần này"),
   certWeek: L("이번 주 교육", "Aralin ngayong linggo", "บทเรียนสัปดาห์นี้", "Bài tuần này"),
   certWeekMin: L("이번 주 학습 시간", "Oras ngayong linggo", "เวลาเรียนสัปดาห์นี้", "Thời gian học tuần này"),
@@ -3926,6 +4240,11 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .oxq[open] summary em{display:none}
 .oxq p{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:var(--ok-soft)}
 .oxq p.x{background:var(--bad-soft)}
+.mkcard{border-color:var(--line);border-style:dashed}
+.wtag.mk{background:var(--sunk);color:var(--ink);border:1px dashed var(--line)}
+.chk.past{border-color:var(--ink-2);opacity:.55}
+.chk.past::after{content:"";width:9px;height:5px;border:solid var(--ink-2);border-width:0 0 2.5px 2.5px;transform:rotate(-45deg) translate(1px,-1px)}
+.mark[aria-pressed="true"]{cursor:default}
 .wtag{display:inline-block;margin:0 0 8px;padding:3px 10px;border-radius:999px;background:#F5B800;color:#15191F;font-weight:800;font-size:12.5px}
 </style>`);
 
@@ -3951,14 +4270,25 @@ document.head.insertAdjacentHTML("beforeend", `<style>
   const WSET = new Set(WK.lessons.map(a => a.lesson.id));
   const prevWk = store.get("wk", null);
   if (prevWk !== WK.id) {
-    if (prevWk !== null) done = {};
+    if (prevWk !== null) { store.set("pdone", done); done = {}; }   // 지난주 체크는 보충 교육용으로 보관
     store.set("wk", WK.id); store.set("done", done); store.set("wkMin0", TRACK.totalMin());
     store.set("wsecs", {});                                         // 이번 주 읽은 시간은 0부터 다시 셈
   }
   const wHist = () => store.get("wkHist", {});
+  // 예전에 한 번이라도 읽은 단원 (주가 바뀌어도 남음) — 목록에 회색 체크로 표시
+  const ever = Object.assign({}, store.get("pdone", {}), store.get("ever", {}), done);
+  store.set("ever", ever);
   const wDone = () => WK.lessons.filter(a => done[a.lesson.id]).length;
   const wMin = () => Math.max(0, TRACK.totalMin() - store.get("wkMin0", 0));
   window.WEEKINFO = () => ({ week: WK.id, wno: WK.no, wdone: wDone(), wtotal: WK.lessons.length, weekMin: wMin(), weeks: Object.keys(wHist()).length });
+  // ---------- 지난주 보충 교육 ----------
+  const PW = WEEK.info(ALL, new Date(WK.from.getFullYear(), WK.from.getMonth(), WK.from.getDate() - 7));
+  const PSET = new Set(PW.lessons.map(a => a.lesson.id));
+  const mkOpen = () => !wHist()[PW.id];
+  const pd = store.get("pdone", {});
+  const pOk = id => !!(done[id] || pd[id]);
+  const pDone = () => PW.lessons.filter(a => pOk(a.lesson.id)).length;
+  const pLabel = () => `${tx(UI4.weekNo).replace("{n}", PW.no)} · ${WEEK.md(PW.from)}~${WEEK.md(PW.to)}`;
   const wLabel = () => `${tx(UI4.weekNo).replace("{n}", WK.no)} / ${WK.cycles} · ${WEEK.md(WK.from)}~${WEEK.md(WK.to)}`;
   const app = document.getElementById("app");
   const pager = document.getElementById("pager");
@@ -4027,7 +4357,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       <ul class="rows">${WK.lessons.map((a, k) => `<li><button type="button" data-go="${a.lesson.id}"><span class="n">${String(k + 1).padStart(2, "0")}</span><span class="t">${T(a.lesson.title)}${koSub(a.lesson.title)}</span><span class="chk ${done[a.lesson.id] ? "on" : ""}" aria-label="${done[a.lesson.id] ? T(UI.doneOn) : ""}"></span></button></li>`).join("")}</ul>
       ${nextA ? `<button class="cta" type="button" data-go="${nextA.lesson.id}">${T(UI4.today)} →</button><p class="hint">${T(UI4.perDay)}</p>` : `<p class="wdone">✓ ${T(UI4.weekDone)}</p>`}
       <p class="hint">${esc(tx(UI4.cycle).replace("{w}", WK.cycles).replace("{n}", ALL.length))}</p>
-    </section>${nameCard()}
+    </section>${mkOpen() ? mkCard() : ""}${nameCard()}
     <h2 style="margin:26px 0 2px">${T(UI4.allTitle)}</h2><p class="hint" style="margin:0 0 6px">${T(UI4.allSub)}</p>`;
     PARTS.forEach(p => {
       h += `<section class="part"><div class="part-head"><div class="part-no"><small>PART</small>${p.no}</div><h2>${T(p.title)}</h2><p>${T(p.sub)}</p></div><ul class="rows">`;
@@ -4035,7 +4365,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
         const g = p.groups && p.groups.find(g => g.at === i);
         if (g) h += `</ul><div class="group">${T(g.x)}</div><ul class="rows">`;
         const num = i + 1;
-        h += `<li><button type="button" data-go="${l.id}"><span class="n">${String(num).padStart(2, "0")}</span><span class="t">${T(l.title)}${koSub(l.title)}</span><span class="chk ${done[l.id] ? "on" : ""}" aria-label="${done[l.id] ? T(UI.doneOn) : ""}"></span></button></li>`;
+        h += `<li><button type="button" data-go="${l.id}"><span class="n">${String(num).padStart(2, "0")}</span><span class="t">${T(l.title)}${koSub(l.title)}</span><span class="chk ${done[l.id] ? "on" : ever[l.id] ? "past" : ""}" aria-label="${done[l.id] ? T(UI.doneOn) : ""}"></span></button></li>`;
       });
       h += `</ul></section>`;
     });
@@ -4045,12 +4375,22 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     app.innerHTML = h;
   }
 
+  function mkCard() {
+    const pn = pDone(), pt = PW.lessons.length, nextP = PW.lessons.find(a => !pOk(a.lesson.id));
+    return `<section class="weekcard mkcard"><div class="wtop"><div><span class="wno">${esc(pLabel())}</span><h2>↺ ${T(UI6.title)}</h2></div><div class="wcount">${pn}<small> / ${pt}</small></div></div>
+      <p class="hint" style="margin:6px 0 0">${T(UI6.sub)}</p>
+      <div class="track"><span style="width:${(pn / pt) * 100}%"></span></div>
+      <ul class="rows">${PW.lessons.map((a, k) => `<li><button type="button" data-go="${a.lesson.id}"><span class="n">${String(k + 1).padStart(2, "0")}</span><span class="t">${T(a.lesson.title)}${koSub(a.lesson.title)}</span><span class="chk ${pOk(a.lesson.id) ? "on" : ""}"></span></button></li>`).join("")}</ul>
+      ${nextP ? `<button class="cta" type="button" data-go="${nextP.lesson.id}">${T(UI6.start)} →</button>` : ""}
+    </section>`;
+  }
+
   function lesson(id) {
     const k = ALL.findIndex(a => a.lesson.id === id);
     if (k < 0) return home();
     const { part, lesson: l, idx } = ALL[k];
     app.innerHTML = `<div class="crumb"><b>PART ${part.no}</b><span>${T(part.title)}</span></div>
-      ${l.scene ? `<figure class="scenebox">${scene(l.scene)}</figure>` : ""}${WSET.has(l.id) ? `<span class="wtag">★ ${T(UI4.tag)}</span>` : `<div class="note" style="margin:0 0 10px"><span>${T(UI5.notWeek)} <button type="button" class="linkbtn" data-go="">${T(UI4.weekTitle)} →</button></span></div>`}<h1 class="ltitle">${T(l.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(l.title.ko)}</p>` : ""}
+      ${l.scene ? `<figure class="scenebox">${scene(l.scene)}</figure>` : ""}${WSET.has(l.id) ? `<span class="wtag">★ ${T(UI4.tag)}</span>` : (PSET.has(l.id) && mkOpen()) ? `<span class="wtag mk">↺ ${T(UI6.tag)}</span>` : `<div class="note" style="margin:0 0 10px"><span>${T(UI5.notWeek)} <button type="button" class="linkbtn" data-go="">${T(UI4.weekTitle)} →</button></span></div>`}<h1 class="ltitle">${T(l.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(l.title.ko)}</p>` : ""}
       <div class="blocks">${l.blocks.map(block).join("")}${LSRC[l.id] ? block({ t: "src", items: LSRC[l.id] }) : ""}</div>
       <button type="button" class="mark" id="mark" aria-pressed="${!!done[l.id]}">${done[l.id] ? "✓ " + T(UI.doneOn) : T(UI.done)}</button>
       <p class="hint" id="waitHint" hidden style="text-align:center;margin-top:6px">${T(UI5.waitHint)}</p>`;
@@ -4065,7 +4405,17 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     if (!paint()) lessonTimer = setInterval(() => { if (paint()) { clearInterval(lessonTimer); lessonTimer = null; } }, 1000);
     markEl.onclick = () => {
       if (!done[l.id] && need()) return;
-      if (done[l.id]) delete done[l.id]; else { done[l.id] = 1; TRACK.markSent(l.id); TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length, min: TRACK.lessonMin(l.id), totalMin: TRACK.totalMin() }); }
+      if (done[l.id]) return;                                   // 이미 읽은 단원은 실수로 체크가 풀리지 않게 함
+      {
+        ever[l.id] = 1; store.set("ever", ever);
+        done[l.id] = 1; TRACK.markSent(l.id);
+        // 지난주 보충 6단원을 다 마치면 지난주 이수로 기록 (요약 탭이 이번 주로 남도록 단원 기록보다 먼저 보냄)
+        if (PSET.has(l.id) && mkOpen() && pDone() >= PW.lessons.length) {
+          const hist = wHist(); hist[PW.id] = 1; store.set("wkHist", hist);
+          TRACK.send({ type: "week", week: PW.id, wno: PW.no, wdone: PW.lessons.length, wtotal: PW.lessons.length, weekMin: null, totalMin: TRACK.totalMin() });
+          mkJustDone = true;
+        }
+        TRACK.send({ type: "lesson", id: l.id, title: l.title.ko, count: Object.keys(done).length, total: ALL.length, min: TRACK.lessonMin(l.id), totalMin: TRACK.totalMin() }); }
       store.set("done", done);
       if (done[l.id] && WSET.has(l.id)) {
         const nextA = WK.lessons.find(a => !done[a.lesson.id]);
@@ -4075,6 +4425,11 @@ document.head.insertAdjacentHTML("beforeend", `<style>
           go("");
         } else go(nextA.lesson.id);
         return;
+      }
+      if (done[l.id] && PSET.has(l.id)) {
+        if (mkJustDone) { mkJustDone = false; go(""); return; }
+        const nextP = PW.lessons.find(a => !pOk(a.lesson.id));
+        if (nextP && mkOpen()) { go(nextP.lesson.id); return; }
       }
       if (done[l.id] && ALL[k + 1]) go(ALL[k + 1].lesson.id); else lesson(id);
     };
@@ -4086,6 +4441,12 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     if (wi >= 0) {
       // 이번 주 교육 단원: 이전/다음은 이번 주 6단원 안에서만 이동
       const pw = WK.lessons[wi - 1], nw = WK.lessons[wi + 1];
+      pv.disabled = !pw; pv.onclick = () => pw && go(pw.lesson.id);
+      if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(nw.lesson.id); }
+      else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => go(""); }
+    } else if (PSET.has(l.id) && mkOpen()) {
+      // 지난주 보충 단원: 지난주 6단원 안에서 이동
+      const pi = PW.lessons.findIndex(a => a.lesson.id === l.id), pw = PW.lessons[pi - 1], nw = PW.lessons[pi + 1];
       pv.disabled = !pw; pv.onclick = () => pw && go(pw.lesson.id);
       if (nw) { nx.textContent = tx(UI.next) + " →"; nx.onclick = () => go(nw.lesson.id); }
       else { nx.textContent = tx(UI.home) + " →"; nx.onclick = () => go(""); }
@@ -4193,7 +4554,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 
   app.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
 
-  let lessonTimer = null;
+  let lessonTimer = null, mkJustDone = false;
   function render() {
     if (lessonTimer) { clearInterval(lessonTimer); lessonTimer = null; }
     document.documentElement.lang = lang;
