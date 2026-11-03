@@ -4476,13 +4476,20 @@ const GUIDE = (() => {
         "ห้ามให้คนอื่นทำแทน การอบรมนี้เพื่อปกป้องตัวเราและเพื่อน ไม่เข้าใจให้ถามหัวหน้าหรือผู้จัดการ",
         "Không nhờ người khác làm thay. Bài học này để bảo vệ bạn và đồng nghiệp. Không hiểu thì hỏi tổ trưởng hoặc quản lý.")]
   ];
+  const IOS = ["🍎", L("아이폰은 먼저 설치하세요", "iPhone: i-install muna", "iPhone: ติดตั้งก่อน", "iPhone: cài đặt trước"),
+    L("아이폰은 사파리와 홈 화면 앱의 기록이 따로 저장됩니다. 사파리에서 시작하지 말고, 먼저 '공유 → 홈 화면에 추가'로 설치한 뒤 그 앱에서 이름을 넣고 시작하세요.",
+      "Sa iPhone, magkahiwalay ang talaan ng Safari at ng app sa home screen. Huwag magsimula sa Safari; i-install muna sa 'Share → Add to Home Screen', saka ilagay ang pangalan at magsimula sa app na iyon.",
+      "ใน iPhone บันทึกของ Safari กับแอปบนหน้าจอโฮมแยกกัน อย่าเริ่มใน Safari ให้ติดตั้งก่อนด้วย 'แชร์ → เพิ่มไปยังหน้าจอโฮม' แล้วใส่ชื่อและเริ่มในแอปนั้น",
+      "Trên iPhone, hồ sơ của Safari và ứng dụng trên màn hình chính được lưu riêng. Đừng bắt đầu trên Safari; hãy cài trước bằng 'Chia sẻ → Thêm vào MH chính', rồi nhập tên và bắt đầu trong ứng dụng đó.")];
+  const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isStandalone = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
   const css = `.gd-bg{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
 .gd{background:var(--surface,var(--bg,#fff));color:var(--ink,inherit);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom))}
 @media(min-width:600px){.gd-bg{align-items:center}.gd{border-radius:18px}}
 .gd h2{margin:0 0 4px;font-size:1.25rem}.gd .gd-sub{margin:0 0 14px;opacity:.75;font-size:.92rem}
 .gd ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .gd li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:10px;border-radius:12px;background:var(--sunk,rgba(127,127,127,.09))}
-.gd li>span{font-size:1.35rem;line-height:1.2;text-align:center}.gd li b{display:block;margin-bottom:2px}.gd li p{margin:0;font-size:.93rem;line-height:1.5}
+.gd li.ios{background:var(--hazard,#f5b800);color:var(--hazard-ink,#111)}.gd li>span{font-size:1.35rem;line-height:1.2;text-align:center}.gd li b{display:block;margin-bottom:2px}.gd li p{margin:0;font-size:.93rem;line-height:1.5}
 .gd .cta{width:100%;margin-top:16px}.gd-langs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}.gd-langs button{border:1px solid var(--line,#ccc);background:transparent;color:inherit;border-radius:999px;padding:6px 12px;font:inherit;font-size:.9rem}.gd-langs button[aria-pressed="true"]{background:var(--hazard,#f5b800);color:var(--hazard-ink,#111);border-color:transparent;font-weight:700}.guidebtn{margin-top:10px}`;
   let styled = false;
   function open(lang, onClose) {
@@ -4493,7 +4500,7 @@ const GUIDE = (() => {
     const bg = document.createElement("div");
     bg.className = "gd-bg";
     bg.innerHTML = `<div class="gd" role="dialog" aria-modal="true" aria-labelledby="gdT"><div class="gd-langs">${langs}</div><h2 id="gdT">${T(UI.title)}</h2><p class="gd-sub">${T(UI.sub)}</p>
-      <ol>${STEPS.map(([i, t, x]) => `<li><span aria-hidden="true">${i}</span><div><b>${T(t)}</b><p>${T(x)}</p></div></li>`).join("")}</ol>
+      <ol>${(isIOS() && !isStandalone() ? [STEPS[0], IOS, ...STEPS.slice(1)] : STEPS).map(([i, t, x]) => `<li${i === "🍎" ? ' class="ios"' : ""}><span aria-hidden="true">${i}</span><div><b>${T(t)}</b><p>${T(x)}</p></div></li>`).join("")}</ol>
       <button type="button" class="cta" id="gdOk">${T(UI.ok)}</button></div>`;
     document.body.appendChild(bg);
     document.body.style.overflow = "hidden";
