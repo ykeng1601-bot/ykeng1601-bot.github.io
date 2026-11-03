@@ -4183,10 +4183,10 @@ const TRACK = (() => {
     flush();
   }
 
-  // ---- 학습 시간: 화면이 보이고 최근 90초 안에 조작이 있을 때만 15초씩 더함 ----
-  const TICK = 5, IDLE = 90;
+  // ---- 학습 시간: 화면이 보이고 최근 30초 안에 조작이 있을 때만 15초씩 더함 ----
+  const TICK = 5, IDLE = 30;
   let cur = null, curTitle = "", lastAct = Date.now();
-  ["scroll", "touchstart", "pointerdown", "keydown", "wheel"].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));
+  ["scroll", "touchstart", "touchmove", "pointerdown", "pointermove", "keydown", "wheel"].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));   // PC는 마우스 움직임도 포함
   const secs = () => get("secs", {});
   const me = Math.random().toString(36).slice(2, 8);
   setInterval(() => {
@@ -4222,6 +4222,7 @@ const TRACK = (() => {
     setCurrent(id, title) { if (cur && cur !== id) leave(cur, curTitle); cur = id; curTitle = title || ""; lastAct = Date.now(); },
     lessonMin, weekMin, totalMin, markSent,
     lessonSecs: id => secs()[id] || 0,
+    idle: () => document.hidden || Date.now() - lastAct > IDLE * 1000,
     weekSecs: id => get("wsecs", {})[id] || 0
   };
 })();
@@ -4267,11 +4268,12 @@ const UI5 = {
     "Hindi ito aralin ngayong linggo. Puwede mong basahin, pero hindi ito bibilangin sa linggong ito.",
     "บทนี้ไม่ใช่บทเรียนของสัปดาห์นี้ อ่านได้ตามสบาย แต่จะไม่นับรวมการเรียนครบสัปดาห์นี้",
     "Đây không phải bài của tuần này. Có thể đọc tự do nhưng không tính vào hoàn thành tuần này."),
+  paused: L("⏸ 멈춤 — 화면을 넘기면 다시 셉니다", "⏸ Nakahinto — mag-scroll para magpatuloy", "⏸ หยุดนับ — เลื่อนหน้าจอเพื่อนับต่อ", "⏸ Tạm dừng — cuộn màn hình để đếm tiếp"),
   wait: L("{t} 더 읽으면 체크할 수 있어요", "Puwedeng i-tsek pagkatapos ng {t} pa", "อ่านอีก {t} แล้วจึงกดได้", "Đọc thêm {t} nữa thì mới đánh dấu được"),
-  waitHint: L("한 단원은 최소 2분 이상 읽어야 합니다. 화면을 오래 그대로 두면 시간이 멈추니, 넘기면서 읽어 주세요.",
-    "Kailangang basahin ang bawat aralin nang hindi bababa sa 2 minuto. Humihinto ang oras kapag matagal na hindi ginagalaw ang screen, kaya mag-scroll habang nagbabasa.",
-    "แต่ละบทต้องอ่านอย่างน้อย 2 นาที ถ้าปล่อยหน้าจอนิ่งนาน เวลาจะหยุดนับ ให้เลื่อนอ่านไปเรื่อย ๆ",
-    "Mỗi bài phải đọc ít nhất 2 phút. Để màn hình đứng yên lâu thì thời gian sẽ dừng, hãy vừa đọc vừa cuộn.")
+  waitHint: L("한 단원은 최소 2분 이상 읽어야 합니다. 30초 동안 화면을 건드리지 않으면 시간이 멈추니, 넘기면서 읽어 주세요.",
+    "Kailangang basahin ang bawat aralin nang hindi bababa sa 2 minuto. Humihinto ang oras kapag 30 segundong hindi ginagalaw ang screen, kaya mag-scroll habang nagbabasa.",
+    "แต่ละบทต้องอ่านอย่างน้อย 2 นาที ถ้าไม่แตะหน้าจอ 30 วินาที เวลาจะหยุดนับ ให้เลื่อนอ่านไปเรื่อย ๆ",
+    "Mỗi bài phải đọc ít nhất 2 phút. Không chạm màn hình 30 giây thì thời gian sẽ dừng, hãy vừa đọc vừa cuộn.")
 };
 const UI4 = {
   dailyTitle: L("오늘의 안전 한마디", "Paalala sa kaligtasan ngayon", "คำเตือนความปลอดภัยวันนี้", "Lời nhắc an toàn hôm nay"),
@@ -4446,10 +4448,10 @@ const GUIDE = (() => {
         "ทุกวันจันทร์จะเปิดบทเรียนใหม่ 6 บท ควรเรียนพร้อมกันทุกวันพุธในเวลา TBM ถ้าไม่ได้เรียน ให้เรียนให้จบระหว่างวันจันทร์ถึงวันศุกร์",
         "Mỗi thứ Hai mở 6 bài mới. Nên học cùng nhau vào giờ TBM thứ Tư hằng tuần. Ai chưa học thì phải hoàn thành từ thứ Hai đến thứ Sáu.")],
     ["⏱", L("단원마다 최소 2분", "Hindi bababa sa 2 minuto", "อย่างน้อย 2 นาทีต่อบท", "Ít nhất 2 phút mỗi bài"),
-      L("한 단원을 2분 이상 읽어야 '완료'가 됩니다. 2분이 지나 '다음'을 누르면 자동으로 완료됩니다. 화면만 켜 두지 말고 끝까지 읽어 주세요.",
-        "Kailangang basahin nang 2 minuto o higit pa bago ma-'Tapos'. Pagkalipas ng 2 minuto, awtomatikong tapos kapag pinindot ang 'Susunod'. Basahin hanggang dulo, huwag lang iwanang bukas.",
-        "ต้องอ่านบทละ 2 นาทีขึ้นไปจึงจะ 'เสร็จ' หลัง 2 นาทีกด 'ถัดไป' จะเสร็จอัตโนมัติ อ่านให้จบ อย่าแค่เปิดหน้าจอทิ้งไว้",
-        "Phải đọc mỗi bài từ 2 phút trở lên mới 'Hoàn thành'. Sau 2 phút bấm 'Tiếp' sẽ tự hoàn thành. Hãy đọc hết, đừng chỉ để màn hình mở.")],
+      L("한 단원을 2분 이상 읽어야 '완료'가 됩니다. 2분이 지나 '다음'을 누르면 자동으로 완료됩니다. 30초 동안 화면을 건드리지 않으면 시간이 멈추니, 넘기면서 끝까지 읽어 주세요.",
+        "Kailangang basahin nang 2 minuto o higit pa bago ma-'Tapos'. Pagkalipas ng 2 minuto, awtomatikong tapos kapag pinindot ang 'Susunod'. Humihinto ang oras kapag 30 segundong hindi ginagalaw ang screen, kaya mag-scroll hanggang dulo.",
+        "ต้องอ่านบทละ 2 นาทีขึ้นไปจึงจะ 'เสร็จ' หลัง 2 นาทีกด 'ถัดไป' จะเสร็จอัตโนมัติ ถ้าไม่แตะหน้าจอ 30 วินาที เวลาจะหยุดนับ ให้เลื่อนอ่านจนจบ",
+        "Phải đọc mỗi bài từ 2 phút trở lên mới 'Hoàn thành'. Sau 2 phút bấm 'Tiếp' sẽ tự hoàn thành. Không chạm màn hình 30 giây thì thời gian dừng, hãy vừa cuộn vừa đọc hết.")],
     ["✓", L("완료는 취소되지 않아요", "Hindi na mababawi ang Tapos", "เสร็จแล้วยกเลิกไม่ได้", "Đã hoàn thành thì không hủy được"),
       L("완료 표시는 지울 수 없습니다. 회색 체크는 예전 주에 마친 단원입니다. 이번 주 교육이 아닌 단원도 자유롭게 읽을 수 있습니다.",
         "Hindi na mabubura ang tsek. Ang gray na tsek ay aralin na natapos sa nakaraang linggo. Puwede ring basahin ang ibang aralin.",
@@ -4669,7 +4671,7 @@ const GUIDE = (() => {
     const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     const paint = () => {
       if (done[l.id] || !need()) { markEl.disabled = false; markEl.textContent = done[l.id] ? "✓ " + tx(UI.doneOn) : tx(UI.done); hintEl.hidden = true; return true; }
-      markEl.disabled = true; markEl.textContent = "⏱ " + tx(UI5.wait).replace("{t}", fmt(need())); hintEl.hidden = false; return false;
+      markEl.disabled = true; markEl.textContent = TRACK.idle() ? tx(UI5.paused) + " (" + fmt(need()) + ")" : "⏱ " + tx(UI5.wait).replace("{t}", fmt(need())); hintEl.hidden = false; return false;
     };
     if (!paint()) lessonTimer = setInterval(() => { if (paint()) { clearInterval(lessonTimer); lessonTimer = null; } }, 1000);
     // 2분을 채운 뒤 '다음'만 눌러도 '다 읽었어요'로 처리 (깜빡하고 넘어가는 경우 방지)
