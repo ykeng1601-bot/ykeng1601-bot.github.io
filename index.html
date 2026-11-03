@@ -4448,10 +4448,15 @@ const GUIDE = (() => {
         "ทุกวันจันทร์จะเปิดบทเรียนใหม่ 6 บท ควรเรียนพร้อมกันทุกวันพุธในเวลา TBM ถ้าไม่ได้เรียน ให้เรียนให้จบระหว่างวันจันทร์ถึงวันศุกร์",
         "Mỗi thứ Hai mở 6 bài mới. Nên học cùng nhau vào giờ TBM thứ Tư hằng tuần. Ai chưa học thì phải hoàn thành từ thứ Hai đến thứ Sáu.")],
     ["⏱", L("단원마다 최소 2분", "Hindi bababa sa 2 minuto", "อย่างน้อย 2 นาทีต่อบท", "Ít nhất 2 phút mỗi bài"),
-      L("한 단원을 2분 이상 읽어야 '완료'가 됩니다. 2분이 지나 '다음'을 누르면 자동으로 완료됩니다. 30초 동안 화면을 건드리지 않으면 시간이 멈추니, 넘기면서 끝까지 읽어 주세요.",
-        "Kailangang basahin nang 2 minuto o higit pa bago ma-'Tapos'. Pagkalipas ng 2 minuto, awtomatikong tapos kapag pinindot ang 'Susunod'. Humihinto ang oras kapag 30 segundong hindi ginagalaw ang screen, kaya mag-scroll hanggang dulo.",
-        "ต้องอ่านบทละ 2 นาทีขึ้นไปจึงจะ 'เสร็จ' หลัง 2 นาทีกด 'ถัดไป' จะเสร็จอัตโนมัติ ถ้าไม่แตะหน้าจอ 30 วินาที เวลาจะหยุดนับ ให้เลื่อนอ่านจนจบ",
-        "Phải đọc mỗi bài từ 2 phút trở lên mới 'Hoàn thành'. Sau 2 phút bấm 'Tiếp' sẽ tự hoàn thành. Không chạm màn hình 30 giây thì thời gian dừng, hãy vừa cuộn vừa đọc hết.")],
+      L("한 단원을 2분 이상 읽어야 '완료'가 됩니다. 2분이 지나 '다음'을 누르면 자동으로 완료됩니다.",
+        "Kailangang basahin nang 2 minuto o higit pa bago ma-'Tapos'. Pagkalipas ng 2 minuto, awtomatikong tapos kapag pinindot ang 'Susunod'.",
+        "ต้องอ่านบทละ 2 นาทีขึ้นไปจึงจะ 'เสร็จ' หลัง 2 นาทีกด 'ถัดไป' จะเสร็จอัตโนมัติ",
+        "Phải đọc mỗi bài từ 2 phút trở lên mới 'Hoàn thành'. Sau 2 phút bấm 'Tiếp' sẽ tự hoàn thành.")],
+    ["⏸", L("30초 이상 움직이지 않으면 시간이 멈춥니다", "Humihinto ang oras kapag 30 segundong walang galaw", "ไม่ขยับ 30 วินาที เวลาจะหยุดนับ", "Không thao tác 30 giây thì thời gian dừng"),
+      L("30초 이상 화면을 넘기거나 건드리지 않으면 읽은 시간이 더 이상 쌓이지 않습니다. 버튼에 '⏸ 멈춤'이 보이면 화면을 넘기세요. 다시 셉니다. 화면을 끄거나 다른 앱으로 가도 멈춥니다.",
+        "Kapag 30 segundo o higit pang hindi ini-scroll o hinahawakan ang screen, hindi na madadagdagan ang oras ng pagbasa. Kapag may '⏸ Nakahinto' sa button, mag-scroll para magpatuloy. Humihinto rin kapag pinatay ang screen o lumipat sa ibang app.",
+        "ถ้าไม่เลื่อนหรือแตะหน้าจอ 30 วินาทีขึ้นไป เวลาอ่านจะไม่นับเพิ่ม เมื่อปุ่มขึ้น '⏸ หยุดนับ' ให้เลื่อนหน้าจอ แล้วจะนับต่อ ปิดหน้าจอหรือไปแอปอื่นก็หยุดนับเช่นกัน",
+        "Nếu không cuộn hay chạm màn hình từ 30 giây trở lên, thời gian đọc sẽ không được cộng thêm. Khi nút hiện '⏸ Tạm dừng', hãy cuộn màn hình để đếm tiếp. Tắt màn hình hoặc chuyển sang ứng dụng khác cũng sẽ dừng.")],
     ["✓", L("완료는 취소되지 않아요", "Hindi na mababawi ang Tapos", "เสร็จแล้วยกเลิกไม่ได้", "Đã hoàn thành thì không hủy được"),
       L("완료 표시는 지울 수 없습니다. 회색 체크는 예전 주에 마친 단원입니다. 이번 주 교육이 아닌 단원도 자유롭게 읽을 수 있습니다.",
         "Hindi na mabubura ang tsek. Ang gray na tsek ay aralin na natapos sa nakaraang linggo. Puwede ring basahin ang ibang aralin.",
@@ -4491,7 +4496,7 @@ const GUIDE = (() => {
 .gd h2{margin:0 0 4px;font-size:1.25rem}.gd .gd-sub{margin:0 0 14px;opacity:.75;font-size:.92rem}
 .gd ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .gd li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:10px;border-radius:12px;background:var(--sunk,rgba(127,127,127,.09))}
-.gd li.ios{background:var(--hazard,#f5b800);color:var(--hazard-ink,#111)}.gd li>span{font-size:1.35rem;line-height:1.2;text-align:center}.gd li b{display:block;margin-bottom:2px}.gd li p{margin:0;font-size:.93rem;line-height:1.5}
+.gd li.gdwarn{background:var(--note-soft,#fff3c4)}.gd li.ios{background:var(--hazard,#f5b800);color:var(--hazard-ink,#111)}.gd li>span{font-size:1.35rem;line-height:1.2;text-align:center}.gd li b{display:block;margin-bottom:2px}.gd li p{margin:0;font-size:.93rem;line-height:1.5}
 .gd .cta{width:100%;margin-top:16px}.gd-langs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}.gd-langs button{border:1px solid var(--line,#ccc);background:transparent;color:inherit;border-radius:999px;padding:6px 12px;font:inherit;font-size:.9rem}.gd-langs button[aria-pressed="true"]{background:var(--hazard,#f5b800);color:var(--hazard-ink,#111);border-color:transparent;font-weight:700}.guidebtn{margin-top:10px}`;
   let styled = false;
   function open(lang, onClose) {
@@ -4502,7 +4507,7 @@ const GUIDE = (() => {
     const bg = document.createElement("div");
     bg.className = "gd-bg";
     bg.innerHTML = `<div class="gd" role="dialog" aria-modal="true" aria-labelledby="gdT"><div class="gd-langs">${langs}</div><h2 id="gdT">${T(UI.title)}</h2><p class="gd-sub">${T(UI.sub)}</p>
-      <ol>${(isIOS() && !isStandalone() ? [STEPS[0], IOS, ...STEPS.slice(1)] : STEPS).map(([i, t, x]) => `<li${i === "🍎" ? ' class="ios"' : ""}><span aria-hidden="true">${i}</span><div><b>${T(t)}</b><p>${T(x)}</p></div></li>`).join("")}</ol>
+      <ol>${(isIOS() && !isStandalone() ? [STEPS[0], IOS, ...STEPS.slice(1)] : STEPS).map(([i, t, x]) => `<li${i === "🍎" ? ' class="ios"' : i === "⏸" ? ' class="gdwarn"' : ""}><span aria-hidden="true">${i}</span><div><b>${T(t)}</b><p>${T(x)}</p></div></li>`).join("")}</ol>
       <button type="button" class="cta" id="gdOk">${T(UI.ok)}</button></div>`;
     document.body.appendChild(bg);
     document.body.style.overflow = "hidden";
@@ -4643,7 +4648,7 @@ const GUIDE = (() => {
     if (!(window.INSTALL_ENV && window.INSTALL_ENV.standalone)) h += `<button type="button" class="mark howbtn" data-go="install">📲 ${T(UI3.howTitle)}</button>`;
     h += `<p class="src">${T(UI.source)}<br>${T(UI.source4)}</p>`;
     app.innerHTML = h;
-    if (!store.get("guide2", false)) GUIDE.open(lang, () => store.set("guide2", true));
+    if (!store.get("guide3", false)) GUIDE.open(lang, () => store.set("guide3", true));
   }
 
   function mkCard() {
