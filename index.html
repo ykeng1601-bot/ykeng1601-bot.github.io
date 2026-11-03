@@ -4284,7 +4284,7 @@ const UI4 = {
     "เรียน {n} บทใน {w} สัปดาห์ แล้วเริ่มใหม่ตั้งแต่ต้น ทุกวันจันทร์จะเปิดบทใหม่และรีเซ็ตเครื่องหมายถูก",
     "Học {n} bài trong {w} tuần rồi lặp lại từ đầu. Mỗi thứ Hai mở bài mới và đặt lại dấu tích."),
   today: L("오늘 읽을 단원", "Basahin ngayon", "บทที่ต้องอ่านวันนี้", "Bài đọc hôm nay"),
-  perDay: L("가급적 매주 수요일 TBM 시간에 함께 하세요. 못 한 사람은 금요일까지 마치세요.", "Hangga't maaari, gawin tuwing Miyerkoles sa oras ng TBM. Kung hindi nagawa, tapusin bago mag-Biyernes.", "ควรเรียนพร้อมกันทุกวันพุธในเวลา TBM ถ้าไม่ได้เรียน ให้เรียนให้จบภายในวันศุกร์", "Nên học cùng nhau vào giờ TBM thứ Tư hằng tuần. Ai chưa học thì hoàn thành trước thứ Sáu."),
+  perDay: L("가급적 매주 수요일 08:20~08:30 TBM 시간에 함께 하세요. 다 못 한 단원은 금요일까지 마치세요.", "Hangga't maaari, gawin tuwing Miyerkoles 08:20–08:30 sa oras ng TBM. Tapusin ang natitirang aralin bago mag-Biyernes.", "ควรเรียนพร้อมกันทุกวันพุธ 08:20–08:30 ในเวลา TBM บทที่เหลือให้เรียนให้จบภายในวันศุกร์", "Nên học cùng nhau vào giờ TBM thứ Tư hằng tuần, 08:20–08:30. Bài còn lại hoàn thành trước thứ Sáu."),
   weekDone: L("이번 주 교육을 모두 마쳤습니다! 다음 주 월요일에 새 단원이 열립니다.", "Tapos na ang aralin ngayong linggo! May bagong aralin sa susunod na Lunes.", "เรียนครบสัปดาห์นี้แล้ว! วันจันทร์หน้าจะเปิดบทใหม่", "Đã hoàn thành bài tuần này! Thứ Hai tuần sau sẽ mở bài mới."),
   allTitle: L("전체 단원", "Lahat ng aralin", "บทเรียนทั้งหมด", "Tất cả bài học"),
   allSub: L("이번 주 교육이 아니어도 언제든 읽을 수 있습니다. 초록 체크는 이번 주에 읽은 단원, 회색 체크는 예전에 읽은 단원입니다.", "Puwedeng basahin anumang oras. Berdeng tsek: nabasa ngayong linggo; abong tsek: nabasa dati.", "อ่านได้ทุกเมื่อ เครื่องหมายถูกสีเขียวคืออ่านสัปดาห์นี้ สีเทาคืออ่านก่อนหน้านี้", "Có thể đọc bất cứ lúc nào. Dấu tích xanh: đã đọc tuần này; dấu tích xám: đã đọc trước đây."),
@@ -4359,7 +4359,7 @@ const DAILY = [
   L("안전은 규칙이 아니라 습관입니다.", "Ang kaligtasan ay hindi lang patakaran—ito ay ugali.", "ความปลอดภัยไม่ใช่แค่กฎ แต่เป็นนิสัย", "An toàn không chỉ là quy định, mà là thói quen."),
   L("질문하는 사람이 가장 안전한 사람입니다.", "Ang nagtatanong ang pinakaligtas.", "คนที่ถามคือคนที่ปลอดภัยที่สุด", "Người hay hỏi là người an toàn nhất."),
   L("오늘 하루 무사고, 우리가 함께 만듭니다.", "Sama-sama nating gagawing walang aksidente ang araw na ito.", "วันนี้ไม่มีอุบัติเหตุ เราสร้างด้วยกัน", "Một ngày không tai nạn, chúng ta cùng tạo nên."),
-  L("이번 주 교육은 수요일 TBM 시간에 함께 합니다.", "Gagawin natin ang aralin ngayong linggo sa TBM ng Miyerkoles.", "บทเรียนสัปดาห์นี้ เรียนด้วยกันในเวลา TBM วันพุธ", "Bài tuần này học cùng nhau vào giờ TBM thứ Tư.")
+  L("이번 주 교육은 수요일 08:20 TBM 시간에 함께 합니다.", "Gagawin natin ang aralin ngayong linggo sa TBM ng Miyerkoles, 08:20.", "บทเรียนสัปดาห์นี้ เรียนด้วยกันในเวลา TBM วันพุธ 08:20", "Bài tuần này học cùng nhau vào giờ TBM thứ Tư, 08:20.")
 ];
 
 const WEEK = (() => {
@@ -4443,10 +4443,10 @@ const GUIDE = (() => {
         "ใส่ชื่อจริงที่ลงทะเบียนกับบริษัท บันทึกการอบรมจะเก็บด้วยชื่อนี้ ห้ามใช้ชื่อเล่นหรือชื่อคนอื่น",
         "Nhập tên thật đã đăng ký với công ty. Hồ sơ đào tạo được lưu theo tên này. Không dùng biệt danh hay tên người khác.")],
     ["📅", L("매주 6개 단원", "6 aralin bawat linggo", "สัปดาห์ละ 6 บท", "Mỗi tuần 6 bài"),
-      L("월요일마다 새 교육 6개가 열립니다. 가급적 매주 수요일 TBM 시간에 함께 하세요. 그때 못 한 사람은 월~금요일 사이에 꼭 마치세요.",
-        "Tuwing Lunes, may bagong 6 na aralin. Hangga't maaari, gawin tuwing Miyerkoles sa oras ng TBM. Kung hindi nagawa, tapusin mula Lunes hanggang Biyernes.",
-        "ทุกวันจันทร์จะเปิดบทเรียนใหม่ 6 บท ควรเรียนพร้อมกันทุกวันพุธในเวลา TBM ถ้าไม่ได้เรียน ให้เรียนให้จบระหว่างวันจันทร์ถึงวันศุกร์",
-        "Mỗi thứ Hai mở 6 bài mới. Nên học cùng nhau vào giờ TBM thứ Tư hằng tuần. Ai chưa học thì phải hoàn thành từ thứ Hai đến thứ Sáu.")],
+      L("월요일마다 새 교육 6개가 열립니다. 가급적 매주 수요일 08:20~08:30 TBM 시간에 함께 하세요. 그때 다 못 한 단원이나 빠진 사람은 월~금요일 사이에 꼭 마치세요.",
+        "Tuwing Lunes, may bagong 6 na aralin. Hangga't maaari, gawin tuwing Miyerkoles 08:20–08:30 sa oras ng TBM. Ang natitirang aralin o kung lumiban ka, tapusin mula Lunes hanggang Biyernes.",
+        "ทุกวันจันทร์จะเปิดบทเรียนใหม่ 6 บท ควรเรียนพร้อมกันทุกวันพุธ 08:20–08:30 ในเวลา TBM บทที่เหลือหรือคนที่ขาด ให้เรียนให้จบระหว่างวันจันทร์ถึงวันศุกร์",
+        "Mỗi thứ Hai mở 6 bài mới. Nên học cùng nhau vào giờ TBM thứ Tư hằng tuần, 08:20–08:30. Bài còn lại hoặc ai vắng mặt thì phải hoàn thành từ thứ Hai đến thứ Sáu.")],
     ["⏱", L("단원마다 최소 2분", "Hindi bababa sa 2 minuto", "อย่างน้อย 2 นาทีต่อบท", "Ít nhất 2 phút mỗi bài"),
       L("한 단원을 2분 이상 읽어야 '완료'가 됩니다. 2분이 지나 '다음'을 누르면 자동으로 완료됩니다.",
         "Kailangang basahin nang 2 minuto o higit pa bago ma-'Tapos'. Pagkalipas ng 2 minuto, awtomatikong tapos kapag pinindot ang 'Susunod'.",
@@ -4648,7 +4648,7 @@ const GUIDE = (() => {
     if (!(window.INSTALL_ENV && window.INSTALL_ENV.standalone)) h += `<button type="button" class="mark howbtn" data-go="install">📲 ${T(UI3.howTitle)}</button>`;
     h += `<p class="src">${T(UI.source)}<br>${T(UI.source4)}</p>`;
     app.innerHTML = h;
-    if (!store.get("guide3", false)) GUIDE.open(lang, () => store.set("guide3", true));
+    if (!store.get("guide4", false)) GUIDE.open(lang, () => store.set("guide4", true));
   }
 
   function mkCard() {
