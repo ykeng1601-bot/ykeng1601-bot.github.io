@@ -4383,7 +4383,7 @@ const WEEK = (() => {
     return DAILY[((d % DAILY.length) + DAILY.length) % DAILY.length];
   }
   const md = d => `${d.getMonth() + 1}/${d.getDate()}`;
-  return { PER, info, daily, md, ymd };
+  return { PER, EPOCH, info, daily, md, ymd };
 })();
 
 document.head.insertAdjacentHTML("beforeend", `<style>
@@ -4523,6 +4523,43 @@ const GUIDE = (() => {
   return { open, UI };
 })();
 
+// 주차별 교재 출력 화면 문구 + 인쇄용 스타일
+const UIP = {
+  btn: L("주차별 교재 출력", "I-print ang aralin bawat linggo", "พิมพ์บทเรียนรายสัปดาห์", "In bài học theo tuần"),
+  title: L("주차별 교재 출력", "I-print ang aralin bawat linggo", "พิมพ์บทเรียนรายสัปดาห์", "In bài học theo tuần"),
+  sub: L("주차를 고르고 '인쇄'를 누르세요. 지금 고른 언어로 인쇄됩니다. 단원마다 새 쪽에서 시작합니다. PDF로 저장하려면 인쇄 창에서 'PDF로 저장'을 고르세요.",
+    "Pumili ng linggo at pindutin ang 'I-print'. Ipi-print sa napiling wika. Bawat aralin ay sa bagong pahina. Para sa PDF, piliin ang 'Save as PDF'.",
+    "เลือกสัปดาห์แล้วกด 'พิมพ์' จะพิมพ์เป็นภาษาที่เลือกอยู่ แต่ละบทขึ้นหน้าใหม่ ถ้าจะบันทึกเป็น PDF ให้เลือก 'บันทึกเป็น PDF'",
+    "Chọn tuần rồi bấm 'In'. Sẽ in bằng ngôn ngữ đang chọn. Mỗi bài bắt đầu trang mới. Muốn lưu PDF, chọn 'Lưu dưới dạng PDF'."),
+  week: L("주차", "Linggo", "สัปดาห์", "Tuần"),
+  print: L("인쇄", "I-print", "พิมพ์", "In"),
+  head: L("안전보건교육 주간 교재", "Lingguhang aralin sa kaligtasan", "บทเรียนความปลอดภัยประจำสัปดาห์", "Tài liệu an toàn hằng tuần"),
+  now: L("이번 주", "Ngayong linggo", "สัปดาห์นี้", "Tuần này")
+};
+document.head.insertAdjacentHTML("beforeend", `<style>
+.pctl{margin:8px 0 18px;padding:16px;border:2px solid #F5B800;border-radius:14px;background:var(--surface)}
+.pctl h1{margin:0 0 6px;font-size:1.3rem}.pctl label{display:block;margin:12px 0 10px;font-weight:700}
+.pctl select{display:block;width:100%;margin-top:6px;padding:10px;font:inherit;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.phead{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;justify-content:space-between;border-bottom:3px solid #F5B800;padding:0 0 8px;margin:0 0 6px}
+.phead b{font-size:1.1rem}.phead span{color:var(--ink-2);font-size:.92rem}
+.plesson{margin:22px 0 30px;padding-top:12px;border-top:1px dashed var(--line)}
+.plesson:first-of-type{border-top:0}
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  html,body{background:#fff!important;color:#000!important}
+  .bar,#pager,#installBar,.noprint,.gd-bg{display:none!important}
+  .wrap{max-width:none!important;padding:0!important;margin:0!important}
+  .plesson{break-before:page;border-top:0;margin:0;padding:0}
+  .plesson:first-of-type{break-before:auto}
+  .phead{border-bottom-color:#000}
+  .oxq summary em{display:none}
+  .scenebox svg{max-height:70mm}
+  .pic img{max-height:80mm;width:auto;margin:0 auto}
+  details>*{display:block}
+  *{box-shadow:none!important}
+}
+</style>`);
+
 </script>
 <script>
 (function () {
@@ -4632,7 +4669,7 @@ const GUIDE = (() => {
       <ul class="rows">${WK.lessons.map((a, k) => `<li><button type="button" data-go="${a.lesson.id}"><span class="n">${String(k + 1).padStart(2, "0")}</span><span class="t">${T(a.lesson.title)}${koSub(a.lesson.title)}</span><span class="chk ${done[a.lesson.id] ? "on" : ""}" aria-label="${done[a.lesson.id] ? T(UI.doneOn) : ""}"></span></button></li>`).join("")}</ul>
       ${nextA ? `<button class="cta" type="button" data-go="${nextA.lesson.id}">${T(UI4.today)} →</button><p class="hint">${T(UI4.perDay)}</p>` : `<p class="wdone">✓ ${T(UI4.weekDone)}</p>`}
       <p class="hint">${esc(tx(UI4.cycle).replace("{w}", WK.cycles).replace("{n}", ALL.length))}</p>
-    </section>${mkOpen() ? mkCard() : ""}${nameCard()}<button type="button" class="mark howbtn guidebtn" id="openGuide">📖 ${T(GUIDE.UI.btn)}</button>
+    </section>${mkOpen() ? mkCard() : ""}${nameCard()}<button type="button" class="mark howbtn guidebtn" id="openGuide">📖 ${T(GUIDE.UI.btn)}</button><button type="button" class="mark howbtn" data-go="print">🖨 ${T(UIP.btn)}</button>
     <h2 style="margin:26px 0 2px">${T(UI4.allTitle)}</h2><p class="hint" style="margin:0 0 6px">${T(UI4.allSub)}</p>`;
     PARTS.forEach(p => {
       h += `<section class="part"><div class="part-head"><div class="part-no"><small>PART</small>${p.no}</div><h2>${T(p.title)}</h2><p>${T(p.sub)}</p></div><ul class="rows">`;
@@ -4835,6 +4872,26 @@ const GUIDE = (() => {
   app.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
 
   let lessonTimer = null, mkJustDone = false;
+  function printView(arg) {
+    pager.hidden = true;
+    const cur = WEEK.info(ALL), weeks = [];
+    const last = new Date(cur.from.getFullYear(), cur.from.getMonth(), cur.from.getDate() + 7 * WEEK.info(ALL).cycles);
+    for (let d = new Date(WEEK.EPOCH); d < last; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7)) weeks.push(WEEK.info(ALL, d));
+    const sel = weeks.find(w => w.id === arg) || cur;
+    const wl = w => `${tx(UI4.weekNo).replace("{n}", w.no)} · ${WEEK.md(w.from)}~${WEEK.md(w.to)}`;
+    const lname = (LANGS.find(x => x[0] === lang) || LANGS[0])[1];
+    app.innerHTML = `<section class="pctl noprint"><h1>🖨 ${T(UIP.title)}</h1><p class="hint">${T(UIP.sub)}</p>
+      <label>${T(UIP.week)}<select id="pweek">${weeks.map(w => `<option value="${w.id}"${w.id === sel.id ? " selected" : ""}>${esc(w.from.getFullYear() + " " + wl(w))}${w.id === cur.id ? " ★ " + esc(tx(UIP.now)) : ""}</option>`).join("")}</select></label>
+      <button type="button" class="cta" id="pgo">🖨 ${T(UIP.print)}</button></section>
+      <div class="phead"><b>${T(UIP.head)}</b><span>${esc(wl(sel))} (${esc(WEEK.ymd(sel.from))} ~ ${esc(WEEK.ymd(sel.to))})</span><span>${esc(lname)}</span></div>
+      ${sel.lessons.map((a, k) => `<article class="plesson"><div class="crumb"><b>${k + 1} / ${sel.lessons.length} · PART ${a.part.no}</b><span>${T(a.part.title)}</span></div>
+        <h1 class="ltitle">${T(a.lesson.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(a.lesson.title.ko)}</p>` : ""}
+        ${a.lesson.scene ? `<figure class="scenebox">${scene(a.lesson.scene)}</figure>` : ""}
+        <div class="blocks">${(a.lesson.blocks.map(block).join("") + (LSRC[a.lesson.id] ? block({ t: "src", items: LSRC[a.lesson.id] }) : "")).replace(/<details class="oxq">/g, '<details class="oxq" open>')}</div></article>`).join("")}`;
+    document.getElementById("pweek").onchange = e => go("print/" + e.target.value);
+    document.getElementById("pgo").onclick = () => window.print();
+  }
+
   function render() {
     if (lessonTimer) { clearInterval(lessonTimer); lessonTimer = null; }
     document.documentElement.lang = lang;
@@ -4843,7 +4900,7 @@ const GUIDE = (() => {
     const h = location.hash.slice(1);
     const cl = ALL.find(x => x.lesson.id === h);
     TRACK.setCurrent(cl ? h : h === "quiz" ? "quiz" : null, cl ? cl.lesson.title.ko : "퀴즈");
-    if (!h) home(); else if (h === "quiz") quiz(); else if (h === "cert") cert(); else if (h === "install") install(); else lesson(h);
+    if (!h) home(); else if (h === "print" || h.startsWith("print/")) printView(h.split("/")[1]); else if (h === "quiz") quiz(); else if (h === "cert") cert(); else if (h === "install") install(); else lesson(h);
   }
   render();
 })();
