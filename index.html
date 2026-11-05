@@ -4527,13 +4527,23 @@ const GUIDE = (() => {
 const UIP = {
   btn: L("주차별 교재 출력", "I-print ang aralin bawat linggo", "พิมพ์บทเรียนรายสัปดาห์", "In bài học theo tuần"),
   title: L("주차별 교재 출력", "I-print ang aralin bawat linggo", "พิมพ์บทเรียนรายสัปดาห์", "In bài học theo tuần"),
-  sub: L("주차를 고르고 '인쇄'를 누르세요. 지금 고른 언어로 인쇄됩니다. 단원마다 새 쪽에서 시작합니다. PDF로 저장하려면 인쇄 창에서 'PDF로 저장'을 고르세요.",
-    "Pumili ng linggo at pindutin ang 'I-print'. Ipi-print sa napiling wika. Bawat aralin ay sa bagong pahina. Para sa PDF, piliin ang 'Save as PDF'.",
-    "เลือกสัปดาห์แล้วกด 'พิมพ์' จะพิมพ์เป็นภาษาที่เลือกอยู่ แต่ละบทขึ้นหน้าใหม่ ถ้าจะบันทึกเป็น PDF ให้เลือก 'บันทึกเป็น PDF'",
-    "Chọn tuần rồi bấm 'In'. Sẽ in bằng ngôn ngữ đang chọn. Mỗi bài bắt đầu trang mới. Muốn lưu PDF, chọn 'Lưu dưới dạng PDF'."),
+  sub: L("주차·언어·단원·내용을 고르고 '인쇄'를 누르세요. 아래 미리보기 그대로 인쇄됩니다. PDF로 저장하려면 인쇄 창에서 'PDF로 저장'을 고르세요.",
+    "Pumili ng linggo, wika, aralin at nilalaman, saka pindutin ang 'I-print'. Ipi-print gaya ng preview sa ibaba. Para sa PDF, piliin ang 'Save as PDF'.",
+    "เลือกสัปดาห์ ภาษา บท และเนื้อหา แล้วกด 'พิมพ์' จะพิมพ์ตามตัวอย่างด้านล่าง ถ้าจะบันทึกเป็น PDF ให้เลือก 'บันทึกเป็น PDF'",
+    "Chọn tuần, ngôn ngữ, bài và nội dung rồi bấm 'In'. Sẽ in giống bản xem trước bên dưới. Muốn lưu PDF, chọn 'Lưu dưới dạng PDF'."),
   week: L("주차", "Linggo", "สัปดาห์", "Tuần"),
   print: L("인쇄", "I-print", "พิมพ์", "In"),
   head: L("안전보건교육 주간 교재", "Lingguhang aralin sa kaligtasan", "บทเรียนความปลอดภัยประจำสัปดาห์", "Tài liệu an toàn hằng tuần"),
+  lang: L("언어", "Wika", "ภาษา", "Ngôn ngữ"),
+  lessons: L("인쇄할 단원", "Mga aralin na ipi-print", "บทที่จะพิมพ์", "Bài cần in"),
+  all: L("모두 선택", "Piliin lahat", "เลือกทั้งหมด", "Chọn tất cả"),
+  none: L("모두 해제", "Alisin lahat", "ยกเลิกทั้งหมด", "Bỏ chọn tất cả"),
+  opts: L("인쇄할 내용", "Isasama sa print", "เนื้อหาที่จะพิมพ์", "Nội dung cần in"),
+  oPic: L("사진·그림", "Larawan at guhit", "รูปภาพและภาพวาด", "Ảnh và hình vẽ"),
+  oOx: L("OX 문제 (정답 포함)", "OX na tanong (may sagot)", "คำถาม OX (มีเฉลย)", "Câu hỏi OX (có đáp án)"),
+  oStory: L("현장 이야기", "Kuwento sa trabaho", "เรื่องเล่าจากหน้างาน", "Câu chuyện hiện trường"),
+  oSrc: L("출처", "Pinagmulan", "แหล่งที่มา", "Nguồn"),
+  oBrk: L("단원마다 새 쪽에서 시작 (끄면 이어서 인쇄해 종이 절약)", "Bagong pahina bawat aralin (patayin para makatipid sa papel)", "ขึ้นหน้าใหม่ทุกบท (ปิดเพื่อประหยัดกระดาษ)", "Mỗi bài bắt đầu trang mới (tắt để tiết kiệm giấy)"),
   now: L("이번 주", "Ngayong linggo", "สัปดาห์นี้", "Tuần này")
 };
 document.head.insertAdjacentHTML("beforeend", `<style>
@@ -4544,13 +4554,20 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .phead b{font-size:1.1rem}.phead span{color:var(--ink-2);font-size:.92rem}
 .plesson{margin:22px 0 30px;padding-top:12px;border-top:1px dashed var(--line)}
 .plesson:first-of-type{border-top:0}
+.pgrp{margin:12px 0}.pgrp>b{display:inline-block;margin-bottom:6px}
+.pchips{display:flex;flex-wrap:wrap;gap:6px}.pchip{border:1px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:6px 12px;font:inherit;font-size:.9rem}
+.pchip[aria-pressed="true"]{background:#F5B800;color:#111;border-color:transparent;font-weight:700}
+.pchk{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:4px}.pchk label{display:flex;gap:8px;align-items:flex-start;padding:6px 8px;border-radius:8px;background:var(--sunk);cursor:pointer}
+.pchk input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:#F5B800}
+#pgo[disabled]{opacity:.45}
 @media print{
   @page{size:A4;margin:14mm 12mm}
   html,body{background:#fff!important;color:#000!important}
   .bar,#pager,#installBar,.noprint,.gd-bg{display:none!important}
   .wrap{max-width:none!important;padding:0!important;margin:0!important}
-  .plesson{break-before:page;border-top:0;margin:0;padding:0}
-  .plesson:first-of-type{break-before:auto}
+  .plesson{border-top:0;margin:0 0 8mm;padding:0}
+  .pbrk .plesson{break-before:page;margin:0}
+  .pbrk .plesson:first-of-type{break-before:auto}
   .phead{border-bottom-color:#000}
   .oxq summary em{display:none}
   .scenebox svg{max-height:70mm}
@@ -4875,21 +4892,38 @@ document.head.insertAdjacentHTML("beforeend", `<style>
   function printView(arg) {
     pager.hidden = true;
     const cur = WEEK.info(ALL), weeks = [];
-    const last = new Date(cur.from.getFullYear(), cur.from.getMonth(), cur.from.getDate() + 7 * WEEK.info(ALL).cycles);
+    const last = new Date(cur.from.getFullYear(), cur.from.getMonth(), cur.from.getDate() + 7 * cur.cycles);
     for (let d = new Date(WEEK.EPOCH); d < last; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7)) weeks.push(WEEK.info(ALL, d));
     const sel = weeks.find(w => w.id === arg) || cur;
     const wl = w => `${tx(UI4.weekNo).replace("{n}", w.no)} · ${WEEK.md(w.from)}~${WEEK.md(w.to)}`;
     const lname = (LANGS.find(x => x[0] === lang) || LANGS[0])[1];
+    const opt = Object.assign({ pic: true, ox: true, src: true, story: true, brk: true }, store.get("popt", {}));
+    const skip = new Set((store.get("pskip", {})[sel.id]) || []);
+    const OPTS = [["pic", UIP.oPic], ["ox", UIP.oOx], ["story", UIP.oStory], ["src", UIP.oSrc], ["brk", UIP.oBrk]];
+    const isStory = b => b.t === "def" && b.k && /^현장 이야기/.test(b.k.ko || "");
+    const keep = b => !((!opt.pic && (b.t === "pic" || b.t === "photo")) || (!opt.ox && b.t === "ox") || (!opt.src && b.t === "src") || (!opt.story && isStory(b)));
+    const chosen = sel.lessons.filter(a => !skip.has(a.lesson.id));
     app.innerHTML = `<section class="pctl noprint"><h1>🖨 ${T(UIP.title)}</h1><p class="hint">${T(UIP.sub)}</p>
       <label>${T(UIP.week)}<select id="pweek">${weeks.map(w => `<option value="${w.id}"${w.id === sel.id ? " selected" : ""}>${esc(w.from.getFullYear() + " " + wl(w))}${w.id === cur.id ? " ★ " + esc(tx(UIP.now)) : ""}</option>`).join("")}</select></label>
-      <button type="button" class="cta" id="pgo">🖨 ${T(UIP.print)}</button></section>
+      <div class="pgrp"><b>${T(UIP.lang)}</b><div class="pchips">${LANGS.map(([c, n]) => `<button type="button" class="pchip" data-pl="${c}" aria-pressed="${c === lang}" lang="${c}">${n}</button>`).join("")}</div></div>
+      <div class="pgrp"><b>${T(UIP.lessons)}</b> <button type="button" class="linkbtn" id="pall">${T(UIP.all)}</button> · <button type="button" class="linkbtn" id="pnone">${T(UIP.none)}</button>
+        <ul class="pchk">${sel.lessons.map((a, k) => `<li><label><input type="checkbox" data-pid="${a.lesson.id}"${skip.has(a.lesson.id) ? "" : " checked"}> <span>${k + 1}. ${T(a.lesson.title)}</span></label></li>`).join("")}</ul></div>
+      <div class="pgrp"><b>${T(UIP.opts)}</b><ul class="pchk">${OPTS.map(([k, t]) => `<li><label><input type="checkbox" data-po="${k}"${opt[k] ? " checked" : ""}> <span>${T(t)}</span></label></li>`).join("")}</ul></div>
+      <button type="button" class="cta" id="pgo"${chosen.length ? "" : " disabled"}>🖨 ${T(UIP.print)} (${chosen.length} / ${sel.lessons.length})</button></section>
       <div class="phead"><b>${T(UIP.head)}</b><span>${esc(wl(sel))} (${esc(WEEK.ymd(sel.from))} ~ ${esc(WEEK.ymd(sel.to))})</span><span>${esc(lname)}</span></div>
-      ${sel.lessons.map((a, k) => `<article class="plesson"><div class="crumb"><b>${k + 1} / ${sel.lessons.length} · PART ${a.part.no}</b><span>${T(a.part.title)}</span></div>
+      <div class="${opt.brk ? "pbrk" : ""}">${chosen.map(a => { const k = sel.lessons.indexOf(a); return `<article class="plesson"><div class="crumb"><b>${k + 1} / ${sel.lessons.length} · PART ${a.part.no}</b><span>${T(a.part.title)}</span></div>
         <h1 class="ltitle">${T(a.lesson.title)}</h1>${lang !== "ko" ? `<p class="ltitle-ko" lang="ko">${esc(a.lesson.title.ko)}</p>` : ""}
-        ${a.lesson.scene ? `<figure class="scenebox">${scene(a.lesson.scene)}</figure>` : ""}
-        <div class="blocks">${(a.lesson.blocks.map(block).join("") + (LSRC[a.lesson.id] ? block({ t: "src", items: LSRC[a.lesson.id] }) : "")).replace(/<details class="oxq">/g, '<details class="oxq" open>')}</div></article>`).join("")}`;
+        ${opt.pic && a.lesson.scene ? `<figure class="scenebox">${scene(a.lesson.scene)}</figure>` : ""}
+        <div class="blocks">${(a.lesson.blocks.filter(keep).map(block).join("") + (opt.src && LSRC[a.lesson.id] ? block({ t: "src", items: LSRC[a.lesson.id] }) : "")).replace(/<details class="oxq">/g, '<details class="oxq" open>')}</div></article>`; }).join("")}</div>`;
+    const again = () => { const y = scrollY; printView(sel.id); scrollTo(0, y); };
     document.getElementById("pweek").onchange = e => go("print/" + e.target.value);
     document.getElementById("pgo").onclick = () => window.print();
+    app.querySelectorAll("[data-pl]").forEach(b => b.onclick = () => { const r = langsEl.querySelector(`button[data-l="${b.dataset.pl}"]`); if (r) r.click(); });
+    const setSkip = ids => { const all = store.get("pskip", {}); all[sel.id] = ids; store.set("pskip", all); again(); };
+    app.querySelectorAll("[data-pid]").forEach(c => c.onchange = () => setSkip([...app.querySelectorAll("[data-pid]")].filter(x => !x.checked).map(x => x.dataset.pid)));
+    document.getElementById("pall").onclick = () => setSkip([]);
+    document.getElementById("pnone").onclick = () => setSkip(sel.lessons.map(a => a.lesson.id));
+    app.querySelectorAll("[data-po]").forEach(c => c.onchange = () => { opt[c.dataset.po] = c.checked; store.set("popt", opt); again(); });
   }
 
   function render() {
