@@ -4577,6 +4577,171 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 }
 </style>`);
 
+// 모션그래픽 (직접 그린 SVG + 자바스크립트 애니메이션). 블록: { t: "motion", k: "grinder" }
+const MOTION = (() => {
+  const UIM = {
+    play: L("다시 보기", "Ulitin", "ดูอีกครั้ง", "Xem lại"),
+    prev: L("이전", "Bumalik", "ก่อนหน้า", "Trước"),
+    next: L("다음 장면", "Susunod", "ถัดไป", "Tiếp"),
+    tag: L("움직이는 그림", "Animasyon", "ภาพเคลื่อนไหว", "Hình động")
+  };
+
+  // ---------------- 그라인더 ----------------
+  const GR = {
+    steps: [
+      [L("숫돌은 1분에 1만 번 넘게 돕니다", "Umiikot ang wheel nang higit 10,000 beses kada minuto", "หินเจียรหมุนมากกว่า 10,000 รอบต่อนาที", "Đá mài quay hơn 10.000 vòng mỗi phút"),
+       L("금이 가거나 맞지 않는 숫돌을 끼우면, 이 힘을 견디지 못하고 깨질 수 있습니다.", "Kapag may lamat o hindi tugma ang wheel, maaari itong mabasag dahil sa lakas na ito.", "ถ้าหินเจียรร้าวหรือไม่ตรงรุ่น จะทนแรงนี้ไม่ได้และอาจแตก", "Nếu đá mài bị nứt hoặc không đúng loại, nó không chịu nổi lực này và có thể vỡ.")],
+      [L("덮개가 없으면 — 파편이 얼굴로", "Kapag walang takip — sa mukha ang piraso", "ถ้าไม่มีฝาครอบ — เศษพุ่งเข้าหน้า", "Không có nắp che — mảnh vỡ bay vào mặt"),
+       L("깨진 조각은 도는 방향으로 총알처럼 튀어 나갑니다. 숫돌 회전면 정면에 있는 사람이 맞습니다.", "Tumatalsik na parang bala ang piraso sa direksyon ng ikot. Tatamaan ang taong nasa harap ng umiikot na wheel.", "เศษที่แตกพุ่งออกตามทิศการหมุนเหมือนกระสุน คนที่อยู่แนวหน้าหินเจียรจะโดน", "Mảnh vỡ văng theo chiều quay như viên đạn. Người đứng thẳng hướng mặt quay sẽ bị trúng.")],
+      [L("덮개가 있으면 — 덮개가 막아 줍니다", "Kapag may takip — hinaharang ito", "ถ้ามีฝาครอบ — ฝาครอบจะกันไว้", "Có nắp che — nắp che chặn lại"),
+       L("덮개는 몸 쪽으로 가도록 달고, 절대 떼지 않습니다. 지름 5cm 이상 숫돌에는 덮개가 의무입니다.", "Ikabit ang takip sa gawi ng katawan at huwag kailanman tanggalin. Sapilitan ang takip sa wheel na 5 cm pataas.", "ติดฝาครอบให้หันเข้าหาตัว และห้ามถอดเด็ดขาด หินเจียรขนาด 5 ซม. ขึ้นไปต้องมีฝาครอบตามกฎหมาย", "Lắp nắp che quay về phía người và tuyệt đối không tháo. Đá mài từ 5 cm trở lên bắt buộc có nắp che.")],
+      [L("시운전 · 비켜 서기 · 보안경과 보안면", "Test run · tumabi · goggles at face shield", "ทดลองเดินเครื่อง · ยืนเลี่ยง · แว่นตาและหน้ากาก", "Chạy thử · đứng tránh · kính và mặt nạ"),
+       L("작업 전 1분, 숫돌을 바꾼 뒤 3분 시운전합니다. 그동안 덮개가 없는 쪽(빨간 구역)에는 아무도 서지 않고, 작업자는 보안경 위에 보안면을 씁니다.", "Patakbuhin nang 1 minuto bago magtrabaho at 3 minuto pagkapalit ng wheel. Walang tatayo sa gawing walang takip (pulang lugar), at ang operator ay magsuot ng face shield sa ibabaw ng goggles.", "ก่อนทำงานทดลองเดินเครื่อง 1 นาที เปลี่ยนหินแล้ว 3 นาที ระหว่างนั้นห้ามใครยืนด้านที่ไม่มีฝาครอบ (เขตสีแดง) และผู้ปฏิบัติงานสวมหน้ากากทับแว่นตา", "Chạy thử 1 phút trước khi làm, 3 phút sau khi thay đá. Trong lúc đó không ai đứng ở phía không có nắp che (vùng đỏ), người làm đeo mặt nạ bên ngoài kính bảo hộ.")]
+    ],
+    svg: () => {
+      const tick = Array.from({ length: 12 }, (_, i) => { const a = i * 30 * Math.PI / 180; return `<path d="M${(150 + 14 * Math.cos(a)).toFixed(1)} ${(100 + 14 * Math.sin(a)).toFixed(1)}L${(150 + 31 * Math.cos(a)).toFixed(1)} ${(100 + 31 * Math.sin(a)).toFixed(1)}" stroke="#6B5A48" stroke-width="${i % 3 ? 1 : 2.4}" opacity=".7"/>`; }).join("");
+      return `${bg()}
+      <g class="mz">${(() => { const R = 260, a1 = 2.75, a2 = 3.55; return `<path d="M150 100L${150 + R * Math.cos(a1)} ${100 + R * Math.sin(a1)}A${R} ${R} 0 0 1 ${150 + R * Math.cos(a2)} ${100 + R * Math.sin(a2)}Z" fill="${C.red}" opacity=".18"/>`; })()}</g>
+      <rect x="30" y="132" width="150" height="8" fill="${C.steelD}"/><path d="M44 140v20M166 140v20" stroke="${C.steelD}" stroke-width="5"/>
+      <rect x="50" y="122" width="110" height="10" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="2"/>
+      <g class="mdisc"><circle cx="150" cy="100" r="34" fill="#B49A7E" stroke="#6B5A48" stroke-width="2"/>${tick}
+        <circle cx="150" cy="100" r="12" fill="${C.steel}" stroke="${C.ink}" stroke-width="2"/><circle cx="150" cy="100" r="4" fill="${C.ink}"/></g>
+      <path class="mcrack" d="M150 66l4 10-5 7 6 9" stroke="${C.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <g class="mfrags"></g>
+      <path class="mguard" d="M${150 + 42 * Math.cos(-1.9)} ${100 + 42 * Math.sin(-1.9)}A42 42 0 0 1 ${150 + 42 * Math.cos(1.1)} ${100 + 42 * Math.sin(1.1)}" stroke="${C.steelD}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <rect x="168" y="91" width="60" height="18" rx="7" fill="#2E6FA8" stroke="#1F4F7A" stroke-width="2"/><rect x="226" y="95" width="16" height="10" rx="3" fill="${C.ink}"/>
+      <g class="mman">${worker(262, 160, { flip: true, arm: "reach" })}
+        <rect class="mppe" x="250" y="74" width="9" height="5" rx="2" fill="#7CC4F2" stroke="${C.ink}" stroke-width="1"/>
+        <path class="mppe" d="M246 66q-6 12 0 24h4v-24z" fill="#BFE6FF" opacity=".75" stroke="#5B9BC4" stroke-width="1"/></g>
+      <g class="mhit">${burst(255, 76, .7)}</g>
+      <g class="mrpm"><rect x="12" y="24" width="96" height="26" rx="6" fill="${C.ink}"/><text x="60" y="42" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="${C.vest}">10,000+ rpm</text></g>
+      <g class="mclock"><rect x="12" y="24" width="96" height="26" rx="6" fill="${C.ink}"/><text class="mclockt" x="60" y="42" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#fff">⏱ 1:00 / 3:00</text></g>
+      <g class="mby1">${worker(52, 160, { arm: "down", s: .9 })}<path d="M38 52l20 20M58 52l-20 20" stroke="${C.red}" stroke-width="5" stroke-linecap="round"/></g>
+      <g class="mby2">${worker(303, 160, { flip: true, arm: "down", s: .8 })}<circle cx="303" cy="50" r="10" fill="#2E9D5B"/><path d="M298 50l4 4 7-8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>`;
+    },
+    // 장면별 연출
+    run(svg, step, still) {
+      const $ = s => svg.querySelector(s), all = s => svg.querySelectorAll(s);
+      const show = (s, on) => all(s).forEach(e => { e.style.opacity = on ? 1 : 0; });
+      const disc = $(".mdisc"), frags = $(".mfrags");
+      frags.innerHTML = "";
+      show(".mguard", step >= 2); show(".mcrack", step === 1 || step === 2); show(".mhit", false);
+      show(".mppe", step === 3); show(".mz", step === 3); show(".mby1", step === 3 && !still); show(".mby2", step === 3 && !!still);
+      show(".mrpm", step === 0); show(".mclock", step === 3); show(".mdisc", true);
+            let rot = 0, last = performance.now(), t0 = last, alive = true;
+      const speed = step === 3 ? 0.9 : 1.6;               // 도는 속도(화면용)
+      const shatter = step === 1 || step === 2;
+      // 파편: 가장자리 각도 → 접선 방향으로 날아감 (시계 방향 회전)
+      const parts = [];
+      if (shatter) {
+        // 얼굴(255,76)로 가는 각도 찾기
+        let best = 0, bv = -9;
+        for (let a = -Math.PI; a < Math.PI; a += 0.01) {
+          const px = 150 + 34 * Math.cos(a), py = 100 + 34 * Math.sin(a), dx = -Math.sin(a), dy = Math.cos(a);
+          const hx = 255 - px, hy = 76 - py, hl = Math.hypot(hx, hy), v = (dx * hx + dy * hy) / hl;
+          if (v > bv) { bv = v; best = a; }
+        }
+        const angs = [best, best + 0.9, best + 1.7, best + 2.6, best + 3.4, best + 4.3, best + 5.1];
+        angs.forEach((a, i) => {
+          const el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+          el.setAttribute("points", i ? "-5,-4 6,-3 4,5 -4,4" : "-7,-5 8,-4 6,7 -6,5");
+          el.setAttribute("fill", "#9C8266"); el.setAttribute("stroke", C.ink); el.setAttribute("stroke-width", "1");
+          frags.appendChild(el);
+          parts.push({ el, a, x: 150 + 34 * Math.cos(a), y: 100 + 34 * Math.sin(a), vx: -Math.sin(a), vy: Math.cos(a), stop: false, vy2: 0, face: i === 0 });
+        });
+      }
+      const guardHit = (x, y) => { const d = Math.hypot(x - 150, y - 100), ang = Math.atan2(y - 100, x - 150); return d >= 37 && ang > -1.9 && ang < 1.1; };
+      const BREAK = 1300;
+      function frame(now) {
+        if (!alive || !svg.isConnected) return;
+        const dt = Math.min(50, now - last); last = now; const t = now - t0;
+        if (!shatter || t < BREAK) { rot = (rot + speed * dt) % 360; disc.setAttribute("transform", `rotate(${rot} 150 100)`); }
+        if (shatter && t >= BREAK) {
+          disc.style.opacity = 0; svg.querySelector(".mcrack").style.opacity = 0;
+          const v = 0.42 * dt;
+          parts.forEach(p => {
+            if (p.stop) { p.vy2 += 0.004 * dt; p.y = Math.min(118, p.y + p.vy2 * dt); }
+            else {
+              p.x += p.vx * v; p.y += p.vy * v;
+              if (step === 2 && guardHit(p.x, p.y)) { p.stop = true; p.vy2 = 0; }
+              if (step === 1 && p.face && Math.hypot(p.x - 255, p.y - 76) < 10) { p.stop = true; p.vy2 = 0; show(".mhit", true); }
+            }
+            p.el.setAttribute("transform", `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${(t * 0.6 + p.a * 60) % 360})`);
+          });
+        }
+        if (step === 3) {
+          const s = Math.min(60, Math.floor(t / 1000 * 12));
+          const tt = svg.querySelector(".mclockt"); if (tt) tt.textContent = `⏱ 0:${String(s).padStart(2, "0")} / 1:00`;
+          if (t > 2200) { show(".mby1", false); show(".mby2", true); }
+        }
+        if (!still) requestAnimationFrame(frame);
+      }
+      if (still) {   // 움직임 줄이기 / 인쇄: 결과 장면만
+        t0 = performance.now() - (shatter ? 2600 : 3000); last = t0;
+        if (shatter) { for (let i = 0; i < 60; i++) frame(t0 + BREAK + i * 40); } else frame(performance.now());
+        return () => {};
+      }
+      requestAnimationFrame(frame);
+      return () => { alive = false; };
+    }
+  };
+
+  const LIB = { grinder: GR };
+  const reduce = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function mount(root, lang, opt) {
+    opt = opt || {};
+    const T = o => (o && (o[lang] || o.ko)) || "";
+    root.querySelectorAll(".motion[data-motion]").forEach(box => {
+      const M = LIB[box.dataset.motion]; if (!M || box.dataset.ready) return;
+      box.dataset.ready = "1";
+      const still = opt.print || reduce();
+      let step = opt.print ? M.steps.length - 1 : 0, stop = () => {}, timer = null;
+      box.innerHTML = `<div class="mv-tag">▶ ${T(UIM.tag)}</div>
+        <svg class="scene" viewBox="0 0 320 200" role="img" aria-label="${T(M.steps[0][0])}">${M.svg()}</svg>
+        <div class="mv-cap" aria-live="polite"><b></b><p></p></div>
+        <div class="mv-ctl noprint"><button type="button" class="mv-prev" aria-label="${T(UIM.prev)}">◀</button>
+          <div class="mv-dots">${M.steps.map((_, i) => `<i data-i="${i}"></i>`).join("")}</div>
+          <button type="button" class="mv-next">${T(UIM.next)} ▶</button></div>`;
+      const svg = box.querySelector("svg");
+      const go = i => {
+        stop(); clearTimeout(timer);
+        step = (i + M.steps.length) % M.steps.length;
+        box.querySelector(".mv-cap b").textContent = `${step + 1}. ${T(M.steps[step][0])}`;
+        box.querySelector(".mv-cap p").textContent = T(M.steps[step][1]);
+        box.querySelectorAll(".mv-dots i").forEach((d, k) => d.classList.toggle("on", k === step));
+        const nb = box.querySelector(".mv-next"); nb.textContent = step === M.steps.length - 1 ? "⟳ " + T(UIM.play) : T(UIM.next) + " ▶";
+        stop = M.run(svg, step, still);
+        if (!still && !opt.print) timer = setTimeout(() => { if (box.isConnected && step < M.steps.length - 1) go(step + 1); }, 6500);
+      };
+      box.querySelector(".mv-prev").onclick = () => go(step - 1);
+      box.querySelector(".mv-next").onclick = () => go(step + 1);
+      box.querySelectorAll(".mv-dots i").forEach(d => d.onclick = () => go(+d.dataset.i));
+      go(step);
+    });
+  }
+
+  document.head.insertAdjacentHTML("beforeend", `<style>
+  .motion{position:relative;margin:4px 0 16px;border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+  .motion svg{display:block;width:100%;height:auto}
+  .motion svg *{transition:opacity .35s}
+  .motion .mman{transition:transform .8s ease}
+  .mv-tag{position:absolute;top:8px;right:8px;background:#1E252Ccc;color:#F5B800;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;letter-spacing:.02em}
+  .mv-cap{padding:12px 14px 4px;min-height:92px}.mv-cap b{display:block;font-size:1.02rem;margin-bottom:4px}.mv-cap p{margin:0;line-height:1.55;font-size:.95rem}
+  .mv-ctl{display:flex;align-items:center;gap:10px;padding:8px 12px 12px}
+  .mv-ctl button{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--sunk);color:var(--ink)}
+  .mv-ctl .mv-next{margin-left:auto;background:#F5B800;color:#111}
+  .mv-dots{display:flex;gap:6px}.mv-dots i{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer}.mv-dots i.on{background:#F5B800;width:22px;border-radius:5px}
+  @media print{.mv-tag{display:none}.motion{break-inside:avoid}}
+  </style>`);
+  return { mount };
+})();
+
+// 그라인더 단원: 정지 그림 대신 움직이는 그림
+(function () {
+  for (const p of window.NEW_PARTS || []) for (const l of p.lessons) if (l.id === "w-grind") { l.scene = null; l.blocks.unshift({ t: "motion", k: "grinder" }); }
+})();
+
 </script>
 <script>
 (function () {
@@ -4665,6 +4830,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
       case "help": return `<div class="help"><div><b>1350</b><strong>${T(UI.h1350)}</strong><span>${T(UI.h1350s)}</span></div><div><b>1577-0071</b><strong>${T(UI.h0071)}</strong><span>${T(UI.h0071s)}</span></div></div>`;
       case "ox": return `<section class="oxbox"><h4>✍ ${T(UI5.oxTitle)}</h4>${b.items.map(([q, o, why], k) =>
         `<details class="oxq"><summary><b>Q${k + 1}</b><span>${T(q)}</span><em>${T(UI5.oxTap)}</em></summary><p class="${o ? "o" : "x"}"><b>${o ? "⭕ O" : "❌ X"}</b> ${T(why)}</p></details>`).join("")}</section>`;
+      case "motion": return `<div class="motion" data-motion="${esc(b.k)}"></div>`;
       case "call": return `<div class="call" role="note"><b>119</b><strong>${T(UI.callText)}</strong><span>${T(UI.callSub)}</span></div>`;
     }
     return "";
@@ -4901,7 +5067,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     const skip = new Set((store.get("pskip", {})[sel.id]) || []);
     const OPTS = [["pic", UIP.oPic], ["ox", UIP.oOx], ["story", UIP.oStory], ["src", UIP.oSrc], ["brk", UIP.oBrk]];
     const isStory = b => b.t === "def" && b.k && /^현장 이야기/.test(b.k.ko || "");
-    const keep = b => !((!opt.pic && (b.t === "pic" || b.t === "photo")) || (!opt.ox && b.t === "ox") || (!opt.src && b.t === "src") || (!opt.story && isStory(b)));
+    const keep = b => !((!opt.pic && (b.t === "pic" || b.t === "photo" || b.t === "motion")) || (!opt.ox && b.t === "ox") || (!opt.src && b.t === "src") || (!opt.story && isStory(b)));
     const chosen = sel.lessons.filter(a => !skip.has(a.lesson.id));
     app.innerHTML = `<section class="pctl noprint"><h1>🖨 ${T(UIP.title)}</h1><p class="hint">${T(UIP.sub)}</p>
       <label>${T(UIP.week)}<select id="pweek">${weeks.map(w => `<option value="${w.id}"${w.id === sel.id ? " selected" : ""}>${esc(w.from.getFullYear() + " " + wl(w))}${w.id === cur.id ? " ★ " + esc(tx(UIP.now)) : ""}</option>`).join("")}</select></label>
@@ -4918,6 +5084,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     const again = () => { const y = scrollY; printView(sel.id); scrollTo(0, y); };
     document.getElementById("pweek").onchange = e => go("print/" + e.target.value);
     document.getElementById("pgo").onclick = () => window.print();
+    MOTION.mount(app, lang, { print: true });
     app.querySelectorAll("[data-pl]").forEach(b => b.onclick = () => { const r = langsEl.querySelector(`button[data-l="${b.dataset.pl}"]`); if (r) r.click(); });
     const setSkip = ids => { const all = store.get("pskip", {}); all[sel.id] = ids; store.set("pskip", all); again(); };
     app.querySelectorAll("[data-pid]").forEach(c => c.onchange = () => setSkip([...app.querySelectorAll("[data-pid]")].filter(x => !x.checked).map(x => x.dataset.pid)));
@@ -4935,6 +5102,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
     const cl = ALL.find(x => x.lesson.id === h);
     TRACK.setCurrent(cl ? h : h === "quiz" ? "quiz" : null, cl ? cl.lesson.title.ko : "퀴즈");
     if (!h) home(); else if (h === "print" || h.startsWith("print/")) printView(h.split("/")[1]); else if (h === "quiz") quiz(); else if (h === "cert") cert(); else if (h === "install") install(); else lesson(h);
+    MOTION.mount(app, lang, { print: h.startsWith("print") });
   }
   render();
 })();
