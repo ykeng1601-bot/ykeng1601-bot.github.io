@@ -1883,7 +1883,7 @@ function worker(x, y, o) {
   const arms = {
     down: [[0, -62, 6, -40]], reach: [[0, -62, 22, -52], [0, -60, 20, -46]],
     up: [[0, -62, 10, -92]], carry: [[0, -62, 20, -58], [0, -60, 20, -52]], low: [[0, -62, 20, -38], [0, -60, 18, -34]]
-  }[o.arm || "down"];
+  }[o.arm || "down"] || [];
   const armSvg = arms.map(([a, b, c, d]) => `<path d="M${a} ${b}L${c} ${d}" stroke="${C.shirt}" stroke-width="7" stroke-linecap="round"/><circle cx="${c}" cy="${d}" r="4" fill="${hand}" stroke="#0002"/>`).join("");
   const legs = o.legs === "run"
     ? `<path d="M-4 -38L-14 -2M4 -38L12 -4" stroke="${C.pants}" stroke-width="9" stroke-linecap="round"/><rect x="-22" y="-6" width="12" height="6" rx="2" fill="${C.boot}"/><rect x="8" y="-8" width="12" height="6" rx="2" fill="${C.boot}"/>`
@@ -4686,7 +4686,101 @@ const MOTION = (() => {
     }
   };
 
-  const LIB = { grinder: GR };
+  // ---------------- 절곡기 (프레스 브레이크) ----------------
+  const BD = {
+    steps: [
+      [L("펀치는 수십 톤의 힘으로 내려옵니다", "Bumababa ang punch nang may lakas na sampu-sampung tonelada", "พันช์กดลงด้วยแรงหลายสิบตัน", "Chày ép xuống với lực hàng chục tấn"),
+       L("판재가 접히면서 양 끝이 빠르게 위로 들립니다. 손은 금형에서 먼 판재 끝만 잡고, 얼굴과 몸은 판재가 들리는 방향 밖에 둡니다.", "Habang binabaluktot, mabilis na umaangat ang dalawang dulo ng sheet. Hawakan lang ang dulong malayo sa die, at ilayo ang mukha at katawan sa direksyon ng pag-angat.", "ขณะพับ ปลายแผ่นทั้งสองข้างจะยกขึ้นเร็ว จับเฉพาะปลายแผ่นที่ไกลจากแม่พิมพ์ และให้หน้ากับตัวอยู่นอกทางที่แผ่นยกขึ้น", "Khi chấn, hai đầu tấm bật lên rất nhanh. Chỉ cầm phần đầu tấm xa khuôn, để mặt và người ở ngoài hướng tấm bật lên.")],
+      [L("광선이 손을 감지하면 멈춥니다", "Humihinto kapag nakita ng ilaw ang kamay", "ม่านแสงเจอมือ เครื่องจะหยุด", "Tia sáng phát hiện tay thì máy dừng"),
+       L("펀치 바로 아래의 빨간 광선(광선식 안전장치)에 손이 닿으면 램이 멈춥니다. 그래서 안전장치를 끄거나 감도를 낮추면 절대 안 됩니다.", "Kapag natamaan ng kamay ang pulang ilaw sa ilalim ng punch (light guard), humihinto ang ram. Kaya huwag kailanman patayin o pahinain ang safety device.", "เมื่อมือโดนลำแสงสีแดงใต้พันช์ (อุปกรณ์นิรภัยแบบลำแสง) แรมจะหยุด จึงห้ามปิดหรือลดความไวของอุปกรณ์นิรภัยเด็ดขาด", "Khi tay chạm tia sáng đỏ ngay dưới chày (thiết bị an toàn quang học), đầu chày dừng lại. Vì vậy tuyệt đối không tắt hoặc giảm độ nhạy.")],
+      [L("판재에 거의 닿으면 광선이 꺼집니다 (뮤팅)", "Namamatay ang ilaw kapag halos dikit na sa sheet (muting)", "เมื่อเกือบถึงแผ่น ลำแสงจะดับ (มิวติ้ง)", "Gần chạm tấm thì tia sáng tắt (muting)"),
+       L("이 순간에는 손이 들어가도 멈추지 않을 수 있습니다. 펀치가 내려오기 시작하면 손은 절대 금형 쪽으로 넣지 않습니다.", "Sa sandaling ito, puwedeng hindi huminto kahit may kamay. Kapag bumababa na ang punch, huwag kailanman ipasok ang kamay sa die.", "ช่วงนี้ถึงมือเข้าไป เครื่องก็อาจไม่หยุด เมื่อพันช์เริ่มลง ห้ามยื่นมือเข้าหาแม่พิมพ์เด็ดขาด", "Lúc này dù tay đưa vào máy cũng có thể không dừng. Khi chày bắt đầu đi xuống, tuyệt đối không đưa tay vào khuôn.")],
+      [L("2인 작업: 신호 후, 한 사람만 페달", "Dalawahan: senyas muna, isang tao lang sa pedal", "งาน 2 คน: ให้สัญญาณก่อน คนเดียวเหยียบแป้น", "Làm 2 người: ra hiệu trước, một người đạp bàn đạp"),
+       L("긴 판재는 2인 1조로 합니다. 서로 'OK' 신호를 주고받은 뒤 정해진 한 사람만 페달을 밟습니다. 작업하지 않을 때는 발을 페달에서 뗍니다.", "Dalawahan sa mahabang sheet. Pagkatapos magpalitan ng senyas na 'OK', isang itinalagang tao lang ang aapak sa pedal. Alisin ang paa sa pedal kapag hindi nagtatrabaho.", "แผ่นยาวให้ทำ 2 คน ส่งสัญญาณ 'OK' กันก่อน แล้วให้คนที่กำหนดไว้คนเดียวเหยียบแป้น เมื่อไม่ทำงานให้ยกเท้าออกจากแป้น", "Tấm dài làm 2 người. Ra hiệu 'OK' với nhau xong, chỉ một người được chỉ định đạp bàn đạp. Khi không làm, bỏ chân khỏi bàn đạp.")],
+      [L("금형 교체: 안전블록 + 전원 잠금", "Pagpapalit ng die: safety block + lock ng kuryente", "เปลี่ยนแม่พิมพ์: บล็อกนิรภัย + ล็อกไฟ", "Thay khuôn: khối an toàn + khóa nguồn"),
+       L("금형을 바꾸거나 조정할 때는 램 아래에 안전블록을 받치고, 전원을 끈 뒤 자물쇠와 표지를 겁니다. 그래야 램이 내려오지 않습니다.", "Kapag nagpapalit o nag-aayos ng die, lagyan ng safety block ang ilalim ng ram, patayin ang kuryente at lagyan ng kandado at tag. Sa ganoon hindi bababa ang ram.", "เมื่อเปลี่ยนหรือปรับแม่พิมพ์ ให้ค้ำบล็อกนิรภัยใต้แรม ปิดไฟแล้วล็อกกุญแจและแขวนป้าย แรมจะได้ไม่เลื่อนลง", "Khi thay hoặc chỉnh khuôn, kê khối an toàn dưới đầu chày, tắt nguồn rồi khóa và treo thẻ. Như vậy đầu chày không thể đi xuống.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="34" y="18" width="12" height="142" fill="${C.machD}"/><rect x="234" y="18" width="12" height="142" fill="${C.machD}"/>
+      <rect x="40" y="108" width="200" height="52" fill="${C.mach}"/><rect x="40" y="108" width="200" height="6" fill="${C.machD}"/>
+      <path d="M118 108V98h16l6 6 6-6h16v10z" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="2"/>
+      <g class="bpanel"><rect x="252" y="20" width="26" height="34" rx="3" fill="${C.machD}"/><circle cx="265" cy="31" r="6" fill="${C.red}" stroke="#fff" stroke-width="1.5"/><rect x="258" y="42" width="14" height="7" rx="2" fill="#9FC3D9"/></g>
+      <g class="block" opacity="0"><rect x="66" y="52" width="18" height="56" fill="${C.vest}" stroke="${C.ink}" stroke-width="2"/><path d="M66 60l18 10M66 74l18 10M66 88l18 10" stroke="${C.ink}" stroke-width="4"/></g>
+      <g class="lock" opacity="0"><path d="M283 34v-5a4 4 0 0 1 8 0v5" stroke="${C.ink}" stroke-width="2.4" fill="none"/><rect x="280" y="34" width="14" height="11" rx="2" fill="${C.red}"/><rect x="282" y="48" width="12" height="16" rx="2" fill="#fff" stroke="${C.red}" stroke-width="1.5"/><path d="M285 53h6M285 57h6" stroke="${C.red}" stroke-width="1.5"/></g>
+      <g class="ram"><rect x="40" y="20" width="200" height="32" fill="${C.mach}"/><rect x="40" y="20" width="200" height="7" fill="${C.machD}"/>
+        <path d="M128 52h24l-12 16z" fill="${C.steelD}"/>
+        <rect x="44" y="56" width="7" height="20" rx="2" fill="${C.ink}"/><rect x="229" y="56" width="7" height="20" rx="2" fill="${C.ink}"/>
+        <path class="beam" d="M51 72H229" stroke="${C.red}" stroke-width="2" stroke-dasharray="5 3"/></g>
+      <g class="sheet"><rect class="shL" x="58" y="93" width="82" height="4" fill="${C.steel}" stroke="${C.steelD}" stroke-width="1"/>
+        <rect class="shR" x="140" y="93" width="82" height="4" fill="${C.steel}" stroke="${C.steelD}" stroke-width="1"/></g>
+      <rect class="pedal" x="196" y="150" width="24" height="10" rx="3" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.5"/>
+      <g class="w2" opacity="0">${worker(20, 160, { arm: "none" })}<path class="armL" stroke="${C.shirt}" stroke-width="7" stroke-linecap="round" fill="none"/><circle class="handL" r="4.2" fill="#fff" stroke="#0003"/></g>
+      ${worker(262, 160, { flip: true, arm: "none" })}
+      <path class="armR" stroke="${C.shirt}" stroke-width="7" stroke-linecap="round" fill="none"/><circle class="handR" r="4.2" fill="#fff" stroke="#0003"/>
+      <g class="hit" opacity="0">${burst(152, 88, .55)}<path d="M176 76l12 12M188 76l-12 12" stroke="${C.red}" stroke-width="4" stroke-linecap="round"/></g>
+      <g class="ok2" opacity="0"><circle cx="158" cy="104" r="9" fill="#2E9D5B"/><path d="M153 104l4 4 7-8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+      <g class="lstop" opacity="0"><rect x="52" y="36" width="54" height="20" rx="4" fill="${C.red}"/><text x="79" y="50" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="900" fill="#fff">STOP</text></g>
+      <g class="lmute" opacity="0"><rect x="48" y="36" width="70" height="20" rx="4" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.5"/><text x="83" y="50" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="900" fill="${C.ink}">MUTING</text></g>
+      <g class="ton">${[96, 140, 184].map(x => `<path d="M${x} 1v9h-6l6 7 6-7h-6" fill="${C.red}" stroke="${C.red}" stroke-width="3" stroke-linejoin="round"/>`).join("")}</g>
+      <g class="bb1" opacity="0"><rect x="268" y="56" width="40" height="20" rx="8" fill="#fff" stroke="${C.ink}" stroke-width="1.5"/><text x="288" y="70" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="900" fill="${C.ink}">OK?</text></g>
+      <g class="bb2" opacity="0"><rect x="2" y="56" width="46" height="20" rx="8" fill="#fff" stroke="${C.ink}" stroke-width="1.5"/><text x="25" y="70" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="900" fill="#2E9D5B">OK! 👍</text></g>`,
+    run(svg, step, still) {
+      const $ = s => svg.querySelector(s), op = (s, v) => { const e = $(s); if (e) e.setAttribute("opacity", v); };
+      const lerp = (a, b, k) => a + (b - a) * Math.max(0, Math.min(1, k));
+      const PIV = [140, 95], SH = [260, 99], SH2 = [20, 99], R = 78;
+      const arm = (path, hand, sh, hx, hy, show) => {
+        const mx = (sh[0] + hx) / 2, my = (sh[1] + hy) / 2 + 12;
+        $(path).setAttribute("d", `M${sh[0]} ${sh[1]}Q${mx} ${my} ${hx} ${hy}`); $(hand).setAttribute("cx", hx); $(hand).setAttribute("cy", hy);
+        $(path).setAttribute("opacity", show ? 1 : 0); $(hand).setAttribute("opacity", show ? 1 : 0);
+      };
+      const ends = th => { const r = th * Math.PI / 180; return { rx: PIV[0] + R * Math.cos(r), ry: PIV[1] - R * Math.sin(r), lx: PIV[0] - R * Math.cos(r), ly: PIV[1] - R * Math.sin(r) }; };
+      let alive = true;
+      const total = [3600, 3800, 3600, 3400, 3200][step];
+      function draw(t) {
+        let dy = 0, th = 0, beam = 1, stop = 0, mute = 0, hit = 0, hand = null, ped = 0, w2 = 0, b1 = 0, b2 = 0, blk = 0, lock = 0, ok = 0, sheet = 1, ton = 0;
+        if (step === 0) {
+          const u = t % 3600; ton = 1;
+          dy = u < 700 ? lerp(0, 27, u / 700) : u < 1500 ? lerp(27, 31, (u - 700) / 800) : u < 1900 ? 31 : u < 2700 ? lerp(31, 0, (u - 1900) / 800) : 0;
+          th = u < 700 ? 0 : u < 1500 ? lerp(0, 28, (u - 700) / 800) : u < 2700 ? 28 : lerp(28, 0, (u - 2700) / 500);
+          ped = u > 100 && u < 1500 ? 1 : 0; mute = u > 560 && u < 2000 ? 1 : 0; beam = mute ? 0 : 1;
+        } else if (step === 1) {
+          const e = ends(0);
+          const hk = t < 600 ? 0 : t < 1400 ? (t - 600) / 800 : t < 2900 ? 1 : 1 - (t - 2900) / 600;
+          hand = [lerp(e.rx, 152, hk), lerp(e.ry, 84, hk)];
+          dy = t < 900 ? 0 : Math.min(8, (t - 900) / 1000 * 18);
+          if (t > 2900) dy = lerp(8, 0, (t - 2900) / 600);
+          stop = t > 1350 && t < 3000 ? 1 : 0; beam = stop ? (Math.floor(t / 150) % 2 ? 1 : .25) : 1; ped = t > 900 && t < 1350 ? 1 : 0;
+        } else if (step === 2) {
+          dy = t < 1600 ? lerp(0, 22, t / 1600) : lerp(22, 24, (t - 1600) / 500);
+          mute = dy >= 20 ? 1 : 0; beam = mute ? 0 : 1; ped = t < 2100 ? 1 : 0;
+          const e = ends(0); const hk = t < 1300 ? 0 : (t - 1300) / 700;
+          hand = [lerp(e.rx, 154, hk), lerp(e.ry, 90, hk)]; hit = t > 2050 ? 1 : 0;
+        } else if (step === 3) {
+          w2 = 1; b1 = t > 200 && t < 1700 ? 1 : 0; b2 = t > 900 && t < 1900 ? 1 : 0; ped = t > 1800 && t < 3000 ? 1 : 0;
+          dy = t < 1800 ? 0 : t < 2400 ? lerp(0, 27, (t - 1800) / 600) : lerp(27, 31, (t - 2400) / 600);
+          th = t < 2400 ? 0 : lerp(0, 28, (t - 2400) / 600); mute = dy > 21 ? 1 : 0; beam = mute ? 0 : 1;
+        } else {
+          sheet = 0; blk = Math.min(1, t / 700); lock = t > 1000 ? 1 : 0; ok = t > 2300 ? 1 : 0;
+          hand = [lerp(236, 152, (t - 1500) / 700), lerp(104, 100, (t - 1500) / 700)];
+        }
+        $(".ram").setAttribute("transform", `translate(0 ${dy.toFixed(1)})`);
+        $(".beam").setAttribute("opacity", beam); $(".beam").setAttribute("stroke-width", stop ? 4 : 2);
+        $(".shL").setAttribute("transform", `rotate(${th} ${PIV[0]} ${PIV[1]})`); $(".shR").setAttribute("transform", `rotate(${-th} ${PIV[0]} ${PIV[1]})`);
+        op(".sheet", sheet); op(".lstop", stop); op(".lmute", mute); op(".hit", hit); op(".w2", w2); op(".bb1", b1); op(".bb2", b2);
+        op(".block", blk); $(".block").setAttribute("transform", `translate(${lerp(-60, 0, blk)} 0)`); op(".lock", lock); op(".ok2", ok); op(".ton", ton);
+        $(".pedal").setAttribute("fill", ped ? C.red : C.vest);
+        const e = ends(th);
+        arm(".armR", ".handR", SH, hand ? hand[0] : e.rx - 4, hand ? hand[1] : e.ry - 2, true);
+        arm(".armL", ".handL", SH2, e.lx + 4, e.ly - 2, w2);
+      }
+      if (still) { draw([1700, 2000, 2400, 3000, 3000][step]); return () => {}; }
+      const t0 = performance.now();
+      (function f(now) { if (!alive || !svg.isConnected) return; const t = now - t0; draw(step === 0 ? t : Math.min(t, total)); requestAnimationFrame(f); })(t0);
+      return () => { alive = false; };
+    }
+  };
+
+  const LIB = { grinder: GR, bend: BD };
   const reduce = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function mount(root, lang, opt) {
@@ -4739,7 +4833,7 @@ const MOTION = (() => {
 
 // 그라인더 단원: 정지 그림 대신 움직이는 그림
 (function () {
-  for (const p of window.NEW_PARTS || []) for (const l of p.lessons) if (l.id === "w-grind") { l.scene = null; l.blocks.unshift({ t: "motion", k: "grinder" }); }
+  for (const p of window.NEW_PARTS || []) for (const l of p.lessons) if (l.id === "w-grind" || l.id === "w-bend") { l.blocks.unshift({ t: "motion", k: l.id === "w-grind" ? "grinder" : "bend" }); l.scene = null; }
 })();
 
 </script>
