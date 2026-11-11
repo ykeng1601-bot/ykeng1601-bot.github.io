@@ -4787,12 +4787,12 @@ const MOTION = (() => {
     opt = opt || {};
     const T = o => (o && (o[lang] || o.ko)) || "";
     root.querySelectorAll(".motion[data-motion]").forEach(box => {
-      const M = LIB[box.dataset.motion]; if (!M || box.dataset.ready) return;
+      const M = LIB[box.dataset.motion] || (window.MOTION_LIB2 || {})[box.dataset.motion]; if (!M || box.dataset.ready) return;
       box.dataset.ready = "1";
       const still = opt.print || reduce();
       let step = opt.print ? M.steps.length - 1 : 0, stop = () => {}, timer = null;
       box.innerHTML = `<div class="mv-tag">▶ ${T(UIM.tag)}</div>
-        <svg class="scene" viewBox="0 0 320 200" role="img" aria-label="${T(M.steps[0][0])}">${M.svg()}</svg>
+        <svg class="scene" viewBox="0 0 320 200" role="img" aria-label="${T(M.steps[0][0])}">${M.svg(T)}</svg>
         <div class="mv-cap" aria-live="polite"><b></b><p></p></div>
         <div class="mv-ctl noprint"><button type="button" class="mv-prev" aria-label="${T(UIM.prev)}">◀</button>
           <div class="mv-dots">${M.steps.map((_, i) => `<i data-i="${i}"></i>`).join("")}</div>
@@ -4834,6 +4834,689 @@ const MOTION = (() => {
 // 그라인더 단원: 정지 그림 대신 움직이는 그림
 (function () {
   for (const p of window.NEW_PARTS || []) for (const l of p.lessons) if (l.id === "w-grind" || l.id === "w-bend") { l.blocks.unshift({ t: "motion", k: l.id === "w-grind" ? "grinder" : "bend" }); l.scene = null; }
+})();
+
+// PART 2 작업별 모션그래픽 (직접 그린 SVG). motion.js의 MOTION.add 로 등록
+(function () {
+  const cl = k => Math.max(0, Math.min(1, k)), sg = (t, a, b) => cl((t - a) / (b - a)), lp = (a, b, k) => a + (b - a) * cl(k);
+  const ez = k => (k = cl(k), k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+  const blink = (t, ms) => Math.floor(t / (ms || 180)) % 2 ? 1 : .35;
+  function util(svg) {
+    const q = s => svg.querySelectorAll(s);
+    return {
+      op: (s, v) => q(s).forEach(e => e.setAttribute("opacity", v)),
+      tf: (s, v) => q(s).forEach(e => e.setAttribute("transform", v)),
+      at: (s, a, v) => q(s).forEach(e => e.setAttribute(a, v)),
+      tx: (s, v) => q(s).forEach(e => { e.textContent = v; })
+    };
+  }
+  function mk(o) {
+    return {
+      steps: o.steps, svg: o.svg,
+      run(svg, step, still) {
+        const U = util(svg), D = (o.dur && o.dur[step]) || 3600, LOOP = o.loop && o.loop[step];
+        const frame = t => { U.op(".x", 0); o.draw(step, t, U); };
+        if (still) { frame(o.still && o.still[step] != null ? o.still[step] : D); return () => {}; }
+        let alive = true; const t0 = performance.now();
+        (function f(n) { if (!alive || !svg.isConnected) return; const t = n - t0; frame(LOOP ? t % LOOP : Math.min(t, D)); requestAnimationFrame(f); })(t0);
+        return () => { alive = false; };
+      }
+    };
+  }
+  // 공통 그림 조각
+  const OK = (c, x, y) => `<g class="x ${c}"><circle cx="${x}" cy="${y}" r="10" fill="#2E9D5B"/><path d="M${x - 5} ${y}l4 4 7-8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>`;
+  const NO = (c, x, y) => `<g class="x ${c}"><circle cx="${x}" cy="${y}" r="10" fill="${C.red}"/><path d="M${x - 5} ${y - 5}l10 10M${x + 5} ${y - 5}l-10 10" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></g>`;
+  const TAG = (c, x, y, txt, bg, fg) => `<g class="x ${c}"><rect x="${x}" y="${y}" width="${txt.length * 7 + 14}" height="18" rx="4" fill="${bg || C.red}"/><text x="${x + 7}" y="${y + 13}" font-family="sans-serif" font-size="11" font-weight="900" fill="${fg || "#fff"}">${txt}</text></g>`;
+  const LOCK = (c, x, y) => `<g class="x ${c}"><path d="M${x + 3} ${y}v-5a4 4 0 0 1 8 0v5" stroke="${C.ink}" stroke-width="2.4" fill="none"/><rect x="${x}" y="${y}" width="14" height="11" rx="2" fill="${C.red}"/><rect x="${x + 2}" y="${y + 14}" width="12" height="16" rx="2" fill="#fff" stroke="${C.red}" stroke-width="1.5"/><path d="M${x + 5} ${y + 19}h6M${x + 5} ${y + 23}h6" stroke="${C.red}" stroke-width="1.5"/></g>`;
+  const FLAME = (c, x, y, s) => `<g class="x ${c}" transform="translate(${x} ${y}) scale(${s || 1})"><path d="M0 0c-10 0-14-9-9-18 2 5 5 6 5 6-2-9 4-16 10-20-1 7 5 11 7 17 2-3 2-6 2-6 5 6 4 21-15 21z" fill="#FF7A00"/><path d="M1 -1c-5 0-7-5-4-10 2 3 4 3 4 3 0-5 3-8 5-10 0 5 3 7 3 11 0 4-3 6-8 6z" fill="#FFD23F"/></g>`;
+  const BOOM = (c, x, y, s) => `<g class="x ${c}">${burst(x, y, s || 1)}</g>`;
+  const CLOCK = (c, x, y) => `<g class="x ${c}"><rect x="${x}" y="${y}" width="78" height="22" rx="6" fill="${C.ink}"/><text class="${c}t" x="${x + 39}" y="${y + 15}" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="800" fill="#fff"></text></g>`;
+  const ARM = (c, col) => `<path class="${c}" stroke="${col || C.shirt}" stroke-width="7" stroke-linecap="round" fill="none"/><circle class="${c}h" r="4.2" fill="${C.skin}" stroke="#0003"/>`;
+  const setArm = (U, c, sx, sy, hx, hy, glove) => { U.at("." + c, "d", `M${sx} ${sy}Q${(sx + hx) / 2} ${(sy + hy) / 2 + 10} ${hx} ${hy}`); U.at("." + c + "h", "cx", hx); U.at("." + c + "h", "cy", hy); if (glove != null) U.at("." + c + "h", "fill", glove); };
+  // 무릎 굽혀 드는 사람 (k: 0 앉음 → 1 섬)
+  const lifter = c => `<g class="${c}"><path class="${c}leg" stroke="${C.pants}" stroke-width="9" stroke-linecap="round" fill="none"/><rect class="${c}boot" width="13" height="6" rx="2" fill="${C.boot}"/>
+    <g class="${c}up"><rect x="-12" y="-32" width="24" height="32" rx="7" fill="${C.shirt}"/><path d="M-12 -26h24v20h-24z" fill="${C.vest}"/><rect x="-12" y="-16" width="24" height="4" fill="${C.strip}"/>
+    <circle cx="2" cy="-41" r="8" fill="${C.skin}"/><circle cx="6" cy="-42" r="1.2" fill="${C.ink}"/><path d="M-8 -42a10 10 0 0 1 20 0z" fill="${C.vest}"/><path d="M-9 -42h24" stroke="#C99600" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M2 -24L18 -6" stroke="${C.shirt}" stroke-width="7" stroke-linecap="round"/><circle cx="18" cy="-6" r="4" fill="#fff"/></g></g>`;
+  function setLifter(U, c, x, y, k, back) { // back: 상체 기울기(도)
+    const hipY = y - lp(22, 38, k), kneeX = x + lp(16, 3, k), kneeY = y - lp(16, 19, k);
+    U.at("." + c + "leg", "d", `M${x} ${hipY}L${kneeX} ${kneeY}L${x + 2} ${y - 3}`);
+    U.at("." + c + "boot", "x", x - 4); U.at("." + c + "boot", "y", y - 6);
+    U.tf("." + c + "up", `translate(${x} ${hipY}) rotate(${back || 0})`);
+  }
+  const T4 = (a, b, c, d) => L(a, b, c, d);
+
+  const LIB = {};
+
+  // ===== w-0 사망사고 5대 유형 (막대그래프) =====
+  const W0 = [["pinch", 26.7, T4("끼임", "Naipit", "ถูกหนีบ", "Bị kẹp")], ["struck", 21.7, T4("맞음·깔림", "Tinamaan", "ถูกกระแทก/ทับ", "Bị đập/đè")], ["fall", 19.4, T4("떨어짐", "Nahulog", "ตกจากที่สูง", "Ngã cao")], ["fire", 12.4, T4("화재·폭발", "Sunog", "ไฟไหม้/ระเบิด", "Cháy/nổ")], ["collide", 9.3, T4("부딪힘", "Nabangga", "ถูกชน", "Va chạm")]];
+  LIB.w0 = mk({
+    steps: [
+      [T4("제조업 사망사고, 이 다섯 가지가 대부분입니다", "Karamihan ng nakamamatay na aksidente ay 5 uri na ito", "อุบัติเหตุถึงตายในโรงงาน ส่วนใหญ่มี 5 แบบนี้", "Tai nạn chết người trong sản xuất chủ yếu là 5 loại này"),
+       T4("끼임이 가장 많고, 맞음·깔림과 떨어짐이 뒤를 잇습니다. 모두 우리 판금 공장에서 날 수 있는 사고입니다.", "Pinakamarami ang naipit, sunod ang tinamaan at nahulog. Lahat ay puwedeng mangyari sa aming pabrika.", "ถูกหนีบมากที่สุด ตามด้วยถูกกระแทก/ทับ และตกจากที่สูง ทั้งหมดเกิดได้ในโรงงานของเรา", "Bị kẹp nhiều nhất, tiếp theo là bị đập/đè và ngã cao. Tất cả đều có thể xảy ra ở xưởng chúng ta.")],
+      [T4("세 가지만 막아도 약 3분의 2", "Kapag napigilan ang 3, halos 2/3 na", "ป้องกัน 3 อย่างนี้ได้ ก็ราว 2 ใน 3", "Ngăn 3 loại này là được khoảng 2/3"),
+       T4("끼임·맞음·떨어짐 세 가지가 약 68%입니다. 전원 잠금, 인양물 아래 출입 금지, 난간과 안전모가 가장 큰 효과를 냅니다.", "Ang naipit, tinamaan at nahulog ay mga 68%. Pinakamabisa ang pag-lock ng kuryente, bawal sa ilalim ng karga, barandilya at helmet.", "ถูกหนีบ ถูกกระแทก และตกจากที่สูงรวมกันราว 68% การล็อกไฟ ห้ามอยู่ใต้ของที่ยก ราวกันตกและหมวกนิรภัยได้ผลที่สุด", "Bị kẹp, bị đập và ngã cao chiếm khoảng 68%. Khóa nguồn, không đứng dưới vật nâng, lan can và mũ bảo hộ hiệu quả nhất.")]
+    ],
+    svg: T => `<rect width="320" height="200" fill="${C.wall}"/>
+      ${W0.map(([k, v, n], i) => { const y = 22 + i * 32; return `<text x="12" y="${y + 16}" font-family="sans-serif" font-size="12" font-weight="800" fill="${C.ink}">${i + 1}. ${T(n)}</text>
+        <rect x="112" y="${y + 3}" width="180" height="18" rx="4" fill="#0001"/><rect class="b${i}" x="112" y="${y + 3}" width="0" height="18" rx="4" fill="${i < 3 ? C.red : C.steel}"/>
+        <text class="v${i}" x="118" y="${y + 16}" font-family="sans-serif" font-size="11" font-weight="900" fill="#fff"></text>`; }).join("")}
+      <g class="x hi"><rect x="6" y="20" width="304" height="98" rx="8" fill="none" stroke="${C.red}" stroke-width="3" stroke-dasharray="6 4"/>
+      <rect x="196" y="166" width="114" height="26" rx="6" fill="${C.red}"/><text x="253" y="184" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="900" fill="#fff">≈ 68%</text></g>`,
+    dur: [3000, 2400],
+    draw(step, t, U) {
+      W0.forEach(([, v], i) => { const k = step ? 1 : ez(sg(t, i * 350, i * 350 + 700)); U.at(".b" + i, "width", (180 * v / 30 * k).toFixed(1)); U.tx(".v" + i, k > .3 ? v.toFixed(1) + "%" : ""); });
+      if (step === 1) U.op(".hi", blink(t, 400) > .5 || t > 1600 ? 1 : .3);
+    }
+  });
+
+  // ===== w-1 정비·청소 전 멈추고 잠그기 (LOTO) =====
+  LIB.loto = mk({
+    steps: [
+      [T4("멈춘 줄 알았던 기계를 누군가 켭니다", "May nagbukas ng makinang akala mo nakapatay", "มีคนเปิดเครื่องที่คิดว่าหยุดแล้ว", "Ai đó bật máy mà bạn tưởng đã dừng"),
+       T4("걸린 스크랩을 빼려고 손을 넣은 사이, 모르는 사람이 스위치를 켭니다. 정비 중 사망사고의 약 11%가 이렇게 일어납니다.", "Habang inaalis mo ang naipit na scrap, binuksan ng iba ang switch nang hindi alam. Mga 11% ng nakamamatay na aksidente sa maintenance ay ganito.", "ระหว่างยื่นมือเข้าไปเอาเศษที่ติด มีคนไม่รู้เปิดสวิตช์ อุบัติเหตุถึงตายขณะซ่อมราว 11% เกิดแบบนี้", "Khi bạn thò tay gỡ phế liệu bị kẹt, người không biết đã bật công tắc. Khoảng 11% tai nạn chết người khi bảo trì xảy ra như vậy.")],
+      [T4("끄고, 내 자물쇠로 잠그고, 표지를 겁니다", "Patayin, i-lock ng sariling kandado, lagyan ng tag", "ปิด ล็อกด้วยกุญแจของเรา แขวนป้าย", "Tắt, khóa bằng khóa của mình, treo thẻ"),
+       T4("전원을 끄고 조작부에 내 자물쇠와 '점검 중·조작금지' 표지를 겁니다. 열쇠는 작업하는 내가 가지고 있습니다.", "Patayin ang kuryente, ikabit ang sariling kandado at tag na 'Inaayos – Huwag galawin'. Nasa iyo ang susi.", "ปิดไฟ ล็อกกุญแจของเราและแขวนป้าย 'กำลังซ่อม ห้ามเปิด' ที่แผงควบคุม กุญแจอยู่กับคนที่ทำงาน", "Tắt nguồn, gắn khóa của mình và thẻ 'Đang sửa – Cấm vận hành' lên bảng điều khiển. Chìa khóa do chính người làm giữ.")],
+      [T4("잠겨 있으면 아무도 켤 수 없습니다", "Kapag naka-lock, walang makakapagbukas", "เมื่อล็อกแล้ว ไม่มีใครเปิดได้", "Đã khóa thì không ai bật được"),
+       T4("다른 사람이 켜려 해도 스위치가 움직이지 않습니다. 작업이 끝나면 모두 물러났는지 확인하고 내가 자물쇠를 풉니다.", "Kahit subukan ng iba, hindi gagalaw ang switch. Pagkatapos, siguraduhing lumayo na ang lahat bago mo alisin ang kandado.", "แม้คนอื่นจะพยายามเปิด สวิตช์ก็ไม่ขยับ ทำเสร็จแล้วตรวจว่าทุกคนถอยออกแล้วจึงปลดล็อกเอง", "Người khác có muốn bật, công tắc cũng không nhúc nhích. Xong việc, kiểm tra mọi người đã tránh xa rồi tự mình mở khóa.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="24" y="104" width="196" height="12" rx="6" fill="#3B434B"/><circle cx="30" cy="110" r="9" fill="${C.steel}" stroke="${C.ink}" stroke-width="2"/><circle cx="214" cy="110" r="9" fill="${C.steel}" stroke="${C.ink}" stroke-width="2"/>
+      <path class="belt" d="M30 104H214" stroke="#9AA4AD" stroke-width="2" stroke-dasharray="8 6"/>
+      <path d="M40 116v44M200 116v44" stroke="${C.steelD}" stroke-width="5"/>
+      <g class="plate"><rect x="0" y="96" width="46" height="8" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/></g>
+      <path d="M148 104l6-9 6 9z" fill="#B49A7E" stroke="${C.ink}" stroke-width="1"/>
+      <rect x="248" y="58" width="34" height="52" rx="4" fill="${C.mach}" stroke="${C.machD}" stroke-width="2"/><path d="M265 110v50" stroke="${C.steelD}" stroke-width="5"/>
+      <rect x="257" y="70" width="16" height="26" rx="3" fill="${C.ink}"/><g class="sw"><rect x="261" y="70" width="8" height="13" rx="2" fill="${C.vest}"/></g>
+      <text class="onoff" x="265" y="66" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="${C.ink}">OFF</text>
+      ${LOCK("lk", 285, 74)}
+      <g class="wA">${worker(0, 160, { arm: "none" })}</g>${ARM("aA")}
+      <g class="wB">${worker(300, 160, { flip: true, arm: "none" })}</g>${ARM("aB")}
+      ${BOOM("hit", 152, 100, .55)}${NO("noB", 296, 40)}${OK("okA", 128, 52)}
+      <g class="x key"><circle cx="0" cy="0" r="5" fill="none" stroke="${C.vest}" stroke-width="3"/><path d="M5 0h10v4M11 0v3" stroke="${C.vest}" stroke-width="3"/></g>`,
+    dur: [3400, 3600, 3600], still: [3400, 3600, 2600],
+    draw(step, t, U) {
+      let on = 0, belt = 0, lock = 0, hand = [152, 100], bHand = [280, 96], swUp = 0, ax = 128;
+      if (step === 0) { swUp = t > 1500 ? 1 : 0; on = swUp; belt = on ? (t - 1500) : 0; U.op(".hit", t > 1900 ? blink(t) : 0); hand = t > 1900 ? [lp(152, 170, sg(t, 1900, 2300)), 100] : [lp(140, 152, sg(t, 0, 700)), 100]; }
+      if (step === 1) { ax = lp(128, 236, ez(sg(t, 0, 900))); hand = t < 900 ? [ax + 16, 108] : [lp(252, 264, sg(t, 900, 1300)), lp(108, 84, sg(t, 900, 1300))]; lock = t > 1500 ? 1 : 0; U.op(".lk", lock); if (t > 1900) { U.op(".key", 1); U.tf(".key", `translate(${lp(292, 240, sg(t, 1900, 2600))} ${lp(70, 112, sg(t, 1900, 2600))})`); } bHand = [300 - 18, 112]; }
+      if (step === 2) { U.op(".lk", 1); const tr = t > 600 && t < 2000; bHand = tr ? [268 + Math.sin(t / 60) * 2, 82] : [282, 112]; U.op(".noB", t > 900 && t < 2400 ? 1 : 0); U.op(".okA", t > 1200 ? 1 : 0); U.tf(".lk", tr ? `translate(${Math.sin(t / 50) * 1.5} 0)` : ""); }
+      U.tf(".sw", swUp ? "translate(0 13)" : "");
+      U.tx(".onoff", swUp ? "ON" : "OFF"); U.at(".onoff", "fill", swUp ? C.red : C.ink);
+      U.at(".belt", "stroke-dashoffset", -(belt / 12));
+      U.tf(".plate", `translate(${on ? lp(80, 160, (t - 1500) / 1600) : 80} 0)`);
+      if (step === 0 && t > 1300 && t < 1600) bHand = [266, 78];
+      U.tf(".wA", `translate(${ax.toFixed(1)} 0)`); setArm(U, "aA", ax, 99, hand[0], hand[1]); setArm(U, "aB", 300, 99, bHand[0], bHand[1]);
+    }
+  });
+
+  // ===== 레이저 커팅 =====
+  LIB.laser = mk({
+    steps: [
+      [T4("덮개와 문을 닫은 상태로만 가동합니다", "Patakbuhin lang kapag sarado ang takip at pinto", "เดินเครื่องเฉพาะเมื่อปิดฝาและประตูแล้ว", "Chỉ chạy máy khi nắp và cửa đã đóng"),
+       T4("레이저 빛은 눈에 보이지 않아도 눈과 피부를 태웁니다. 덮개 안에서만 자르고, 연동장치를 끄거나 개조하지 않습니다.", "Kahit hindi nakikita, sinusunog ng laser ang mata at balat. Sa loob lang ng takip mag-cut, at huwag patayin o baguhin ang interlock.", "แสงเลเซอร์แม้มองไม่เห็นก็เผาตาและผิวได้ ตัดเฉพาะภายในฝาครอบ ห้ามปิดหรือดัดแปลงระบบอินเตอร์ล็อก", "Tia laser dù không thấy vẫn làm bỏng mắt và da. Chỉ cắt bên trong vỏ che, không tắt hay sửa khóa liên động.")],
+      [T4("문을 열면 연동장치가 바로 멈춥니다", "Kapag binuksan ang pinto, humihinto agad", "เปิดประตู อินเตอร์ล็อกจะหยุดทันที", "Mở cửa là khóa liên động dừng ngay"),
+       T4("부품을 꺼내거나 렌즈·노즐을 바꿀 때는 레이저 발진을 멈추고 전원을 잠근 뒤 합니다.", "Kapag kukuha ng piyesa o magpapalit ng lens/nozzle, patigilin ang laser at i-lock ang kuryente.", "เมื่อหยิบชิ้นงานหรือเปลี่ยนเลนส์/หัวฉีด ให้หยุดเลเซอร์และล็อกไฟก่อน", "Khi lấy chi tiết hay thay thấu kính/đầu phun, dừng phát laser và khóa nguồn trước.")],
+      [T4("불이 나면: 비상정지 → 산소 밸브 → 소화기", "Kapag may sunog: E-stop → oxygen valve → extinguisher", "ไฟไหม้: หยุดฉุกเฉิน → ปิดวาล์วออกซิเจน → ถังดับเพลิง", "Khi cháy: dừng khẩn → khóa van oxy → bình chữa cháy"),
+       T4("비상정지 버튼으로 멈추고, 산소 밸브를 잠급니다. 산소는 불을 더 키웁니다. 작은 불은 소화기로, 커지면 바로 대피하고 119.", "Pindutin ang E-stop at isara ang oxygen valve—pinapalakas ng oxygen ang apoy. Extinguisher sa maliit na apoy; kapag lumaki, lumikas at tumawag sa 119.", "กดหยุดฉุกเฉินแล้วปิดวาล์วออกซิเจน ออกซิเจนทำให้ไฟลุกแรงขึ้น ไฟเล็กใช้ถังดับเพลิง ถ้าลุกลามให้อพยพและโทร 119", "Bấm dừng khẩn và khóa van oxy—oxy làm lửa to hơn. Lửa nhỏ dùng bình chữa cháy, lửa lớn thì sơ tán ngay và gọi 119.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="22" y="40" width="210" height="120" rx="4" fill="${C.machD}"/><rect x="30" y="48" width="194" height="88" fill="#26303A"/>
+      <rect x="34" y="122" width="186" height="8" fill="${C.steelL}"/><path d="M40 58H214" stroke="${C.steel}" stroke-width="5"/>
+      <g class="head"><rect x="-8" y="54" width="16" height="22" rx="3" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.5"/><path d="M-3 76h6l-3 6z" fill="${C.ink}"/>
+        <path class="x beam" d="M0 82V122" stroke="#FF4D4D" stroke-width="2"/><circle class="x spark" cx="0" cy="122" r="4" fill="#FFE27A"/></g>
+      ${FLAME("fl", 120, 124, 1)}
+      <g class="door"><rect x="30" y="48" width="194" height="88" fill="#7EC0E8" opacity=".35" stroke="#7EC0E8" stroke-width="2"/><rect x="118" y="88" width="18" height="6" rx="2" fill="${C.steelL}"/></g>
+      <circle class="lamp" cx="40" cy="34" r="6" stroke="${C.ink}" stroke-width="1.5"/>
+      <g class="estop"><rect x="242" y="70" width="22" height="22" rx="3" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.5"/><circle class="eb" cx="253" cy="81" r="7" fill="${C.red}" stroke="${C.ink}" stroke-width="1.5"/></g>
+      <rect x="290" y="96" width="18" height="64" rx="8" fill="#2F7D4F" stroke="${C.ink}" stroke-width="1.5"/><text x="299" y="132" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#fff">O₂</text>
+      <g class="valve"><rect x="292" y="86" width="14" height="4" rx="2" fill="${C.ink}"/></g>
+      <g class="x ext"><rect x="196" y="128" width="12" height="28" rx="4" fill="${C.red}" stroke="${C.ink}" stroke-width="1"/><path d="M202 128v-6h-14" stroke="${C.ink}" stroke-width="2" fill="none"/></g>
+      <g class="x foam">${[0, 1, 2, 3, 4].map(i => `<circle cx="${172 - i * 11}" cy="${120 - i * 1.5}" r="${4 + i}" fill="#fff" opacity=".85"/>`).join("")}</g>
+      <g class="wk">${worker(0, 160, { flip: true, arm: "none" })}</g>${ARM("aW")}
+      ${TAG("stop", 160, 26, "STOP")}${OK("ok", 210, 26)}`,
+    dur: [3600, 3400, 4200], loop: [3600, 0, 0], still: [1500, 3000, 4200],
+    draw(step, t, U) {
+      let hx = lp(60, 200, (Math.sin(t / 600) + 1) / 2), beam = 1, door = 0, lamp = "#2E9D5B", hand = [256, 118], wx = 272;
+      if (step === 1) { door = ez(sg(t, 700, 1300)); beam = t < 900 ? 1 : 0; lamp = t < 900 ? "#2E9D5B" : C.red; U.op(".stop", t > 900 ? blink(t, 250) : 0); wx = lp(272, 238, sg(t, 1300, 1900)); hand = [lp(256, 176, sg(t, 1600, 2300)), lp(118, 100, sg(t, 1600, 2300))]; if (t > 2400) U.op(".ok", 1); }
+      if (step === 2) {
+        hx = 120; beam = t < 700 ? 1 : 0; lamp = t < 700 ? "#2E9D5B" : C.red;
+        const fs = t < 2600 ? lp(.5, 1.1, t / 1200) : lp(1.1, 0, (t - 2600) / 900); U.op(".fl", fs > .05 ? 1 : 0); U.tf(".fl", `translate(120 124) scale(${fs.toFixed(2)}) scale(1 ${(1 + Math.sin(t / 70) * .08).toFixed(2)})`);
+        hand = t < 1100 ? [lp(256, 253, sg(t, 300, 700)), lp(118, 81, sg(t, 300, 700))] : t < 1900 ? [lp(253, 299, sg(t, 1100, 1500)), lp(81, 88, sg(t, 1100, 1500))] : [lp(299, 210, sg(t, 1900, 2300)), 128];
+        U.at(".eb", "r", t > 700 ? 5.5 : 7); U.tf(".valve", t > 1500 ? "rotate(90 299 88)" : "");
+        if (t > 1900) { U.op(".ext", 1); } if (t > 2300 && t < 3600) U.op(".foam", .9); if (t > 3500) U.op(".ok", 1);
+        U.at(".door", "opacity", 1);
+      }
+      U.tf(".head", `translate(${hx.toFixed(1)} 0)`); U.op(".beam", beam); U.op(".spark", beam ? blink(t, 90) : 0);
+      U.tf(".door", `translate(0 ${(-door * 70).toFixed(1)})`); U.at(".lamp", "fill", lamp);
+      if (step !== 2) U.at(".eb", "r", 7), U.tf(".valve", "");
+      if (step === 0) hand = [wx - 16, 112]; U.tf(".wk", `translate(${wx.toFixed(1)} 0)`); setArm(U, "aW", wx, 99, hand[0], hand[1]);
+    }
+  });
+
+  // ===== 프레스 =====
+  LIB.press = mk({
+    steps: [
+      [T4("양수조작식: 두 손이 버튼에 있어야 내려옵니다", "Two-hand control: bababa lang kapag nasa button ang dalawang kamay", "แบบใช้สองมือ: ต้องกดปุ่มสองมือจึงจะลง", "Điều khiển hai tay: hai tay ở nút thì máy mới xuống"),
+       T4("한 손이라도 떼면 슬라이드가 멈춥니다. 두 손이 버튼에 있으니 금형 사이에 손이 들어갈 수 없습니다.", "Kapag inalis ang kahit isang kamay, humihinto ang slide. Dahil nasa button ang dalawang kamay, hindi makakapasok ang kamay sa die.", "ปล่อยมือข้างเดียว สไลด์ก็หยุด เพราะสองมืออยู่ที่ปุ่ม มือจึงเข้าไปในแม่พิมพ์ไม่ได้", "Nhấc một tay là đầu trượt dừng. Hai tay ở nút nên tay không thể lọt vào khuôn.")],
+      [T4("작은 재료는 집게로 넣고 뺍니다", "Gumamit ng sipit sa maliit na piyesa", "ชิ้นเล็กใช้คีมคีบใส่และเอาออก", "Phôi nhỏ dùng kẹp để đưa vào, lấy ra"),
+       T4("빨간 구역(금형 사이)에는 손가락이 절대 들어가지 않게, 수공구로 재료를 넣고 뺍니다.", "Gumamit ng hand tool para hindi pumasok ang daliri sa pulang lugar (sa pagitan ng die).", "ใช้เครื่องมือมือใส่และเอาชิ้นงานออก เพื่อไม่ให้นิ้วเข้าไปในเขตสีแดง (ระหว่างแม่พิมพ์)", "Dùng dụng cụ cầm tay để đưa phôi vào, lấy ra, không để ngón tay lọt vào vùng đỏ (giữa khuôn).")],
+      [T4("금형 교체: 안전블록과 전원 잠금", "Pagpapalit ng die: safety block at lock", "เปลี่ยนแม่พิมพ์: บล็อกนิรภัยและล็อกไฟ", "Thay khuôn: khối an toàn và khóa nguồn"),
+       T4("슬라이드 아래에 안전블록을 끼우고 전원을 잠근 뒤 금형을 바꿉니다. 무거운 금형은 손 대신 금형교환장치·크레인으로 옮깁니다.", "Maglagay ng safety block sa ilalim ng slide at i-lock ang kuryente bago magpalit ng die. Gumamit ng die changer o crane sa mabigat na die.", "ใส่บล็อกนิรภัยใต้สไลด์และล็อกไฟก่อนเปลี่ยนแม่พิมพ์ แม่พิมพ์หนักใช้อุปกรณ์เปลี่ยนแม่พิมพ์หรือเครน", "Kê khối an toàn dưới đầu trượt và khóa nguồn rồi mới thay khuôn. Khuôn nặng dùng thiết bị thay khuôn hoặc cẩu.")]
+    ],
+    svg: () => `${bg()}
+      <path d="M48 24h130v30H96v76h-48z" fill="${C.mach}"/><rect x="40" y="130" width="160" height="30" fill="${C.machD}"/>
+      <rect x="108" y="116" width="62" height="14" fill="${C.steelD}"/><rect x="118" y="108" width="42" height="8" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/>
+      <rect class="x zone" x="114" y="78" width="50" height="30" fill="${C.red}" opacity=".2"/>
+      <g class="slide"><rect x="112" y="54" width="54" height="22" fill="${C.machD}"/><rect x="120" y="76" width="38" height="8" fill="${C.steel}" stroke="${C.steelD}" stroke-width="1.5"/></g>
+      <g class="x blk"><rect x="174" y="76" width="14" height="40" fill="${C.vest}" stroke="${C.ink}" stroke-width="2"/><path d="M174 84l14 8M174 98l14 8" stroke="${C.ink}" stroke-width="4"/></g>
+      <rect class="x part" x="132" y="104" width="14" height="4" fill="${C.steelL}" stroke="${C.ink}" stroke-width="1"/>
+      <rect x="196" y="104" width="62" height="10" rx="3" fill="${C.ink}"/><path d="M227 114v46" stroke="${C.steelD}" stroke-width="4"/>
+      <circle class="bt1" cx="204" cy="101" r="5" stroke="${C.ink}" stroke-width="1.5"/><circle class="bt2" cx="250" cy="101" r="5" stroke="${C.ink}" stroke-width="1.5"/>
+      ${LOCK("lk", 262, 92)}
+      ${worker(228, 160, { flip: true, arm: "none" })}${ARM("a1")}${ARM("a2")}
+      <path class="x tong" stroke="${C.ink}" stroke-width="3" fill="none" stroke-linecap="round"/>
+      ${OK("ok", 228, 52)}`,
+    dur: [3600, 3600, 3200], loop: [3600, 3600, 0], still: [1500, 1700, 3200],
+    draw(step, t, U) {
+      let dy = 0, b1 = 0, b2 = 0, h1 = [210, 112], h2 = [244, 112];
+      if (step === 0) { const both = t > 500 && t < 1900; b1 = both || t < 2600; b2 = both; h1 = [204, 98]; h2 = both ? [250, 98] : [244, 112]; dy = both ? lp(0, 24, sg(t, 500, 1300)) - (t > 1300 ? lp(0, 24, sg(t, 1300, 1900)) : 0) : 0; if (both) U.op(".ok", 1); }
+      if (step === 1) { U.op(".zone", 1); U.op(".part", 1); const c = sg(t, 0, 900), d = sg(t, 2400, 3300); const tx = lp(lp(186, 140, c), 186, d); h1 = [196, 100]; h2 = [204, 104]; U.at(".tong", "d", `M200 102L${tx} 104`); U.op(".tong", 1); U.at(".part", "x", (tx - 7).toFixed(1)); dy = t > 1000 && t < 2300 ? lp(0, 24, sg(t, 1000, 1500)) - lp(0, 24, sg(t, 1700, 2300)) : 0; b1 = b2 = 0; if (t > 900 && t < 2400) U.op(".ok", 1); }
+      if (step === 2) { U.op(".blk", 1); U.tf(".blk", `translate(${lp(80, 0, ez(sg(t, 0, 900)))} 0)`); U.op(".lk", t > 1200 ? 1 : 0); if (t > 2000) U.op(".ok", 1); h1 = [210, 112]; h2 = [lp(244, 264, sg(t, 900, 1200)), lp(112, 96, sg(t, 900, 1200))]; }
+      U.tf(".slide", `translate(0 ${dy.toFixed(1)})`);
+      U.at(".bt1", "fill", b1 ? "#2E9D5B" : "#ddd"); U.at(".bt2", "fill", b2 ? "#2E9D5B" : "#ddd");
+      setArm(U, "a1", 226, 99, h1[0], h1[1]); setArm(U, "a2", 230, 99, h2[0], h2[1]);
+    }
+  });
+
+  // ===== 용접 =====
+  LIB.weld = mk({
+    steps: [
+      [T4("흄(금속 연기)은 흡입기로 바로 빨아들입니다", "Higupin agad ang fume gamit ang extractor", "ฟูม (ควันโลหะ) ให้เครื่องดูดดูดทันที", "Khói hàn hút ngay bằng máy hút"),
+       T4("흄은 위로 올라와 얼굴로 갑니다. 흡입기를 용접 부위 가까이 두고, 용접용 방진마스크를 씁니다.", "Umaakyat ang fume papunta sa mukha. Ilapit ang extractor sa hinang at magsuot ng mask para sa welding.", "ฟูมลอยขึ้นมาที่หน้า วางเครื่องดูดใกล้จุดเชื่อม และสวมหน้ากากกันฝุ่นสำหรับงานเชื่อม", "Khói bốc lên mặt. Đặt máy hút gần chỗ hàn và đeo khẩu trang chống bụi dùng cho hàn.")],
+      [T4("불티는 생각보다 멀리 튑니다", "Malayo ang talsik ng spark", "สะเก็ดไฟกระเด็นไกลกว่าที่คิด", "Tia lửa văng xa hơn bạn nghĩ"),
+       T4("주변 가연물을 치우거나 방화포로 덮고, 소화기를 가까이 둡니다.", "Alisin ang madaling masunog o takpan ng fire blanket, at ilapit ang extinguisher.", "เก็บของติดไฟรอบ ๆ หรือคลุมด้วยผ้ากันไฟ และวางถังดับเพลิงไว้ใกล้ ๆ", "Dọn vật dễ cháy hoặc phủ bạt chống cháy, để bình chữa cháy gần bên.")],
+      [T4("끝난 뒤 30분, 불씨를 확인합니다", "30 minuto pagkatapos, tingnan ang baga", "เสร็จแล้วตรวจลูกไฟอีก 30 นาที", "Xong việc, kiểm tra tàn lửa trong 30 phút"),
+       T4("불티는 한참 뒤에 불이 되기도 합니다. 작업이 끝나도 30분 이상 주변에 남은 불씨가 없는지 봅니다.", "Puwedeng magliyab ang spark kahit matagal na. Pagkatapos ng trabaho, tingnan nang 30 minuto o higit kung may natitirang baga.", "สะเก็ดไฟอาจกลายเป็นไฟหลังผ่านไปนาน ทำงานเสร็จแล้วให้ตรวจลูกไฟรอบ ๆ อย่างน้อย 30 นาที", "Tia lửa có thể bén cháy sau một lúc lâu. Xong việc, kiểm tra quanh đó ít nhất 30 phút xem còn tàn lửa không.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="110" y="116" width="120" height="8" fill="${C.steelD}"/><path d="M118 124v36M222 124v36" stroke="${C.steelD}" stroke-width="5"/>
+      <rect x="128" y="108" width="80" height="8" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/>
+      <g class="arc"><circle cx="168" cy="106" r="9" fill="#E8F4FF"/><circle cx="168" cy="106" r="4" fill="#fff"/></g>
+      <g class="fume">${Array.from({ length: 10 }, (_, i) => `<circle class="fu fu${i}" r="${5 + (i % 3) * 2}" fill="#8A929A" opacity=".55"/>`).join("")}</g>
+      <g class="x hood"><path d="M120 40h40" stroke="${C.steelD}" stroke-width="6"/><path d="M160 40l6 40" stroke="${C.steelD}" stroke-width="6"/><path d="M156 80h20l-4 12h-12z" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.5"/></g>
+      <g class="sparks">${Array.from({ length: 8 }, (_, i) => `<circle class="sp sp${i}" r="2" fill="#FFB020"/>`).join("")}</g>
+      ${boxes(30, 160, [[0, 40, 30], [6, 30, 22]])}
+      ${FLAME("fl", 46, 108, .8)}
+      <g class="x blanket"><path d="M24 160V100q22-12 52 0v60z" fill="#C8B26B" stroke="#8C7A3E" stroke-width="2"/></g>
+      ${worker(212, 160, { flip: true, arm: "low", rot: -8 })}
+      <rect x="194" y="74" width="16" height="16" rx="3" fill="#2D3740"/>
+      ${CLOCK("ck", 12, 24)}${NO("no", 214, 52)}${OK("ok", 120, 24)}${FLAME("ember", 70, 158, .3)}`,
+    dur: [3800, 3600, 3600], loop: [0, 0, 0], still: [3800, 3600, 3600],
+    draw(step, t, U) {
+      const arcOn = step < 2;
+      U.op(".arc", arcOn ? blink(t, 70) : 0);
+      for (let i = 0; i < 10; i++) {
+        const ph = ((t / 2200) + i / 10) % 1;
+        let x, y;
+        if (step === 0 && t > 1600) { const k = ez(ph); x = lp(168 + Math.sin(i) * 6, 166, k); y = lp(100, 88, k); U.op(".fu" + i, (1 - k) * .6); }
+        else { x = 168 + Math.sin(ph * 6 + i) * 8 + ph * 26; y = 100 - ph * 34; U.op(".fu" + i, step === 2 ? 0 : (1 - ph) * .6); }
+        U.at(".fu" + i, "cx", x.toFixed(1)); U.at(".fu" + i, "cy", y.toFixed(1));
+      }
+      if (step === 0) { U.op(".hood", t > 1200 ? 1 : 0); U.tf(".hood", `translate(0 ${lp(-30, 0, sg(t, 1200, 1600))})`); if (t < 1200) U.op(".no", 1); if (t > 2200) U.op(".ok", 1); }
+      for (let i = 0; i < 8; i++) {
+        const ph = ((t / 900) + i / 8) % 1, far = step === 1 && t < 2000;
+        const x = 168 - ph * (far ? 120 : 30) * (0.6 + (i % 4) * .15), y = 106 - Math.sin(ph * Math.PI) * (18 + i * 2) + ph * (far ? 50 : 10);
+        U.at(".sp" + i, "cx", x.toFixed(1)); U.at(".sp" + i, "cy", y.toFixed(1)); U.op(".sp" + i, arcOn ? 1 - ph * .5 : 0);
+      }
+      if (step === 1) { if (t > 900 && t < 2200) { U.op(".fl", 1); U.op(".no", 1); } U.op(".blanket", t > 2000 ? 1 : 0); U.tf(".blanket", `translate(0 ${lp(-50, 0, sg(t, 2000, 2400))})`); if (t > 2600) U.op(".ok", 1); }
+      if (step === 2) { U.op(".ck", 1); const m = Math.min(30, Math.floor(t / 100)); U.tx(".ckt", `⏱ ${m} / 30 min`); U.op(".ember", t < 2600 ? blink(t, 300) : 0); if (t > 3000) U.op(".ok", 1); }
+    }
+  });
+
+  window.MOTION_LIB2 = Object.assign(window.MOTION_LIB2 || {}, LIB);
+  window.MOTION_H = { mk, util, cl, sg, lp, ez, blink, OK, NO, TAG, LOCK, FLAME, BOOM, CLOCK, ARM, setArm, lifter, setLifter, T4 };
+})();
+
+// PART 2 모션그래픽 (2): 크레인, 지게차, 찍힘, 베임, 회전기계, 들기
+(function () {
+  const { mk, sg, lp, ez, blink, OK, NO, TAG, LOCK, BOOM, ARM, setArm, lifter, setLifter, T4 } = window.MOTION_H;
+  const LIB = {};
+
+  // ===== 천정크레인 =====
+  LIB.crane = mk({
+    steps: [
+      [T4("매단 짐 아래로는 절대 들어가지 않습니다", "Huwag kailanman pumasok sa ilalim ng nakabiting karga", "ห้ามเข้าไปใต้ของที่แขวนเด็ดขาด", "Tuyệt đối không đi vào dưới vật đang treo"),
+       T4("빨간 구역은 짐이 떨어질 수 있는 곳입니다. 짐이 지나갈 때는 멈춰서 기다리거나 돌아갑니다.", "Ang pulang lugar ay kung saan puwedeng bumagsak ang karga. Huminto at maghintay o umikot kapag dumadaan ang karga.", "เขตสีแดงคือที่ที่ของอาจตกลงมา เมื่อของผ่านให้หยุดรอหรือเดินอ้อม", "Vùng đỏ là nơi vật có thể rơi xuống. Khi vật đi qua, hãy dừng chờ hoặc đi vòng.")],
+      [T4("긴 판재는 한 줄로 걸지 않습니다", "Huwag isabit sa iisang lubid ang mahabang sheet", "แผ่นยาวห้ามแขวนเชือกเส้นเดียว", "Tấm dài không treo bằng một dây"),
+       T4("한 줄걸이는 기울어 미끄러집니다. 두 줄걸이로 무게중심을 맞추고 슬링 각도는 60° 이내로 합니다.", "Kapag iisa ang lubid, tumatagilid at dumudulas. Gumamit ng dalawang sling sa gitna ng bigat, at hanggang 60° lang ang anggulo.", "แขวนเส้นเดียวจะเอียงและลื่นหลุด ใช้สลิงสองเส้นให้ตรงจุดศูนย์ถ่วง และมุมสลิงไม่เกิน 60°", "Treo một dây sẽ nghiêng và trượt. Dùng hai dây cân đúng trọng tâm, góc cáp không quá 60°.")],
+      [T4("손 대신 유도 로프로 방향을 잡습니다", "Gumamit ng tag line sa halip na kamay", "ใช้เชือกนำทางแทนมือ", "Dùng dây dẫn hướng thay cho tay"),
+       T4("짐을 손으로 잡고 따라가면 기계·벽 사이에 끼입니다. 로프로 떨어져서 잡고, 신호수의 신호에 따릅니다.", "Kapag hinawakan at sinundan ng kamay ang karga, maiipit ka sa makina o pader. Hawakan ang lubid mula sa malayo at sundin ang signal person.", "ถ้าจับของเดินตาม จะถูกหนีบระหว่างเครื่องหรือกำแพง ให้จับเชือกจากระยะห่าง และทำตามสัญญาณของผู้ให้สัญญาณ", "Cầm tay vào vật mà đi theo sẽ bị kẹp giữa máy và tường. Giữ dây từ xa và làm theo tín hiệu của người ra hiệu.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="0" y="12" width="320" height="8" fill="${C.steelD}"/>
+      <ellipse class="x zone" cx="0" cy="162" rx="46" ry="7" fill="${C.red}" opacity=".35"/>
+      <g class="trolley"><rect x="-16" y="20" width="32" height="12" rx="2" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.5"/>
+        <path class="rope" stroke="${C.ink}" stroke-width="2" fill="none"/>
+        <g class="hook"><path d="M0 0v6a5 5 0 1 0 5 5" stroke="${C.ink}" stroke-width="3" fill="none"/></g></g>
+      <g class="ld"><path class="sl" stroke="${C.ink}" stroke-width="2" fill="none"/><rect class="pl" x="-26" y="0" width="52" height="16" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="2"/></g>
+      <g class="x long"><path class="sl2" stroke="${C.ink}" stroke-width="2" fill="none"/><rect x="-70" y="0" width="140" height="7" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/></g>
+      <text class="x ang" x="222" y="80" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="900" fill="#2E9D5B">≤ 60°</text>
+      <path class="x tagl" stroke="${C.vest}" stroke-width="2.5" fill="none" stroke-dasharray="4 2"/>
+      <g class="ped"></g>
+      ${BOOM("boom", 160, 150, .6)}${NO("no", 290, 40)}${OK("ok", 290, 40)}
+      <g class="pw">${worker(0, 160, { arm: "none" })}</g>${ARM("aP")}`,
+    dur: [4200, 4200, 3800], still: [3000, 4200, 3000],
+    draw(step, t, U) {
+      let tx = 160, hy = 70, ldVis = 1, pw = [300, 1], hand = null;
+      if (step === 0) {
+        tx = lp(60, 230, t / 4200); U.op(".zone", 1); U.at(".zone", "cx", tx);
+        const px = t < 1500 ? lp(320, 262, t / 1500) : t < 2600 ? 262 + Math.sin(t / 80) * .5 : lp(262, 300, sg(t, 2600, 3400));
+        pw = [px, -1]; U.op(".ok", t > 1600 ? 1 : 0); hand = [px - 6, 112];
+      } else if (step === 1) {
+        tx = 160; ldVis = 0; U.op(".long", 1);
+        if (t < 2000) { const tilt = lp(0, 28, sg(t, 300, 1400)), fall = sg(t, 1400, 1900); U.at(".sl2", "d", "M0 -40L0 0"); U.tf(".long", `translate(${160 + fall * 30} ${88 + fall * 30}) rotate(${tilt + fall * 6})`); if (t > 1700) { U.op(".boom", blink(t)); U.op(".no", 1); } }
+        else { U.at(".sl2", "d", "M0 -40L-44 0M0 -40L44 0"); U.tf(".long", `translate(160 ${lp(110, 88, sg(t, 2000, 2600))})`); U.op(".ang", t > 2500 ? 1 : 0); if (t > 2800) U.op(".ok", 1); }
+        pw = [300, -1]; hand = [294, 112];
+      } else {
+        tx = lp(120, 200, (Math.sin(t / 900) + 1) / 2 * sg(t, 0, 800)); U.op(".tagl", 1);
+        const px = tx - 92; pw = [px, 1];
+        U.at(".tagl", "d", `M${tx - 26} 100Q${tx - 60} 128 ${px + 18} 108`); hand = [px + 18, 108]; if (t > 1400) U.op(".ok", 1);
+      }
+      U.tf(".trolley", `translate(${tx.toFixed(1)} 0)`);
+      U.at(".rope", "d", `M0 32V${hy - 8}`); U.tf(".hook", `translate(0 ${hy - 8})`);
+      U.op(".ld", ldVis); U.tf(".ld", `translate(${tx.toFixed(1)} ${hy + 14})`); U.at(".sl", "d", "M0 -10L-22 0M0 -10L22 0");
+      if (step === 1) U.op(".trolley .rope", 1);
+      U.tf(".pw", `translate(${pw[0].toFixed(1)} 0) scale(${pw[1]} 1)`);
+      if (hand) setArm(U, "aP", pw[0], 99, hand[0], hand[1]);
+    }
+  });
+
+  // ===== 지게차 =====
+  const LOAD = boxes(76, -6, [[0, 30, 24], [2, 26, 22], [0, 28, 24]]);
+  LIB.fork = mk({
+    steps: [
+      [T4("짐이 앞을 가리면 사람이 보이지 않습니다", "Kapag tinakpan ng karga ang harap, hindi makikita ang tao", "ถ้าของบังข้างหน้า จะมองไม่เห็นคน", "Hàng che phía trước thì không thấy người"),
+       T4("높이 쌓은 짐에 가려 앞사람을 못 보고 칩니다. 지게차 사망사고에서 자주 나오는 장면입니다.", "Natatakpan ng mataas na karga kaya natatamaan ang tao sa harap. Karaniwan ito sa nakamamatay na aksidente sa forklift.", "ของที่ซ้อนสูงบังจนมองไม่เห็นคนข้างหน้าแล้วชน เป็นภาพที่พบบ่อยในอุบัติเหตุถึงตายจากรถยก", "Hàng chất cao che khuất nên tông vào người phía trước. Đây là cảnh hay gặp trong tai nạn chết người do xe nâng.")],
+      [T4("시야가 가리면 후진하거나 유도자를 둡니다", "Kapag natatakpan, umatras o gumamit ng gabay", "ถ้าบังทาง ให้ถอยหลังหรือมีผู้นำทาง", "Bị che tầm nhìn thì lùi xe hoặc có người dẫn đường"),
+       T4("뒤를 보며 후진으로 운전하고, 유도자의 신호에 멈춥니다. 보행자는 지게차 통로로 다니지 않습니다.", "Magmaneho nang paatras habang nakatingin sa likod, at huminto sa senyas ng gabay. Huwag maglakad sa daanan ng forklift.", "ขับถอยหลังโดยมองไปข้างหลัง และหยุดตามสัญญาณผู้นำทาง คนเดินเท้าห้ามเดินในทางรถยก", "Lái lùi và nhìn phía sau, dừng theo tín hiệu người dẫn đường. Người đi bộ không đi vào lối xe nâng.")],
+      [T4("내릴 때: 포크 내림 · 브레이크 · 열쇠", "Pagbaba: forks pababa · preno · susi", "ลงจากรถ: ลดงา · เบรกมือ · ถอดกุญแจ", "Rời xe: hạ càng · phanh tay · rút chìa"),
+       T4("포크를 바닥에 내리고 주차 브레이크를 걸고 열쇠를 뺍니다. 그래야 지게차가 굴러가거나 남이 몰지 않습니다.", "Ibaba ang forks sa sahig, i-hand brake, at alisin ang susi—para hindi gumulong o magamit ng iba.", "ลดงาลงพื้น ดึงเบรกมือ และถอดกุญแจ รถจะได้ไม่ไหลหรือมีคนอื่นขับ", "Hạ càng xuống sàn, kéo phanh tay và rút chìa khóa—để xe không tự trôi hay bị người khác lái.")]
+    ],
+    svg: () => `${bg()}
+      <path class="x cone" fill="#FFE27A" opacity=".45"/>
+      <g class="fk">${forklift(0, 160, { load: `<g class="fl">${LOAD}</g>` })}</g>
+      <g class="pw">${worker(0, 160, { arm: "down" })}</g>
+      <g class="x guide">${worker(0, 160, { arm: "up" })}</g>
+      ${BOOM("boom", 0, 110, .6)}${NO("no", 40, 30)}${OK("ok", 40, 30)}
+      <g class="x pk"><rect x="0" y="0" width="22" height="22" rx="4" fill="#2E6FA8"/><text x="11" y="16" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="900" fill="#fff">P</text></g>
+      <g class="x key"><circle cx="0" cy="0" r="5" fill="none" stroke="${C.vest}" stroke-width="3"/><path d="M5 0h10v4M11 0v3" stroke="${C.vest}" stroke-width="3"/></g>`,
+    dur: [3600, 3800, 3600], still: [2600, 3800, 3600],
+    draw(step, t, U) {
+      let fx = 60, px = 300, pf = -1, fl = 1, mastUp = 0;
+      if (step === 0) {
+        fx = lp(10, 150, sg(t, 0, 2400)); px = lp(320, 250, sg(t, 0, 2400));
+        U.op(".cone", 1); U.at(".cone", "d", `M${fx + 26} 108L${fx + 74} 72L${fx + 74} 126Z`);
+        if (t > 2300) { U.op(".boom", blink(t)); U.tf(".boom", `translate(${px - 160 - 5} 0)`); U.op(".no", 1); }
+      } else if (step === 1) {
+        fx = lp(170, 80, sg(t, 0, 2600)); px = 24; pf = 1;
+        U.op(".cone", 1); U.at(".cone", "d", `M${fx + 18} 106L${fx - 50} 80L${fx - 50} 140Z`);
+        U.op(".guide", 1); U.tf(".guide", "translate(36 0)"); U.op(".pw", 0); if (t > 2600) U.op(".ok", 1);
+      } else {
+        fx = 110; px = 300; fl = 0;
+        U.op(".pk", t > 900 ? 1 : 0); U.tf(".pk", `translate(${fx + 20} 30)`);
+        if (t > 1700) { U.op(".key", 1); U.tf(".key", `translate(${lp(fx + 30, 240, sg(t, 1700, 2500))} ${lp(110, 60, sg(t, 1700, 2500))})`); }
+        if (t > 2600) U.op(".ok", 1);
+      }
+      U.tf(".fk", `translate(${fx.toFixed(1)} 0)`); U.op(".fl", fl);
+      U.tf(".pw", `translate(${px.toFixed(1)} 0) scale(${pf} 1)`);
+      U.tf(".boom", step === 0 ? `translate(${(px - 14).toFixed(1)} 0)` : "");
+      if (step === 0) U.tf(".boom", `translate(${(px - 14).toFixed(1)} 0)`);
+    }
+  });
+
+  // ===== 찍힘 =====
+  LIB.crush = mk({
+    steps: [
+      [T4("놓친 판재는 발등으로 떨어집니다", "Sa paa bumabagsak ang nabitawang sheet", "แผ่นที่หลุดมือจะตกใส่หลังเท้า", "Tấm tuột tay sẽ rơi vào mu bàn chân"),
+       T4("작업 중에는 항상 안전화를 신습니다. 앞코의 보강재가 발가락을 지켜 줍니다.", "Laging magsuot ng safety shoes sa trabaho. Pinoprotektahan ng toe cap ang daliri ng paa.", "สวมรองเท้านิรภัยตลอดเวลาทำงาน หัวเหล็กที่หัวรองเท้าจะปกป้องนิ้วเท้า", "Luôn đi giày bảo hộ khi làm việc. Mũi giày gia cố sẽ bảo vệ ngón chân.")],
+      [T4("내려놓을 때는 받침목을 먼저 놓습니다", "Ilagay muna ang patungan bago ibaba", "วางไม้รองก่อนแล้วจึงวาง", "Đặt gỗ kê trước rồi mới hạ xuống"),
+       T4("받침목이 있으면 손가락이 판재 아래에 깔리지 않습니다. 판재는 옆을 잡고 내려놓습니다.", "Kapag may patungan, hindi maiipit ang daliri sa ilalim ng sheet. Hawakan sa gilid kapag ibinababa.", "มีไม้รอง นิ้วจะไม่ถูกทับใต้แผ่น จับที่ด้านข้างขณะวาง", "Có gỗ kê thì ngón tay không bị đè dưới tấm. Cầm ở mép bên khi hạ xuống.")],
+      [T4("대차는 당기지 말고 밉니다", "Itulak ang kariton, huwag hilahin", "รถเข็นให้ดัน อย่าดึง", "Xe đẩy thì đẩy, đừng kéo"),
+       T4("당기면 바퀴가 발뒤꿈치로 밀려 옵니다. 손잡이를 잡고 앞으로 밀면 발이 바퀴에서 멀어집니다.", "Kapag hinila, papunta sa sakong ang gulong. Itulak gamit ang hawakan para malayo ang paa sa gulong.", "ถ้าดึง ล้อจะชนส้นเท้า จับที่จับแล้วดันไปข้างหน้า เท้าจะอยู่ห่างจากล้อ", "Kéo thì bánh xe sẽ cán vào gót chân. Cầm tay nắm đẩy về phía trước thì chân tránh xa bánh xe.")]
+    ],
+    svg: () => `${bg()}
+      <g class="x dun"><rect x="104" y="150" width="14" height="10" fill="${C.box}" stroke="${C.boxD}" stroke-width="1.5"/><rect x="182" y="150" width="14" height="10" fill="${C.box}" stroke="${C.boxD}" stroke-width="1.5"/></g>
+      <g class="pw">${worker(0, 160, { arm: "carry" })}</g>
+      <rect class="plate" x="-36" y="-3" width="72" height="6" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/>
+      <g class="x cap"><path d="M0 -8h9a4 4 0 0 1 4 4v4H0z" fill="#9CD3F5" stroke="#2E6FA8" stroke-width="2"/></g>
+      <g class="x cart"><rect x="-40" y="-26" width="80" height="8" fill="${C.steelD}"/><circle cx="-30" cy="-8" r="8" fill="${C.ink}"/><circle cx="30" cy="-8" r="8" fill="${C.ink}"/><path class="hdl" d="M40 -24l10-30" stroke="${C.ink}" stroke-width="4"/>${boxes(-34, -26, [[0, 30, 18], [34, 32, 20]])}</g>
+      ${BOOM("boom", 0, 150, .5)}${NO("no", 40, 30)}${OK("ok", 40, 30)}`,
+    dur: [3200, 3600, 4400], still: [3200, 3600, 4400],
+    draw(step, t, U) {
+      let wx = 150, wf = 1, pl = null;
+      if (step === 0) {
+        const f = ez(sg(t, 700, 1200));
+        pl = [lp(172, 168, f), lp(104, 154, f), lp(0, 10, f)];
+        if (t > 1150 && t < 1900) U.op(".boom", blink(t)), U.tf(".boom", "translate(166 0)");
+        U.op(".cap", t > 1300 ? blink(t, 200) : 0); U.tf(".cap", `translate(${wx + 9} 160)`); if (t > 1900) U.op(".ok", 1), U.op(".cap", 1);
+      } else if (step === 1) {
+        U.op(".dun", 1); U.tf(".dun", `translate(0 ${lp(-40, 0, sg(t, 0, 800))})`); U.at(".dun", "opacity", sg(t, 0, 300));
+        wx = 150; const d = ez(sg(t, 900, 2200)); pl = [150, lp(104, 147, d), 0]; if (t > 2400) U.op(".ok", 1);
+      } else {
+        U.op(".cart", 1); U.op(".plate", 0);
+        if (t < 2000) { const cx = lp(150, 214, sg(t, 0, 1600)); U.tf(".cart", `translate(${cx} 160)`); wx = cx + 66; wf = -1; U.tf(".hdl", ""); if (t > 1400) { U.op(".boom", blink(t)); U.tf(".boom", `translate(${cx + 30} 0)`); U.op(".no", 1); } }
+        else { const cx = lp(110, 190, sg(t, 2200, 3800)); U.tf(".cart", `translate(${cx} 160) scale(-1 1)`); wx = cx - 66; wf = 1; if (t > 3000) U.op(".ok", 1); }
+      }
+      U.tf(".pw", `translate(${wx} 0) scale(${wf} 1)`);
+      if (pl) { U.op(".plate", 1); U.tf(".plate", `translate(${pl[0]} ${pl[1]}) rotate(${pl[2]})`); }
+    }
+  });
+
+  // ===== 베임 =====
+  LIB.cut = mk({
+    steps: [
+      [T4("판재 모서리는 칼날과 같습니다", "Parang talim ang gilid ng sheet", "ขอบแผ่นโลหะคมเหมือนใบมีด", "Mép tấm kim loại sắc như dao"),
+       T4("맨손으로 모서리를 쓸면 바로 베입니다. 판재를 다룰 때는 베임방지 장갑을 끼고, 버(거스러미)는 디버링합니다.", "Kapag hinaplos ng hubad na kamay, mahihiwa agad. Magsuot ng cut-resistant gloves at alisin ang burr.", "ลูบขอบด้วยมือเปล่าจะบาดทันที เวลาจับแผ่นให้สวมถุงมือกันบาด และลบครีบคม (ดีเบอร์ริ่ง)", "Vuốt mép bằng tay trần là bị đứt ngay. Khi cầm tấm hãy đeo găng chống cắt và mài bavia.")],
+      [T4("커터는 몸 바깥쪽으로 밉니다", "Itulak ang cutter palayo sa katawan", "ดันคัตเตอร์ออกจากตัว", "Đẩy dao rọc ra phía ngoài người"),
+       T4("몸 쪽으로 당기다 미끄러지면 손과 배를 다칩니다. 다 쓰면 날을 집어넣습니다.", "Kapag hinila papunta sa katawan at dumulas, masusugatan ang kamay at tiyan. Itago ang talim pagkatapos.", "ดึงเข้าหาตัวแล้วลื่น จะบาดมือและท้อง ใช้เสร็จแล้วเก็บใบมีด", "Kéo về phía người mà trượt sẽ đứt tay và bụng. Dùng xong thu lưỡi dao lại.")],
+      [T4("스크랩은 맨손이 아니라 집게로", "Sipit, hindi hubad na kamay, sa scrap", "เศษโลหะใช้คีมคีบ ไม่ใช้มือเปล่า", "Phế liệu dùng kẹp, không dùng tay trần"),
+       T4("날카로운 스크랩은 집게로 집어 전용 통에 넣습니다. 판재는 끌지 말고 들어서 옮깁니다.", "Damputin ang matulis na scrap gamit ang sipit at ilagay sa lalagyan. Buhatin ang sheet, huwag kaladkarin.", "เศษคมใช้คีมคีบใส่ถังเฉพาะ แผ่นโลหะให้ยกย้าย อย่าลาก", "Phế liệu sắc dùng kẹp gắp bỏ vào thùng riêng. Tấm kim loại phải nhấc lên mà chuyển, đừng kéo lê.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="40" y="118" width="190" height="8" fill="${C.steelD}"/><path d="M50 126v34M220 126v34" stroke="${C.steelD}" stroke-width="5"/>
+      <g class="x sheet"><rect x="60" y="108" width="140" height="10" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/><path d="M200 108l4 2-4 2 4 2-4 2" stroke="${C.steelD}" stroke-width="1" fill="none"/></g>
+      <g class="x hand"><path d="M0 0h18a6 6 0 0 1 0 12H0z" class="hf" fill="${C.skin}" stroke="#0003"/><g class="x glv">${[3, 8, 13].map(x => `<circle cx="${x}" cy="6" r="1.2" fill="#6B7783"/>`).join("")}</g></g>
+      <path class="x cutl" d="M150 106h40" stroke="${C.red}" stroke-width="3" stroke-linecap="round"/>
+      <g class="x box"><rect x="70" y="86" width="120" height="22" fill="${C.box}" stroke="${C.boxD}" stroke-width="1.5"/></g>
+      <g class="x knife"><rect x="-14" y="-4" width="22" height="8" rx="2" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.2"/><path d="M8 -3l10 3-10 3z" fill="${C.steelL}" stroke="${C.ink}" stroke-width="1"/></g>
+      <path class="x arw" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <g class="x scr">${[[178, 113], [194, 114], [210, 112]].map(([x, y], i) => `<path class="s${i}" d="M${x} ${y}l8-4 4 5-9 3z" fill="#9AA4AD" stroke="${C.ink}" stroke-width="1"/>`).join("")}</g>
+      <g class="x bin"><path d="M234 118h36l-5 42h-26z" fill="#2E6FA8" stroke="${C.ink}" stroke-width="1.5"/></g>
+      <path class="x tong" stroke="${C.ink}" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g class="wk">${worker(0, 160, { flip: true, arm: "none" })}</g>${ARM("aW")}
+      ${BOOM("boom", 190, 104, .45)}${NO("no", 40, 30)}${OK("ok", 40, 30)}`,
+    dur: [4000, 3800, 4200], still: [4000, 3800, 4200],
+    draw(step, t, U) {
+      let hand = [240, 118], wx = 266;
+      if (step === 0) {
+        U.op(".sheet", 1); U.op(".hand", 1); const first = t < 2000, k = first ? sg(t, 200, 1200) : sg(t, 2300, 3300);
+        const hx = lp(140, 196, k); U.tf(".hand", `translate(${hx} 101)`); U.at(".hf", "fill", first ? C.skin : "#E9ECEF"); U.op(".glv", first ? 0 : 1);
+        if (first && t > 1100) { U.op(".cutl", 1); U.op(".no", 1); } if (!first && t > 3300) U.op(".ok", 1);
+        hand = [hx + 18, 106];
+      } else if (step === 1) {
+        U.op(".box", 1); U.op(".knife", 1); U.op(".arw", 1);
+        const bad = t < 1900, k = bad ? sg(t, 200, 1400) : sg(t, 2100, 3300);
+        const kx = bad ? lp(110, 186, k) : lp(186, 110, k);
+        U.tf(".knife", `translate(${kx} 86) scale(${bad ? 1 : -1} 1)`);
+        U.at(".arw", "d", bad ? "M120 72H196m-8-6 8 6-8 6" : "M196 72H120m8-6-8 6 8 6"); U.at(".arw", "stroke", bad ? C.red : "#2E9D5B");
+        if (bad && t > 1300) { U.op(".boom", blink(t)); U.op(".no", 1); } if (!bad && t > 3300) U.op(".ok", 1);
+        hand = [kx + (bad ? -12 : 12), 88];
+      } else {
+        U.op(".scr", 1); U.op(".bin", 1); U.op(".tong", 1);
+        const i = Math.min(2, Math.floor(t / 1300)), k = (t - i * 1300) / 1300;
+        [0, 1, 2].forEach(j => U.op(".s" + j, j < i ? 0 : 1));
+        wx = 300; const sx = [182, 198, 214][i], tx = k < .5 ? lp(250, sx, k * 2) : lp(sx, 252, (k - .5) * 2), ty = k < .5 ? lp(100, 110, k * 2) : lp(110, 122, (k - .5) * 2);
+        U.at(".tong", "d", `M280 104L${tx} ${ty}`); U.tf(".s" + i, k > .5 ? `translate(${tx - sx} ${ty - 112})` : "");
+        hand = [280, 104]; if (t > 3700) U.op(".ok", 1);
+      }
+      U.tf(".wk", `translate(${wx} 0)`); setArm(U, "aW", wx, 99, hand[0], hand[1]);
+    }
+  });
+
+  // ===== 회전하는 기계 =====
+  LIB.rot = mk({
+    steps: [
+      [T4("면장갑은 회전체에 말려 들어갑니다", "Napupulupot ang cotton gloves sa umiikot na bahagi", "ถุงมือผ้าถูกม้วนเข้าไปในส่วนหมุน", "Găng tay vải bị cuốn vào phần quay"),
+       T4("실 한 가닥이 걸리면 손 전체가 순식간에 끌려 들어갑니다. 회전체 작업에는 면장갑을 끼지 않고, 몸에 맞는 작업복을 입습니다.", "Kapag nasabit ang isang hibla, mahihila agad ang buong kamay. Huwag magsuot ng cotton gloves sa umiikot na makina, at magsuot ng sakto sa katawan na damit.", "ด้ายเส้นเดียวติด มือทั้งมือจะถูกดึงเข้าไปในพริบตา ห้ามสวมถุงมือผ้ากับเครื่องหมุน และสวมชุดทำงานที่พอดีตัว", "Một sợi chỉ vướng là cả bàn tay bị cuốn vào trong chớp mắt. Không đeo găng vải khi làm với máy quay, mặc đồ bảo hộ vừa người.")],
+      [T4("말려 들어가는 곳에는 덮개", "Takip sa lugar na nakakapulupot", "ติดฝาครอบที่จุดม้วนเข้า", "Lắp nắp che chỗ bị cuốn"),
+       T4("척·벨트·기어처럼 말려 들어가는 부분에는 덮개를 달고, 떼어 내지 않습니다.", "Lagyan ng takip ang chuck, belt at gear at huwag tanggalin.", "ติดฝาครอบที่หัวจับ สายพาน และเฟือง และห้ามถอดออก", "Lắp nắp che cho mâm cặp, dây đai, bánh răng và không được tháo ra.")],
+      [T4("칩은 멈춘 뒤 브러시로", "Brush sa chips, kapag nakatigil na", "เศษโลหะใช้แปรงหลังเครื่องหยุด", "Phoi dùng chổi sau khi máy dừng"),
+       T4("도는 중에 손으로 칩을 치우면 회전축에 감깁니다. 기계를 멈추고 브러시로 치웁니다.", "Kapag inalis ng kamay ang chips habang umiikot, mapupulupot ka. Patigilin ang makina at gumamit ng brush.", "ถ้าใช้มือเก็บเศษขณะเครื่องหมุน จะถูกพันเข้าแกน หยุดเครื่องแล้วใช้แปรง", "Dùng tay gạt phoi khi máy đang quay sẽ bị cuốn vào trục. Dừng máy rồi dùng chổi.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="30" y="64" width="64" height="70" rx="4" fill="${C.mach}"/><rect x="24" y="134" width="236" height="10" fill="${C.machD}"/><path d="M40 144v16M250 144v16" stroke="${C.machD}" stroke-width="6"/>
+      <g class="belt"><circle cx="46" cy="44" r="10" fill="${C.steel}" stroke="${C.ink}" stroke-width="1.5"/><circle cx="76" cy="80" r="12" fill="${C.steel}" stroke="${C.ink}" stroke-width="1.5"/><path class="bl" d="M38 50L66 88M56 40L86 74" stroke="${C.ink}" stroke-width="3" stroke-dasharray="5 4"/></g>
+      <g class="x bcov"><path d="M28 30h40l26 40v20H60L28 46z" fill="${C.vest}" stroke="${C.ink}" stroke-width="2" opacity=".95"/></g>
+      <g class="chuck"><circle cx="110" cy="100" r="20" fill="${C.steelD}" stroke="${C.ink}" stroke-width="2"/>${[0, 120, 240].map(a => `<rect x="106" y="80" width="8" height="10" fill="${C.steelL}" transform="rotate(${a} 110 100)"/>`).join("")}</g>
+      <rect x="128" y="94" width="96" height="12" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/>
+      <path class="bar" d="M132 94v12M146 94v12M160 94v12M174 94v12M188 94v12M202 94v12M216 94v12" stroke="${C.steelD}" stroke-width="2"/>
+      <g class="x chips">${[0, 1, 2].map(i => `<path d="M${150 + i * 18} 108c4 6 -6 8 -2 14s8 2 4 8" stroke="#B9C2CA" stroke-width="2" fill="none"/>`).join("")}</g>
+      <g class="x gcov"><path d="M86 74h48v52H86z" fill="#7EC0E8" opacity=".45" stroke="#2E6FA8" stroke-width="2"/></g>
+      <g class="x brush"><rect x="-4" y="-22" width="6" height="22" fill="${C.box}"/><rect x="-8" y="0" width="14" height="8" fill="${C.ink}"/></g>
+      ${worker(240, 160, { flip: true, arm: "none" })}${ARM("aW")}
+      ${TAG("stop", 230, 30, "STOP")}${BOOM("boom", 132, 100, .55)}${NO("no", 40, 30)}${OK("ok", 160, 40)}`,
+    dur: [3000, 3200, 3800], still: [2100, 3200, 3800],
+    draw(step, t, U) {
+      let spin = true, hand = [222, 112], glove = "#fff";
+      if (step === 0) { const k = sg(t, 300, 1300); hand = [lp(222, 186, k), lp(112, 104, k)]; if (t > 1300) { const p = sg(t, 1300, 1800); hand = [lp(186, 134, p), lp(104, 98, p)]; U.op(".boom", blink(t)); U.op(".no", 1); } }
+      if (step === 1) { U.op(".gcov", t > 300 ? 1 : 0); U.tf(".gcov", `translate(0 ${lp(-60, 0, ez(sg(t, 300, 1000)))})`); U.op(".bcov", t > 1200 ? 1 : 0); U.tf(".bcov", `translate(${lp(-60, 0, ez(sg(t, 1200, 1900)))} 0)`); if (t > 2100) U.op(".ok", 1); glove = C.skin; }
+      if (step === 2) { spin = t < 700; U.op(".stop", t > 700 ? 1 : 0); U.op(".gcov", 1); U.op(".bcov", 1); const sw = sg(t, 1200, 2800); U.op(".chips", 1 - sw); U.op(".brush", t > 1000 ? 1 : 0); const bx = lp(150, 210, (Math.sin(t / 160) + 1) / 2); U.tf(".brush", `translate(${bx} 112)`); hand = [bx + 2, 92]; glove = C.skin; if (t > 2900) U.op(".ok", 1); }
+      const a = spin ? (performance.now() / 4) % 360 : 0;
+      U.tf(".chuck", `rotate(${a} 110 100)`); U.at(".bar", "stroke-dashoffset", 0); U.tf(".bar", spin ? `translate(${(performance.now() / 40) % 14 - 7} 0)` : "");
+      U.at(".bl", "stroke-dashoffset", spin ? -performance.now() / 20 : 0);
+      setArm(U, "aW", 240, 99, hand[0], hand[1], glove);
+    }
+  });
+
+  // ===== 무거운 물건 들기 =====
+  LIB.lift = mk({
+    steps: [
+      [T4("허리를 굽혀 들면 허리를 다칩니다", "Masasaktan ang likod kapag yumuko para bumuhat", "ก้มหลังยกของ หลังจะบาดเจ็บ", "Cúi lưng nâng đồ sẽ đau lưng"),
+       T4("무릎을 편 채 허리만 굽혀 들면 허리에 큰 힘이 걸립니다. 들고 나서 허리를 비트는 것도 위험합니다.", "Kapag tuwid ang tuhod at likod lang ang yumuko, malaki ang puwersa sa likod. Mapanganib din ang pagpilipit ng baywang.", "ยืดเข่าแล้วก้มแต่หลัง แรงจะลงที่หลังมาก การบิดเอวหลังยกก็อันตราย", "Thẳng gối mà chỉ cúi lưng thì lưng chịu lực rất lớn. Vặn người sau khi nâng cũng nguy hiểm.")],
+      [T4("무릎을 굽히고, 허리는 펴고, 몸에 붙여", "Ibaluktot ang tuhod, tuwid ang likod, idikit sa katawan", "งอเข่า หลังตรง ถือชิดตัว", "Gập gối, thẳng lưng, ôm sát người"),
+       T4("물건 가까이 서서 무릎을 굽히고 다리 힘으로 천천히 일어납니다. 물건은 몸에 붙여 듭니다.", "Tumayo malapit sa bagay, ibaluktot ang tuhod at dahan-dahang tumayo gamit ang lakas ng binti. Idikit sa katawan ang bagay.", "ยืนใกล้ของ งอเข่า แล้วลุกช้า ๆ ด้วยแรงขา ถือของชิดตัว", "Đứng gần vật, gập gối rồi từ từ đứng dậy bằng sức chân. Ôm vật sát người.")],
+      [T4("크고 무거운 판재는 2인 1조", "Dalawahan sa malaki at mabigat na sheet", "แผ่นใหญ่และหนักทำ 2 คน", "Tấm to và nặng thì 2 người"),
+       T4("혼자 들기 어려운 판재는 두 사람이 함께 들거나, 리프터·크레인 같은 운반기구를 씁니다.", "Kung mahirap buhatin mag-isa, buhatin nang dalawahan o gumamit ng lifter o crane.", "แผ่นที่ยกคนเดียวลำบาก ให้ยกสองคน หรือใช้อุปกรณ์ขนย้ายเช่นลิฟเตอร์หรือเครน", "Tấm khó nâng một mình thì hai người cùng nâng, hoặc dùng thiết bị nâng như xe nâng tay, cẩu.")]
+    ],
+    svg: () => `${bg()}
+      <g class="x stoop">${worker(140, 160, { arm: "low", bend: 70 })}<path d="M128 106q12 -18 30 -6" stroke="${C.red}" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      ${lifter("lf")}
+      <g class="bx"><rect x="-13" y="-11" width="26" height="22" fill="${C.box}" stroke="${C.boxD}" stroke-width="2"/></g>
+      <g class="x two">${worker(70, 160, { arm: "carry" })}${worker(250, 160, { flip: true, arm: "carry" })}<rect x="88" y="98" width="144" height="6" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="1.5"/></g>
+      ${NO("no", 40, 30)}${OK("ok", 40, 30)}`,
+    dur: [3000, 3200, 2600], loop: [0, 0, 0], still: [2000, 3200, 2600],
+    draw(step, t, U) {
+      U.op(".lf", 0); U.op(".bx", 1);
+      if (step === 0) { U.op(".stoop", 1); U.tf(".bx", `translate(176 ${lp(149, 130, sg(t, 800, 1800))})`); if (t > 1300) U.op(".no", 1); }
+      if (step === 1) {
+        U.op(".lf", 1); const k = ez(sg(t, 900, 2500));
+        setLifter(U, "lf", 150, 160, k, lp(-8, 0, k));
+        const hipY = 160 - lp(22, 38, k); U.tf(".bx", `translate(${150 + 18 + 6} ${hipY - 6 + 4})`);
+        if (t > 2500) U.op(".ok", 1);
+      }
+      if (step === 2) { U.op(".bx", 0); U.op(".two", 1); U.tf(".two", `translate(${lp(-30, 0, sg(t, 0, 1600))} 0)`); if (t > 1600) U.op(".ok", 1); }
+    }
+  });
+
+  window.MOTION_LIB2 = Object.assign(window.MOTION_LIB2 || {}, LIB);
+})();
+
+// PART 2 모션그래픽 (3): 사다리·높은 곳, 전기, 화재·폭발, 밀폐공간 + 단원 연결
+(function () {
+  const { mk, sg, lp, ez, blink, OK, NO, TAG, LOCK, FLAME, BOOM, ARM, setArm, T4 } = window.MOTION_H;
+  const LIB = {};
+  const W = (c, o) => `<g class="${c}">${worker(0, 0, o)}</g>`;
+
+  // ===== 높은 곳 작업 =====
+  const LAD = (() => { let s = `<path d="M124 160L176 76M138 160L190 76" stroke="${C.steelD}" stroke-width="4"/>`; for (let i = 1; i < 8; i++) { const k = i / 8; s += `<path d="M${124 + 52 * k} ${160 - 84 * k}h14" stroke="${C.steelD}" stroke-width="3"/>`; } return s; })();
+  LIB.ladder = mk({
+    steps: [
+      [T4("물건을 들고 사다리를 오르지 않습니다", "Huwag umakyat sa hagdan na may bitbit", "ห้ามถือของปีนบันได", "Không cầm đồ khi leo thang"),
+       T4("한 손이 막히면 균형을 잃고 떨어집니다. 사다리는 항상 두 손으로 잡고 오르내립니다.", "Kapag isang kamay lang ang nakahawak, mawawalan ka ng balanse at mahuhulog. Laging dalawang kamay sa hagdan.", "ถ้ามือข้างหนึ่งไม่ว่าง จะเสียการทรงตัวและตก ปีนขึ้นลงบันไดด้วยสองมือเสมอ", "Một tay bận là mất thăng bằng và ngã. Luôn bám thang bằng hai tay khi lên xuống.")],
+      [T4("두 손으로, 위는 60cm 이상, 아래는 잡아 주기", "Dalawang kamay, 60 cm pataas sa itaas, may hahawak sa ibaba", "สองมือ ปลายบนเกิน 60 ซม. มีคนจับด้านล่าง", "Hai tay, đầu trên nhô 60 cm, có người giữ dưới"),
+       T4("사다리 위쪽 끝은 걸친 곳보다 60cm 이상 올라오게 하고, 아래는 미끄럼을 막거나 다른 사람이 잡아 줍니다. 물건은 따로 올립니다.", "Dapat lumampas nang 60 cm o higit ang dulo ng hagdan, at may anti-slip o taong humahawak sa ibaba. Iakyat nang hiwalay ang gamit.", "ปลายบันไดต้องสูงกว่าจุดพาดอย่างน้อย 60 ซม. ด้านล่างกันลื่นหรือมีคนจับ ส่วนของให้ส่งขึ้นแยกต่างหาก", "Đầu thang phải nhô cao hơn chỗ tựa ít nhất 60 cm, chân thang chống trượt hoặc có người giữ. Đồ đạc chuyển lên riêng.")],
+      [T4("떨어질 수 있는 곳에는 안전난간", "Barandilya sa lugar na puwedeng mahulog", "ที่ที่อาจตกได้ ต้องมีราวกันตก", "Nơi có thể ngã phải có lan can"),
+       T4("작업발판 끝이나 개구부처럼 떨어질 위험이 있는 곳에는 튼튼한 안전난간을 설치하고, 안전모를 씁니다.", "Maglagay ng matibay na barandilya sa gilid ng platform o butas, at magsuot ng helmet.", "ติดราวกันตกที่แข็งแรงที่ขอบนั่งร้านหรือช่องเปิด และสวมหมวกนิรภัย", "Lắp lan can chắc chắn ở mép sàn thao tác hoặc lỗ hở, và đội mũ bảo hộ.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="180" y="90" width="140" height="8" fill="${C.steelD}"/><path d="M192 98v62M310 98v62" stroke="${C.steelD}" stroke-width="5"/>
+      ${LAD}
+      <g class="x rail"><path d="M184 90V52M250 90V52M316 90V52M184 54H318M184 72H318" stroke="${C.vest}" stroke-width="4" stroke-linecap="round"/></g>
+      <g class="x m60"><path d="M200 90v-14" stroke="#2E9D5B" stroke-width="2"/><path d="M196 90h8M196 76h8" stroke="#2E9D5B" stroke-width="2"/><text x="206" y="86" font-family="sans-serif" font-size="10" font-weight="900" fill="#2E9D5B">60cm+</text></g>
+      ${W("cl", { arm: "up" })}
+      <g class="x cbox"><rect x="-10" y="-9" width="20" height="18" fill="${C.box}" stroke="${C.boxD}" stroke-width="2"/></g>
+      ${W("x help", { flip: true, arm: "reach" })}
+      ${W("x top", { arm: "down" })}
+      ${NO("no", 40, 30)}${OK("ok", 40, 30)}`,
+    dur: [3600, 3600, 3400], still: [2600, 3600, 3400],
+    draw(step, t, U) {
+      if (step < 2) {
+        const k = lp(0, step === 0 ? .6 : .7, sg(t, 0, 2600)), wob = step === 0 && t > 1600 ? Math.sin(t / 60) * lp(0, 6, sg(t, 1600, 2600)) : 0;
+        const x = 128 + 52 * k, y = 160 - 84 * k;
+        U.op(".cl", 1); U.tf(".cl", `translate(${x} ${y}) rotate(${wob} 0 -40)`);
+        if (step === 0) { U.op(".cbox", 1); U.tf(".cbox", `translate(${x - 18} ${y - 50}) rotate(${wob})`); if (t > 1800) U.op(".no", 1); }
+        else { U.op(".help", 1); U.tf(".help", "translate(112 160)"); U.op(".m60", 1); if (t > 2600) U.op(".ok", 1); }
+      } else {
+        U.op(".cl", 0); U.op(".top", 1); const x = lp(196, 222, sg(t, 0, 1400)); U.tf(".top", `translate(${x} 90)`);
+        if (t < 1400) U.op(".no", t > 600 ? 1 : 0);
+        U.op(".rail", t > 1300 ? 1 : 0); U.tf(".rail", `translate(0 ${lp(30, 0, ez(sg(t, 1300, 2000)))})`);
+        if (t > 2100) U.op(".ok", 1);
+      }
+    }
+  });
+
+  // ===== 전기 =====
+  LIB.elec = mk({
+    steps: [
+      [T4("전기가 흐르는 곳에 손을 넣으면 감전됩니다", "Makukuryente kapag ipinasok ang kamay sa may kuryente", "ยื่นมือเข้าไปที่มีไฟฟ้าไหลจะถูกไฟดูด", "Thò tay vào chỗ có điện sẽ bị điện giật"),
+       T4("분전반과 기계 전기함은 자격이 있는 전기 담당자만 엽니다. 젖은 손으로 플러그·스위치를 만지지 않습니다.", "Ang electrician lang ang magbubukas ng panel at electrical box. Huwag hawakan ang plug o switch nang basa ang kamay.", "ตู้ไฟและกล่องไฟของเครื่อง ให้ช่างไฟที่มีคุณสมบัติเท่านั้นเปิด ห้ามจับปลั๊กหรือสวิตช์ด้วยมือเปียก", "Tủ điện và hộp điện máy chỉ thợ điện có chứng chỉ được mở. Không chạm phích cắm, công tắc bằng tay ướt.")],
+      [T4("정비 전: 차단 → 잠금 → 전압 확인", "Bago ayusin: patayin → i-lock → suriin ang boltahe", "ก่อนซ่อม: ตัดไฟ → ล็อก → วัดแรงดัน", "Trước khi sửa: ngắt → khóa → đo điện áp"),
+       T4("차단기를 내리고 내 자물쇠와 표지를 겁니다. 검전기로 전기가 없는 것(0V)을 확인한 뒤에 손을 댑니다.", "Ibaba ang breaker at ikabit ang sariling kandado at tag. Tiyaking 0 V gamit ang tester bago humawak.", "ปลดเบรกเกอร์ ล็อกกุญแจของเราและแขวนป้าย วัดด้วยเครื่องตรวจไฟว่าไม่มีไฟ (0V) ก่อนจับ", "Hạ cầu dao, gắn khóa và thẻ của mình. Dùng bút thử điện xác nhận không có điện (0V) rồi mới chạm.")],
+      [T4("누전차단기는 한 달에 한 번 시험", "Subukan ang ELCB minsan isang buwan", "ทดสอบเครื่องตัดไฟรั่วเดือนละครั้ง", "Thử cầu dao chống giật mỗi tháng một lần"),
+       T4("시험 버튼을 눌러 바로 떨어지는지 확인합니다(담당자). 떨어지지 않으면 고장이니 바로 알립니다.", "Pindutin ang test button at tingnan kung agad na babagsak (electrician). Kung hindi, sira ito—iulat agad.", "กดปุ่มทดสอบ ดูว่าตัดทันทีหรือไม่ (ผู้รับผิดชอบ) ถ้าไม่ตัดแสดงว่าเสีย ให้แจ้งทันที", "Bấm nút thử xem có nhảy ngay không (người phụ trách). Không nhảy là hỏng, báo ngay.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="140" y="30" width="100" height="120" rx="4" fill="#C9D1D8" stroke="${C.steelD}" stroke-width="3"/>
+      <rect x="150" y="40" width="80" height="100" fill="#EEF2F5"/>
+      <path class="bus" d="M160 104h60M160 114h60M160 124h60" stroke="#C87533" stroke-width="4"/>
+      ${[0, 1, 2].map(i => `<rect x="${158 + i * 22}" y="52" width="16" height="30" rx="3" fill="${C.ink}"/><g class="lv${i}"><rect x="${162 + i * 22}" y="54" width="8" height="12" rx="2" fill="${i ? "#9AA4AD" : C.red}"/></g>`).join("")}
+      <circle class="tbtn" cx="211" cy="90" r="4" fill="${C.vest}" stroke="${C.ink}" stroke-width="1"/>
+      <g class="zap">${[[172, 98], [200, 120]].map(([x, y]) => `<path d="M${x} ${y}l-5 9h5l-4 9 10-12h-5l4-6z" fill="#FFD23F" stroke="${C.ink}" stroke-width=".8"/>`).join("")}</g>
+      <g class="door"><rect x="140" y="30" width="100" height="120" rx="4" fill="#B7C1CA" stroke="${C.steelD}" stroke-width="3"/><path d="M190 80l-8 14h8l-6 12" stroke="${C.vest}" stroke-width="3" fill="none"/></g>
+      ${LOCK("lk", 158, 66)}
+      <g class="x tester"><rect x="-6" y="-22" width="12" height="22" rx="3" fill="${C.vest}" stroke="${C.ink}" stroke-width="1"/><rect x="-4" y="-18" width="8" height="7" fill="#1E3A2A"/><text x="0" y="-12.5" text-anchor="middle" font-family="sans-serif" font-size="5" font-weight="900" fill="#7CFFB2">0V</text><path d="M0 0v8" stroke="${C.ink}" stroke-width="2"/></g>
+      <g class="x cal"><rect x="76" y="26" width="44" height="40" rx="5" fill="#fff" stroke="${C.ink}" stroke-width="1.5"/><rect x="76" y="26" width="44" height="12" rx="5" fill="${C.red}"/><text x="98" y="60" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="900" fill="${C.ink}">1</text></g>
+      ${TAG("test", 246, 82, "TEST", C.vest, C.ink)}
+      ${worker(276, 160, { flip: true, arm: "none" })}${ARM("aW")}
+      ${BOOM("boom", 186, 112, .6)}${NO("no", 40, 30)}${OK("ok", 40, 30)}`,
+    dur: [3000, 3800, 3200], still: [2200, 3800, 3200],
+    draw(step, t, U) {
+      let door = 1, hand = [256, 116], lv0 = 0, zap = 1, lv1 = 0, glove = C.skin;
+      if (step === 0) { const k = sg(t, 400, 1400); hand = [lp(256, 190, k), lp(116, 112, k)]; if (t > 1400) { U.op(".boom", blink(t)); U.op(".no", 1); } }
+      if (step === 1) {
+        hand = t < 900 ? [lp(256, 166, sg(t, 0, 700)), lp(116, 62, sg(t, 0, 700))] : t < 1800 ? [166, 66] : [lp(166, 196, sg(t, 1800, 2400)), lp(66, 108, sg(t, 1800, 2400))];
+        lv0 = t > 700 ? 1 : 0; zap = lv0 ? 0 : 1; U.op(".lk", t > 1200 ? 1 : 0);
+        if (t > 1800) { U.op(".tester", 1); U.tf(".tester", `translate(${hand[0]} ${hand[1] - 2})`); } if (t > 2800) U.op(".ok", 1); glove = "#E9ECEF";
+      }
+      if (step === 2) { U.op(".cal", 1); hand = [lp(256, 213, sg(t, 300, 1100)), lp(116, 90, sg(t, 300, 1100))]; if (t > 1100 && t < 1500) U.op(".test", 1); lv1 = t > 1300 ? 1 : 0; zap = lv1 ? 0 : 1; if (t > 1900) U.op(".ok", 1); }
+      U.op(".door", 0); U.op(".zap", zap ? blink(t, 160) : 0);
+      U.tf(".lv0", lv0 ? "translate(0 14)" : ""); U.tf(".lv1", lv1 ? "translate(0 14)" : ""); U.tf(".lv2", lv1 ? "translate(0 14)" : "");
+      setArm(U, "aW", 276, 99, hand[0], hand[1], glove);
+    }
+  });
+
+  // ===== 화재·폭발 =====
+  const DRUM = `<rect x="-24" y="-56" width="48" height="56" rx="4" fill="#2E6FA8" stroke="${C.ink}" stroke-width="2"/><path d="M-24 -40h48M-24 -16h48" stroke="#1F4F7A" stroke-width="3"/>`;
+  LIB.fire = mk({
+    steps: [
+      [T4("빈 드럼도 터집니다", "Sumasabog kahit walang lamang drum", "ถังเปล่าก็ระเบิดได้", "Thùng rỗng cũng nổ"),
+       T4("드럼 안에 남은 인화성 증기에 불티가 닿으면 폭발합니다. 남은 물질을 없애고 충분히 환기한 뒤에 자릅니다.", "Sasabog kapag tumama ang spark sa natirang singaw sa loob. Alisin ang natirang laman at padaanin ang hangin bago putulin.", "ไอระเหยไวไฟที่ค้างในถังโดนสะเก็ดไฟจะระเบิด ให้กำจัดสารที่เหลือและระบายอากาศให้พอก่อนตัด", "Hơi dễ cháy còn trong thùng gặp tia lửa sẽ nổ. Loại bỏ chất còn sót và thông gió đủ rồi mới cắt.")],
+      [T4("불티가 튀는 곳에는 방화포와 소화기", "Fire blanket at extinguisher kung may spark", "ที่มีสะเก็ดไฟ ต้องมีผ้ากันไฟและถังดับเพลิง", "Nơi có tia lửa phải có bạt chống cháy và bình chữa cháy"),
+       T4("가연물은 치우거나 방화포로 덮고, 소화기를 손 닿는 곳에 둡니다.", "Alisin o takpan ng fire blanket ang madaling masunog, at ilagay ang extinguisher sa abot-kamay.", "เก็บของติดไฟหรือคลุมด้วยผ้ากันไฟ และวางถังดับเพลิงไว้ในระยะเอื้อมถึง", "Dọn hoặc phủ bạt chống cháy lên vật dễ cháy, để bình chữa cháy trong tầm tay.")],
+      [T4("가스 누설은 비눗물로 확인합니다", "Suriin ang tagas ng gas gamit ang sabon", "ตรวจแก๊สรั่วด้วยน้ำสบู่", "Kiểm tra rò khí bằng nước xà phòng"),
+       T4("호스 연결부에 비눗물을 발라 거품이 나면 새는 것입니다. 절대 불로 확인하지 않습니다. 끝나면 밸브를 잠급니다.", "Pahiran ng sabon ang dugtungan; kapag bumula, may tagas. Huwag kailanman gumamit ng apoy. Isara ang valve pagkatapos.", "ทาน้ำสบู่ที่ข้อต่อสาย ถ้ามีฟองแปลว่ารั่ว ห้ามใช้ไฟตรวจเด็ดขาด เสร็จแล้วปิดวาล์ว", "Bôi nước xà phòng vào chỗ nối ống, sủi bọt là rò. Tuyệt đối không thử bằng lửa. Xong việc khóa van.")]
+    ],
+    svg: () => `${bg()}
+      <g class="x drum"><g transform="translate(150 160)">${DRUM}</g><g class="lid"><rect x="126" y="100" width="48" height="6" rx="2" fill="#1F4F7A"/></g></g>
+      <g class="x vap">${[0, 1, 2].map(i => `<path class="vp${i}" d="M${140 + i * 10} 140q-4 -6 0 -12t0 -12" stroke="#9ACD32" stroke-width="2.5" fill="none" opacity=".8"/>`).join("")}</g>
+      <g class="x hose"><rect x="64" y="120" width="12" height="18" fill="#7FB4E0" opacity=".6"/></g>
+      <g class="x sparks">${Array.from({ length: 6 }, (_, i) => `<circle class="sp${i}" r="2" fill="#FFB020"/>`).join("")}</g>
+      ${BOOM("boom", 150, 110, 1.6)}
+      <g class="x blanket"><path d="M40 160V118q30-12 60 0v42z" fill="#C8B26B" stroke="#8C7A3E" stroke-width="2"/></g>
+      <g class="x boxes">${boxes(46, 160, [[0, 44, 30]])}</g>
+      <g class="x ext"><rect x="110" y="128" width="12" height="32" rx="4" fill="${C.red}" stroke="${C.ink}" stroke-width="1"/><path d="M116 128v-6h-10" stroke="${C.ink}" stroke-width="2" fill="none"/></g>
+      <g class="x cyl">${[0, 1].map(i => `<rect x="${60 + i * 26}" y="78" width="20" height="82" rx="9" fill="${i ? "#E8A33A" : "#2F7D4F"}" stroke="${C.ink}" stroke-width="1.5"/>`).join("")}<path d="M56 104h58" stroke="${C.ink}" stroke-width="2" stroke-dasharray="3 2"/>
+        <path d="M70 78v-8h40q20 0 20 20v30" stroke="${C.ink}" stroke-width="3" fill="none"/><circle cx="110" cy="70" r="4" fill="${C.vest}" stroke="${C.ink}" stroke-width="1"/>
+        <g class="bub">${[0, 1, 2].map(i => `<circle class="b${i}" cx="${126 + i * 7}" cy="${94 + (i % 2) * 6}" fill="#fff" stroke="#7EC0E8" stroke-width="1.2"/>`).join("")}</g></g>
+      <g class="x nofire" transform="translate(-70 0)"><circle cx="270" cy="40" r="16" fill="#fff" stroke="${C.red}" stroke-width="3"/>${FLAME("", 266, 50, .55).replace('class="x "', "")}<path d="M259 29l22 22" stroke="${C.red}" stroke-width="3"/></g>
+      <g class="x vtag"><rect x="98" y="62" width="24" height="12" rx="2" fill="#2E9D5B"/><text x="110" y="71" text-anchor="middle" font-family="sans-serif" font-size="7" font-weight="900" fill="#fff">OFF</text></g>
+      ${worker(236, 160, { flip: true, arm: "none" })}${ARM("aW")}
+      <g class="x grd"><rect x="-12" y="-5" width="22" height="10" rx="3" fill="#2E6FA8"/><circle cx="-14" cy="0" r="7" fill="#B49A7E" stroke="${C.ink}" stroke-width="1.2"/></g>
+      ${NO("no", 40, 30)}${OK("ok", 40, 30)}`,
+    dur: [3200, 3600, 4200], still: [2300, 3600, 4200],
+    draw(step, t, U) {
+      let hand = [214, 118];
+      if (step === 0 || step === 1) {
+        U.op(".drum", 1); U.op(".grd", 1); U.tf(".grd", "translate(184 118)"); hand = [196, 118];
+        for (let i = 0; i < 6; i++) { const ph = ((t / 500) + i / 6) % 1; U.op(".sp" + i, 1); U.at(".sp" + i, "cx", (170 - ph * (step ? 70 : 30)).toFixed(1)); U.at(".sp" + i, "cy", (118 - Math.sin(ph * 3.1) * 14 + ph * (step ? 40 : 6)).toFixed(1)); }
+      }
+      if (step === 0) {
+        U.op(".vap", t < 1500 ? 1 : 0); [0, 1, 2].forEach(i => U.tf(".vp" + i, `translate(0 ${-((t / 30 + i * 8) % 20)})`));
+        if (t > 1500) { U.op(".boom", blink(t, 120)); U.op(".no", 1); U.tf(".lid", `translate(${lp(0, 30, sg(t, 1500, 2000))} ${lp(0, -80, sg(t, 1500, 2000))}) `); } else U.tf(".lid", "");
+      }
+      if (step === 1) {
+        U.tf(".lid", ""); U.op(".boxes", 1); U.op(".blanket", t > 1100 ? 1 : 0); U.tf(".blanket", `translate(0 ${lp(-50, 0, sg(t, 1100, 1600))})`);
+        U.op(".ext", t > 1900 ? 1 : 0); if (t > 2400) U.op(".ok", 1);
+      }
+      if (step === 2) {
+        U.op(".cyl", 1); U.op(".nofire", t > 2600 ? 1 : 0);
+        hand = t < 1200 ? [lp(214, 128, sg(t, 200, 1000)), lp(118, 98, sg(t, 200, 1000))] : t < 2600 ? [128 + Math.sin(t / 90) * 3, 98] : [lp(128, 110, sg(t, 2600, 3200)), lp(98, 72, sg(t, 2600, 3200))];
+        [0, 1, 2].forEach(i => U.at(".b" + i, "r", t > 1300 ? Math.max(0, lp(0, 5 + i, sg(t, 1300 + i * 250, 2200 + i * 250))).toFixed(1) : 0));
+        if (t > 3200) { U.op(".vtag", 1); U.op(".ok", 1); }
+      }
+      setArm(U, "aW", 236, 99, hand[0], hand[1]);
+    }
+  });
+
+  // ===== 밀폐공간 =====
+  LIB.conf = mk({
+    steps: [
+      [T4("들어가기 전에 공기를 먼저 잽니다", "Sukatin muna ang hangin bago pumasok", "วัดอากาศก่อนเข้า", "Đo không khí trước khi vào"),
+       T4("탱크·피트 안은 산소가 부족하거나 유해가스가 있을 수 있습니다. 산소 18% 미만이면 들어가지 않습니다.", "Maaaring kulang sa oxygen o may nakalalasong gas sa loob ng tangke o pit. Huwag pumasok kung mas mababa sa 18% ang oxygen.", "ในถังหรือบ่ออาจมีออกซิเจนไม่พอหรือมีแก๊สพิษ ถ้าออกซิเจนต่ำกว่า 18% ห้ามเข้า", "Trong bồn, hầm có thể thiếu oxy hoặc có khí độc. Oxy dưới 18% thì không được vào.")],
+      [T4("들어가기 전과 작업 중에 계속 환기", "Patuloy na bentilasyon bago at habang nagtatrabaho", "ระบายอากาศต่อเนื่องก่อนและระหว่างทำงาน", "Thông gió liên tục trước và trong khi làm"),
+       T4("송풍기로 신선한 공기를 계속 넣고, 측정값이 정상(산소 18~23.5%)인지 확인한 뒤 허가를 받고 들어갑니다.", "Patuloy na magpasok ng sariwang hangin gamit ang blower, tiyaking normal ang sukat (oxygen 18–23.5%), at kumuha ng permit bago pumasok.", "ใช้พัดลมเป่าอากาศดีเข้าตลอด ตรวจว่าค่าปกติ (ออกซิเจน 18–23.5%) แล้วขออนุญาตก่อนเข้า", "Dùng quạt thổi khí sạch liên tục, kiểm tra chỉ số bình thường (oxy 18–23,5%) rồi xin phép mới vào.")],
+      [T4("쓰러진 사람을 그냥 구하러 들어가지 않습니다", "Huwag basta pumasok para sumagip", "ห้ามเข้าไปช่วยคนที่ล้มโดยไม่มีอุปกรณ์", "Không lao vào cứu người ngã khi không có thiết bị"),
+       T4("맨몸으로 들어가면 구하러 간 사람도 쓰러집니다. 먼저 119에 신고하고, 공기호흡기나 송기마스크를 쓴 사람만 들어갑니다.", "Kapag pumasok nang walang proteksyon, babagsak din ang sasagip. Tumawag muna sa 119; ang may SCBA o air-line mask lang ang papasok.", "ถ้าเข้าไปตัวเปล่า คนที่ไปช่วยก็จะล้มด้วย โทร 119 ก่อน และให้เฉพาะคนที่สวมเครื่องช่วยหายใจหรือหน้ากากส่งอากาศเข้าไป", "Vào tay không thì người cứu cũng ngã. Gọi 119 trước, chỉ người đeo bình dưỡng khí hoặc mặt nạ cấp khí mới được vào.")]
+    ],
+    svg: () => `${bg()}
+      <rect x="96" y="70" width="128" height="90" fill="#55616C"/><rect x="100" y="74" width="120" height="86" fill="#2F3A44"/>
+      <rect x="140" y="58" width="40" height="14" fill="${C.steelD}"/><ellipse cx="160" cy="58" rx="22" ry="5" fill="#1B2228"/>
+      <g class="gas">${[[118, 128], [150, 140], [196, 120], [178, 146], [130, 100], [204, 98]].map(([x, y], i) => `<circle class="g${i}" cx="${x}" cy="${y}" r="7" fill="#9ACD32" opacity=".55"/>`).join("")}</g>
+      <g class="x down"><g transform="translate(150 158) rotate(-90)">${worker(0, 0, { arm: "down", s: .7 })}</g></g>
+      <g class="x ghost" opacity=".5">${worker(0, 0, { arm: "up", s: .7 })}</g>
+      <g class="x resc">${worker(0, 0, { arm: "up", s: .7 })}<rect x="-14" y="-50" width="7" height="18" rx="3" fill="#E8A33A" stroke="${C.ink}" stroke-width="1"/><rect x="2" y="-58" width="8" height="7" rx="2" fill="#7EC0E8" stroke="${C.ink}" stroke-width="1"/></g>
+      <g class="x fan"><circle cx="50" cy="40" r="16" fill="${C.steelL}" stroke="${C.ink}" stroke-width="2"/><g class="blade"><path d="M50 40l0-12M50 40l10 7M50 40l-10 7" stroke="${C.ink}" stroke-width="4" stroke-linecap="round"/></g>
+        <path d="M66 40h60q14 0 14 14v14" stroke="#E8A33A" stroke-width="8" fill="none"/></g>
+      <g class="det"><path class="dl" stroke="${C.ink}" stroke-width="1.5"/><g class="dv"><rect x="-12" y="0" width="24" height="18" rx="3" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.2"/><rect x="-9" y="3" width="18" height="9" fill="#1E2A22"/><text class="dt" x="0" y="10.5" text-anchor="middle" font-family="sans-serif" font-size="7" font-weight="900"></text></g></g>
+      <g class="x call"><rect x="248" y="24" width="56" height="24" rx="6" fill="${C.red}"/><text x="276" y="41" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="#fff">📞 119</text></g>
+      ${worker(236, 160, { flip: true, arm: "none" })}${ARM("aW")}
+      ${NO("no", 90, 26)}${OK("ok", 90, 26)}`,
+    dur: [3200, 4000, 4400], still: [3200, 4000, 4400],
+    draw(step, t, U) {
+      let o2 = 16, gas = 1, hand = [196, 62], det = 1;
+      if (step === 0) { const d = lp(0, 60, sg(t, 300, 1500)); U.at(".dl", "d", `M196 62L170 ${62 + d}`); U.tf(".dv", `translate(170 ${62 + d})`); o2 = t > 1500 ? 16 : 20.9; if (t > 1700) U.op(".no", 1); }
+      if (step === 1) {
+        U.op(".fan", 1); U.tf(".blade", `rotate(${(t / 3) % 360} 50 40)`); gas = 1 - sg(t, 500, 2600);
+        U.at(".dl", "d", "M196 62L170 122"); U.tf(".dv", "translate(170 122)"); o2 = lp(16, 20.9, sg(t, 600, 2800)); if (t > 3000) U.op(".ok", 1);
+        [0, 1, 2, 3, 4, 5].forEach(i => U.tf(".g" + i, `translate(0 ${-sg(t, 500, 2600) * (60 + i * 6)})`));
+      }
+      if (step === 2) {
+        det = 0; U.op(".down", 1); U.op(".call", t > 300 ? 1 : 0); hand = [lp(196, 220, sg(t, 0, 500)), 74];
+        if (t < 2000) { U.op(".ghost", 1); const k = sg(t, 400, 1400); U.tf(".ghost", `translate(160 ${lp(56, 150, k)}) rotate(${lp(0, -80, sg(t, 1400, 1900))})`); if (t > 1300) U.op(".no", 1); }
+        else { U.op(".resc", 1); U.tf(".resc", `translate(170 ${lp(56, 150, sg(t, 2200, 3200))})`); if (t > 3300) U.op(".ok", 1); }
+      }
+      if (step !== 1) [0, 1, 2, 3, 4, 5].forEach(i => U.tf(".g" + i, ""));
+      U.op(".gas", step === 1 ? gas * .9 + .1 * 0 : 1); U.op(".det", det);
+      U.tx(".dt", "O₂ " + o2.toFixed(1) + "%"); U.at(".dt", "fill", o2 < 18 ? "#FF6B6B" : "#7CFFB2");
+      setArm(U, "aW", 236, 99, hand[0], hand[1]);
+    }
+  });
+
+  window.MOTION_LIB2 = Object.assign(window.MOTION_LIB2 || {}, LIB);
+
+  // 단원 연결: 정지 그림 대신 움직이는 그림
+  const MAP = { "w-0": "w0", "w-1": "loto", "w-laser": "laser", "w-2": "press", "w-weld": "weld", "w-crane": "crane", "w-fork": "fork", "w-crush": "crush", "w-cut": "cut", "w-3": "rot", "w-lift": "lift", "w-6": "ladder", "w-7": "elec", "w-8": "fire", "w-confined": "conf" };
+  for (const p of window.NEW_PARTS || []) for (const l of p.lessons) if (MAP[l.id] && !l.blocks.some(b => b.t === "motion")) { l.blocks.unshift({ t: "motion", k: MAP[l.id] }); l.scene = null; }
 })();
 
 </script>
