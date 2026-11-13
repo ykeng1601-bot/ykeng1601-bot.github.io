@@ -4098,6 +4098,619 @@ function scene(k) {
   }
 })();
 
+// PART 6 위험성평가 — 새 단원 6개 (맨 뒤에 추가 → 기존 주차 배정 유지, 9주차가 됨)
+(() => {
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+  const P = (ko, tl, th, vi) => ({ t: "p", x: L(ko, tl, th, vi) });
+  const LEAD = (ko, tl, th, vi) => ({ t: "lead", x: L(ko, tl, th, vi) });
+  const NOTE = (ko, tl, th, vi) => ({ t: "note", x: L(ko, tl, th, vi) });
+  const WARN = (ko, tl, th, vi) => ({ t: "warn", x: L(ko, tl, th, vi) });
+  const KV = rows => ({ t: "kv", rows });
+  const SRC = items => ({ t: "src", items });
+  const LAW36 = "산업안전보건법 제36조(위험성평가의 실시)";
+  const RULE37 = "산업안전보건법 시행규칙 제37조(위험성평가 실시내용 및 결과의 기록·보존, 3년)";
+  const GUIDE = "고용노동부고시 「사업장 위험성평가에 관한 지침」(2023년 5월 개정)";
+  const BOOK = "고용노동부 「새로운 위험성평가 안내서」(2023)";
+
+  const lessons = [
+  // ---------- r-1 ----------
+  { id: "r-1", title: L("위험성평가란 무엇인가요?", "Ano ang Risk Assessment?", "การประเมินความเสี่ยงคืออะไร", "Đánh giá rủi ro là gì?"),
+    blocks: [
+      LEAD("위험성평가는 우리 일터에서 다칠 수 있는 것을 미리 찾아내고, 얼마나 위험한지 따져 보고, 줄이는 활동입니다. 사고가 난 뒤가 아니라 나기 전에 하는 일입니다.",
+        "Ang risk assessment ay ang paghahanap nang maaga sa mga bagay na puwedeng makasakit sa trabaho, pagtimbang kung gaano ito kapanganib, at pagbabawas nito. Ginagawa ito bago mangyari ang aksidente, hindi pagkatapos.",
+        "การประเมินความเสี่ยงคือการค้นหาล่วงหน้าว่ามีอะไรในที่ทำงานที่ทำให้บาดเจ็บได้ พิจารณาว่าอันตรายแค่ไหน แล้วลดมันลง เป็นงานที่ทำก่อนเกิดอุบัติเหตุ ไม่ใช่หลังเกิด",
+        "Đánh giá rủi ro là tìm trước những gì có thể gây thương tích ở nơi làm việc, xem xét mức nguy hiểm và giảm bớt. Đây là việc làm trước khi tai nạn xảy ra, không phải sau."),
+      H("세 가지 말만 알면 됩니다", "Tatlong salita lang ang kailangang malaman", "รู้แค่ 3 คำนี้ก็พอ", "Chỉ cần biết ba từ"),
+      KV([
+        [L("유해·위험요인", "Hazard", "สิ่งที่เป็นอันตราย", "Mối nguy"), L("다치거나 병들게 할 수 있는 것. 예) 절곡기 금형 사이, 날카로운 판재 모서리, 용접 흄, 바닥의 기름", "Bagay na puwedeng makasakit o magpasakit. Hal.) pagitan ng die ng press brake, matalim na gilid ng sheet, welding fume, langis sa sahig", "สิ่งที่ทำให้บาดเจ็บหรือเจ็บป่วยได้ เช่น ช่องระหว่างแม่พิมพ์เครื่องพับ ขอบแผ่นโลหะคม ฟูมเชื่อม น้ำมันบนพื้น", "Thứ có thể gây thương tích hoặc bệnh. VD: khe giữa khuôn máy chấn, mép tấm sắc, khói hàn, dầu trên sàn")],
+        [L("위험성", "Risk", "ความเสี่ยง", "Rủi ro"), L("그 위험요인으로 실제 사고가 날 가능성과, 났을 때 얼마나 크게 다치는지를 함께 본 것", "Pinagsamang tingin sa posibilidad na mangyari ang aksidente at kung gaano kalala ang pinsala", "การดูรวมกันว่ามีโอกาสเกิดอุบัติเหตุแค่ไหน และถ้าเกิดจะบาดเจ็บรุนแรงเพียงใด", "Xem xét cùng lúc khả năng xảy ra tai nạn và mức độ thương tích nếu xảy ra")],
+        [L("감소대책", "Hakbang sa pagbabawas", "มาตรการลดความเสี่ยง", "Biện pháp giảm thiểu"), L("위험성을 낮추기 위해 하는 일. 예) 방호장치 설치, 작업 방법 변경, 교육, 보호구", "Ginagawa para bumaba ang panganib. Hal.) safety device, pagbabago ng paraan, training, PPE", "สิ่งที่ทำเพื่อลดความเสี่ยง เช่น ติดอุปกรณ์ป้องกัน เปลี่ยนวิธีทำงาน อบรม อุปกรณ์ป้องกันส่วนบุคคล", "Việc làm để hạ rủi ro. VD: lắp thiết bị bảo vệ, đổi cách làm, đào tạo, bảo hộ cá nhân")]
+      ]),
+      H("왜 해야 하나요?", "Bakit kailangan?", "ทำไมต้องทำ", "Vì sao phải làm?"),
+      P("산업안전보건법 제36조는 사업주가 위험성평가를 하고, 그 결과에 따라 필요한 조치를 하도록 정하고 있습니다. 그리고 그 과정에 해당 작업을 하는 근로자를 참여시키도록 하고 있습니다.",
+        "Ayon sa Artikulo 36 ng Occupational Safety and Health Act, dapat gumawa ng risk assessment ang employer at kumilos ayon sa resulta. Dapat ding isali ang mga manggagawang gumagawa ng trabahong iyon.",
+        "พ.ร.บ.ความปลอดภัยและอาชีวอนามัย มาตรา 36 กำหนดให้นายจ้างประเมินความเสี่ยง และดำเนินการตามผล รวมทั้งให้ลูกจ้างที่ทำงานนั้นมีส่วนร่วมด้วย",
+        "Điều 36 Luật An toàn vệ sinh lao động quy định chủ sử dụng phải đánh giá rủi ro và thực hiện biện pháp theo kết quả, đồng thời phải cho người lao động làm công việc đó tham gia."),
+      P("법 때문만은 아닙니다. 위험을 가장 잘 아는 사람은 매일 그 기계 앞에 서는 작업자입니다. 관리자가 사무실에서 서류로만 하는 위험성평가는 현장의 진짜 위험을 놓칩니다.",
+        "Hindi lang dahil sa batas. Ang pinakaalam sa panganib ay ang manggagawang araw-araw na nasa harap ng makina. Hindi makikita ang tunay na panganib kung papeles lang sa opisina ang risk assessment.",
+        "ไม่ใช่แค่เพราะกฎหมาย คนที่รู้อันตรายดีที่สุดคือคนที่ยืนหน้าเครื่องทุกวัน การประเมินที่ผู้จัดการทำแค่บนกระดาษในสำนักงานจะพลาดอันตรายจริงในหน้างาน",
+        "Không chỉ vì luật. Người hiểu rõ nguy hiểm nhất là người đứng trước máy mỗi ngày. Đánh giá chỉ làm trên giấy ở văn phòng sẽ bỏ sót nguy hiểm thật tại hiện trường."),
+      NOTE("위험성평가는 서류 작업이 아니라 '다치지 않게 미리 바꾸는 일'입니다. 결과는 덮개 하나, 작업 순서 한 줄처럼 현장에서 눈에 보여야 합니다.",
+        "Hindi papeles ang risk assessment kundi 'pagbabago nang maaga para walang masaktan'. Dapat makita ang resulta sa trabaho—isang takip, isang linya sa pamamaraan.",
+        "การประเมินความเสี่ยงไม่ใช่งานเอกสาร แต่คือ 'การเปลี่ยนล่วงหน้าเพื่อไม่ให้ใครบาดเจ็บ' ผลต้องเห็นได้ในหน้างาน เช่น ฝาครอบหนึ่งอัน ขั้นตอนงานหนึ่งบรรทัด",
+        "Đánh giá rủi ro không phải việc giấy tờ mà là 'thay đổi trước để không ai bị thương'. Kết quả phải thấy được ở hiện trường—một tấm che, một dòng trong quy trình."),
+      H("우리 회사에서는", "Sa aming kumpanya", "ที่บริษัทของเรา", "Ở công ty chúng ta"),
+      { t: "ul", items: [
+        L("반장과 작업자가 함께 작업별 위험을 찾습니다.", "Magkasamang hinahanap ng team leader at manggagawa ang panganib sa bawat trabaho.", "หัวหน้าและพนักงานร่วมกันหาอันตรายของแต่ละงาน", "Tổ trưởng và công nhân cùng tìm nguy hiểm của từng công việc."),
+        L("찾은 위험은 표에 적고, 무엇을 언제까지 고칠지 정합니다.", "Isinusulat sa talaan ang panganib at itinatakda kung ano at kailan aayusin.", "จดอันตรายลงตาราง และกำหนดว่าจะแก้อะไร ภายในเมื่อไร", "Ghi nguy hiểm vào bảng, quyết định sửa gì và đến khi nào."),
+        L("결과는 TBM과 이 앱으로 모두에게 알립니다.", "Ipinapaalam sa lahat ang resulta sa TBM at sa app na ito.", "แจ้งผลให้ทุกคนรู้ผ่าน TBM และแอปนี้", "Thông báo kết quả cho mọi người qua TBM và ứng dụng này."),
+        L("기록은 3년 동안 보관합니다.", "Itinatago ang rekord nang 3 taon.", "เก็บบันทึกไว้ 3 ปี", "Lưu hồ sơ trong 3 năm.")
+      ]},
+      { t: "chk", items: [
+        L("내 작업에서 다칠 수 있는 것 3가지를 말할 수 있다.", "Kaya kong sabihin ang 3 bagay na puwedeng makasakit sa trabaho ko.", "บอกได้ 3 อย่างที่ทำให้บาดเจ็บในงานของฉัน", "Tôi nói được 3 thứ có thể gây thương tích trong công việc của mình."),
+        L("위험을 발견하면 누구에게 말하는지 안다.", "Alam ko kung kanino sasabihin kapag may nakitang panganib.", "รู้ว่าถ้าเจออันตรายต้องบอกใคร", "Tôi biết khi phát hiện nguy hiểm thì báo cho ai.")
+      ]},
+      SRC([LAW36, RULE37, GUIDE])
+    ]},
+
+  // ---------- r-2 ----------
+  { id: "r-2", title: L("위험성평가는 언제 하나요?", "Kailan ginagawa ang Risk Assessment?", "ประเมินความเสี่ยงเมื่อไร", "Khi nào đánh giá rủi ro?"),
+    blocks: [
+      LEAD("위험성평가는 한 번 하고 끝나는 것이 아닙니다. 일터가 바뀌면 위험도 바뀌기 때문에, 정해진 때마다 다시 합니다.",
+        "Hindi ito ginagawa nang isang beses lang. Kapag nagbago ang lugar ng trabaho, nagbabago rin ang panganib, kaya inuulit ito sa takdang panahon.",
+        "การประเมินความเสี่ยงไม่ได้ทำครั้งเดียวจบ เมื่อที่ทำงานเปลี่ยน อันตรายก็เปลี่ยน จึงต้องทำใหม่ตามเวลาที่กำหนด",
+        "Đánh giá rủi ro không phải làm một lần là xong. Nơi làm việc thay đổi thì nguy hiểm cũng thay đổi, nên phải làm lại vào những thời điểm quy định."),
+      H("네 가지 시기", "Apat na uri ayon sa panahon", "4 ช่วงเวลา", "Bốn thời điểm"),
+      KV([
+        [L("최초평가", "Unang assessment", "การประเมินครั้งแรก", "Đánh giá lần đầu"), L("사업을 시작하면 1개월 안에 시작합니다.", "Sinisimulan sa loob ng 1 buwan mula sa pagbubukas ng negosyo.", "เริ่มภายใน 1 เดือนหลังเปิดกิจการ", "Bắt đầu trong vòng 1 tháng kể từ khi mở cơ sở.")],
+        [L("정기평가", "Regular", "การประเมินประจำปี", "Đánh giá định kỳ"), L("1년에 한 번, 지난 결과를 다시 보고 바뀐 것을 반영합니다.", "Minsan isang taon, sinusuri muli ang dating resulta at isinasama ang mga pagbabago.", "ปีละครั้ง ทบทวนผลเดิมและปรับตามสิ่งที่เปลี่ยน", "Mỗi năm một lần, xem lại kết quả cũ và cập nhật thay đổi.")],
+        [L("수시평가", "Kapag may pagbabago", "การประเมินเมื่อมีการเปลี่ยนแปลง", "Đánh giá khi có thay đổi"), L("아래처럼 일터가 바뀔 때, 그 작업을 시작하기 전에 합니다.", "Kapag nagbago ang trabaho tulad ng nasa ibaba, bago simulan ang trabahong iyon.", "เมื่อที่ทำงานเปลี่ยนตามด้านล่าง ให้ทำก่อนเริ่มงานนั้น", "Khi nơi làm việc thay đổi như dưới đây, làm trước khi bắt đầu công việc đó.")],
+        [L("상시평가", "Tuloy-tuloy", "การประเมินต่อเนื่อง", "Đánh giá thường xuyên"), L("매월 아차사고 확인·현장 점검, 매주 회의, 매일 TBM 공유를 꾸준히 하면 정기·수시평가를 한 것으로 봅니다.", "Kapag regular ang buwanang pagsuri ng muntikang aksidente at inspeksyon, lingguhang pulong, at araw-araw na TBM, itinuturing na ginawa ang regular at may-pagbabagong assessment.", "ถ้าทำสม่ำเสมอ: ตรวจเหตุเกือบเกิดอุบัติเหตุและหน้างานทุกเดือน ประชุมทุกสัปดาห์ แจ้งผลใน TBM ทุกวัน จะถือว่าได้ประเมินประจำปีและเมื่อมีการเปลี่ยนแปลงแล้ว", "Nếu đều đặn: hằng tháng kiểm tra sự cố suýt xảy ra và hiện trường, hằng tuần họp, hằng ngày chia sẻ ở TBM, thì được coi như đã đánh giá định kỳ và khi có thay đổi.")]
+      ]),
+      H("이럴 때는 다시 평가합니다 (판금 현장 예)", "Kailan uulitin (halimbawa sa sheet metal)", "เมื่อไรต้องประเมินใหม่ (ตัวอย่างงานโลหะแผ่น)", "Khi nào đánh giá lại (ví dụ xưởng gia công tấm)"),
+      { t: "ul", items: [
+        L("새 레이저·절곡기·프레스를 들여오거나 옮길 때", "Kapag may bagong laser, press brake o press, o inilipat ito", "เมื่อนำเลเซอร์ เครื่องพับ หรือเครื่องปั๊มใหม่เข้ามาหรือย้ายที่", "Khi đưa máy laser, máy chấn, máy dập mới vào hoặc di chuyển"),
+        L("금형·지그·원자재(재질·두께)가 바뀔 때", "Kapag nagbago ang die, jig o materyales (uri, kapal)", "เมื่อแม่พิมพ์ จิ๊ก หรือวัตถุดิบ (ชนิด ความหนา) เปลี่ยน", "Khi khuôn, đồ gá, nguyên liệu (loại, độ dày) thay đổi"),
+        L("작업 방법이나 순서를 바꿀 때 (예: 2인 작업을 1인 작업으로)", "Kapag binago ang paraan o pagkakasunod (hal. mula 2 tao naging 1)", "เมื่อเปลี่ยนวิธีหรือลำดับการทำงาน (เช่น จาก 2 คนเป็น 1 คน)", "Khi đổi cách làm hoặc trình tự (VD: từ 2 người thành 1 người)"),
+        L("설비를 정비·보수할 때", "Kapag nagme-maintenance o nag-aayos ng makina", "เมื่อซ่อมบำรุงเครื่องจักร", "Khi bảo trì, sửa chữa thiết bị"),
+        L("사고나 아차사고가 일어났을 때", "Kapag may aksidente o muntikang aksidente", "เมื่อเกิดอุบัติเหตุหรือเหตุเกือบเกิดอุบัติเหตุ", "Khi xảy ra tai nạn hoặc sự cố suýt xảy ra")
+      ]},
+      H("상시평가와 우리 TBM", "Tuloy-tuloy na assessment at ang aming TBM", "การประเมินต่อเนื่องกับ TBM ของเรา", "Đánh giá thường xuyên và TBM của chúng ta"),
+      P("2023년에 바뀐 지침은 '상시평가'를 새로 만들었습니다. 매달 아차사고와 현장 점검으로 위험을 찾고, 매주 관리자들이 논의하고, 매일 작업 전 TBM으로 결과를 공유하는 방식입니다. 매주 수요일 TBM과 이 앱 교육이 바로 그 '공유' 부분입니다.",
+        "Ang binagong patnubay noong 2023 ay lumikha ng 'tuloy-tuloy na assessment': buwanang paghahanap ng panganib sa muntikang aksidente at inspeksyon, lingguhang talakayan ng mga manager, at araw-araw na pagbabahagi sa TBM. Ang TBM tuwing Miyerkoles at ang app na ito ang bahaging 'pagbabahagi'.",
+        "แนวทางที่แก้ไขปี 2023 สร้าง 'การประเมินต่อเนื่อง' ขึ้นใหม่ คือ ทุกเดือนหาอันตรายจากเหตุเกือบเกิดอุบัติเหตุและการตรวจหน้างาน ทุกสัปดาห์ผู้จัดการหารือ ทุกวันแจ้งผลใน TBM ก่อนเริ่มงาน TBM ทุกวันพุธและการอบรมในแอปนี้คือส่วน 'การแบ่งปัน' นั่นเอง",
+        "Hướng dẫn sửa đổi năm 2023 lập ra 'đánh giá thường xuyên': hằng tháng tìm nguy hiểm qua sự cố suýt xảy ra và kiểm tra hiện trường, hằng tuần quản lý thảo luận, hằng ngày chia sẻ kết quả ở TBM trước giờ làm. TBM thứ Tư và bài học trong ứng dụng này chính là phần 'chia sẻ'."),
+      NOTE("아차사고가 났다는 것은 위험성평가에서 놓친 위험이 있다는 신호입니다. 그래서 아차사고를 말하는 것이 곧 위험성평가의 시작입니다.",
+        "Ang muntikang aksidente ay senyales na may panganib na hindi napansin sa assessment. Kaya ang pagsasabi nito ay simula na ng risk assessment.",
+        "เหตุเกือบเกิดอุบัติเหตุคือสัญญาณว่ามีอันตรายที่การประเมินมองข้ามไป การเล่าเหตุเกือบเกิดอุบัติเหตุจึงเป็นจุดเริ่มต้นของการประเมินความเสี่ยง",
+        "Sự cố suýt xảy ra là dấu hiệu có nguy hiểm bị bỏ sót khi đánh giá. Vì vậy báo sự cố suýt xảy ra chính là khởi đầu của đánh giá rủi ro."),
+      { t: "chk", items: [
+        L("새 기계나 새 작업 방법이 생기면, 일을 시작하기 전에 위험성평가를 한다는 것을 안다.", "Alam kong kapag may bagong makina o paraan, gagawin ang assessment bago magsimula.", "รู้ว่าถ้ามีเครื่องหรือวิธีทำงานใหม่ ต้องประเมินก่อนเริ่มงาน", "Tôi biết khi có máy hay cách làm mới thì đánh giá trước khi bắt đầu."),
+        L("아차사고가 있으면 반장에게 알린다.", "Sinasabi ko sa team leader ang muntikang aksidente.", "ถ้ามีเหตุเกือบเกิดอุบัติเหตุ ฉันแจ้งหัวหน้า", "Có sự cố suýt xảy ra thì tôi báo tổ trưởng.")
+      ]},
+      SRC([GUIDE, BOOK])
+    ]},
+
+  // ---------- r-3 ----------
+  { id: "r-3", title: L("위험성평가는 어떻게 하나요? (5단계)", "Paano ginagawa? (5 hakbang)", "ประเมินอย่างไร (5 ขั้นตอน)", "Đánh giá như thế nào? (5 bước)"),
+    blocks: [
+      { t: "motion", k: "risk" },
+      LEAD("위험성평가는 다섯 단계로 돌아갑니다. 마지막 단계가 끝나면 다시 처음으로 돌아가, 바뀐 것이 없는지 봅니다.",
+        "Umiikot ang risk assessment sa limang hakbang. Pagkatapos ng huli, babalik sa simula para tingnan kung may nagbago.",
+        "การประเมินความเสี่ยงหมุนเวียนเป็น 5 ขั้นตอน เมื่อจบขั้นสุดท้ายก็กลับไปเริ่มใหม่ เพื่อดูว่ามีอะไรเปลี่ยนหรือไม่",
+        "Đánh giá rủi ro xoay vòng qua 5 bước. Xong bước cuối lại quay về đầu để xem có gì thay đổi không."),
+      { t: "ol", items: [
+        L("사전준비: 누가, 어떤 작업을, 어떤 기준으로 평가할지 정합니다. (상시 근로자 5명 미만 사업장은 생략할 수 있습니다)", "Paghahanda: kung sino, anong trabaho, at anong pamantayan. (Puwedeng laktawan kung wala pang 5 manggagawa)", "เตรียมการ: กำหนดว่าใคร ประเมินงานอะไร ด้วยเกณฑ์อะไร (สถานประกอบการที่มีลูกจ้างไม่ถึง 5 คนข้ามได้)", "Chuẩn bị: ai, đánh giá công việc nào, theo tiêu chí gì. (Cơ sở dưới 5 lao động có thể bỏ qua)"),
+        L("유해·위험요인 파악: 현장을 둘러보고, 작업자에게 묻고, 사고·아차사고 기록을 봅니다.", "Paghahanap ng panganib: maglibot, magtanong sa manggagawa, tingnan ang rekord ng aksidente at muntikang aksidente.", "หาอันตราย: เดินดูหน้างาน ถามคนทำงาน ดูบันทึกอุบัติเหตุและเหตุเกือบเกิด", "Tìm mối nguy: đi xem hiện trường, hỏi công nhân, xem hồ sơ tai nạn và sự cố suýt xảy ra."),
+        L("위험성 결정: 찾은 위험이 받아들일 수 있는 수준인지 판단합니다. (다음 단원)", "Pagpapasya sa panganib: tanggap ba ang antas ng panganib? (susunod na aralin)", "ตัดสินความเสี่ยง: ดูว่าอันตรายที่พบอยู่ในระดับยอมรับได้หรือไม่ (บทถัดไป)", "Xác định rủi ro: mức nguy hiểm có chấp nhận được không. (bài sau)"),
+        L("감소대책 수립·실행: 무엇을, 누가, 언제까지 고칠지 정하고 실제로 고칩니다.", "Plano at aksyon: ano, sino, kailan aayusin—at talagang ayusin.", "วางและทำมาตรการ: แก้อะไร ใคร ภายในเมื่อไร และลงมือแก้จริง", "Lập và thực hiện biện pháp: sửa gì, ai sửa, đến khi nào—và sửa thật."),
+        L("기록·공유: 결과를 기록해 3년 동안 보관하고, 근로자에게 알립니다.", "Itala at ibahagi: itago ang rekord nang 3 taon at ipaalam sa mga manggagawa.", "บันทึกและแบ่งปัน: บันทึกผลเก็บไว้ 3 ปี และแจ้งให้ลูกจ้างรู้", "Ghi chép và chia sẻ: lưu kết quả 3 năm và thông báo cho người lao động.")
+      ]},
+      H("위험요인은 이렇게 찾습니다", "Paano hanapin ang panganib", "หาอันตรายแบบนี้", "Tìm mối nguy như thế này"),
+      { t: "ul", items: [
+        L("작업을 순서대로 나눠 단계마다 '여기서 다칠 수 있나?'를 묻습니다.", "Hatiin ang trabaho sa mga hakbang at itanong sa bawat isa: 'Puwede bang masaktan dito?'", "แบ่งงานเป็นลำดับขั้น แล้วถามทุกขั้นว่า 'ตรงนี้บาดเจ็บได้ไหม'", "Chia công việc theo trình tự, mỗi bước hỏi 'ở đây có thể bị thương không?'"),
+        L("기계(끼임·말림), 물건(떨어짐·베임), 사람(넘어짐·허리), 환경(소음·흄·더위), 전기·화재를 빠짐없이 봅니다.", "Tingnan lahat: makina (naipit, napulupot), bagay (nahulog, nahiwa), tao (nadulas, likod), kapaligiran (ingay, fume, init), kuryente at sunog.", "ดูให้ครบ: เครื่อง (หนีบ ม้วน) สิ่งของ (ตก บาด) คน (ลื่นล้ม หลัง) สภาพแวดล้อม (เสียง ฟูม ร้อน) ไฟฟ้าและไฟไหม้", "Xem đủ: máy (kẹp, cuốn), vật (rơi, cắt), người (trượt ngã, lưng), môi trường (ồn, khói, nóng), điện và cháy."),
+        L("실제로 그 일을 하는 사람에게 묻습니다. 외국인 근로자도 모국어로 말해도 됩니다.", "Tanungin ang mismong gumagawa ng trabaho. Puwedeng magsalita sa sariling wika ang dayuhang manggagawa.", "ถามคนที่ทำงานนั้นจริง แรงงานต่างชาติพูดเป็นภาษาของตัวเองได้", "Hỏi chính người làm việc đó. Lao động nước ngoài nói bằng tiếng mẹ đẻ cũng được.")
+      ]},
+      { t: "def", k: L("예시 · 레이저 적재대에서 판재 꺼내기", "Halimbawa · Pagkuha ng sheet sa laser table", "ตัวอย่าง · หยิบแผ่นออกจากโต๊ะเลเซอร์", "Ví dụ · Lấy tấm ra khỏi bàn máy laser"),
+        list: [
+          L("위험요인: 판재 모서리, 무거운 판재, 좁은 통로", "Panganib: gilid ng sheet, mabigat na sheet, makitid na daanan", "อันตราย: ขอบแผ่น แผ่นหนัก ทางเดินแคบ", "Mối nguy: mép tấm, tấm nặng, lối đi hẹp"),
+          L("일어날 수 있는 사고: 손 베임, 발등 찍힘, 허리 부상", "Puwedeng mangyari: hiwa sa kamay, nadaganan ang paa, pinsala sa likod", "อุบัติเหตุที่อาจเกิด: มือถูกบาด เท้าถูกทับ บาดเจ็บหลัง", "Tai nạn có thể xảy ra: đứt tay, dập mu bàn chân, đau lưng"),
+          L("지금 하는 조치: 면장갑 착용", "Kasalukuyang hakbang: cotton gloves", "สิ่งที่ทำอยู่: สวมถุงมือผ้า", "Biện pháp hiện tại: đeo găng vải"),
+          L("추가 대책: 베임방지 장갑 지급, 진공 리프터 사용, 통로 1m 이상 확보", "Dagdag na hakbang: cut-resistant gloves, vacuum lifter, daanan na 1 m pataas", "มาตรการเพิ่ม: ถุงมือกันบาด ใช้เครื่องยกสุญญากาศ เว้นทางเดิน 1 ม. ขึ้นไป", "Biện pháp thêm: găng chống cắt, dùng máy hút chân không nâng tấm, lối đi từ 1 m")
+        ]},
+      NOTE("4단계에서 끝내지 말고, 고친 뒤에 정말 위험이 줄었는지 작업자와 함께 확인합니다.",
+        "Huwag tumigil sa hakbang 4. Pagkatapos ayusin, tiyakin kasama ng manggagawa kung talagang bumaba ang panganib.",
+        "อย่าหยุดที่ขั้นที่ 4 แก้แล้วให้ตรวจกับคนทำงานว่าอันตรายลดลงจริงหรือไม่",
+        "Đừng dừng ở bước 4. Sửa xong, cùng công nhân kiểm tra xem nguy hiểm có thật sự giảm không."),
+      SRC([LAW36, RULE37, GUIDE, BOOK])
+    ]},
+
+  // ---------- r-4 ----------
+  { id: "r-4", title: L("얼마나 위험한지 판단하기", "Pagtimbang kung gaano kapanganib", "ตัดสินว่าอันตรายแค่ไหน", "Đánh giá mức độ nguy hiểm"),
+    blocks: [
+      LEAD("찾은 위험을 한꺼번에 다 고칠 수는 없습니다. 그래서 '얼마나 위험한가'를 판단해 급한 것부터 고칩니다.",
+        "Hindi kayang ayusin nang sabay-sabay ang lahat ng panganib. Kaya tinitimbang kung 'gaano kapanganib' at inuuna ang pinakaapura.",
+        "แก้อันตรายทั้งหมดพร้อมกันไม่ได้ จึงต้องตัดสินว่า 'อันตรายแค่ไหน' แล้วแก้เรื่องเร่งด่วนก่อน",
+        "Không thể sửa tất cả cùng lúc. Vì vậy phải đánh giá 'nguy hiểm đến mức nào' rồi sửa cái gấp trước."),
+      H("두 가지를 함께 봅니다", "Dalawang bagay ang tinitingnan", "ดู 2 อย่างพร้อมกัน", "Xem cùng lúc hai điều"),
+      KV([
+        [L("가능성 (빈도)", "Posibilidad (dalas)", "โอกาส (ความถี่)", "Khả năng (tần suất)"), L("얼마나 자주 일어날 수 있나? 매일 하는 작업인가, 1년에 한 번인가?", "Gaano kadalas puwedeng mangyari? Araw-araw ba o isang beses sa isang taon?", "เกิดได้บ่อยแค่ไหน เป็นงานทุกวันหรือปีละครั้ง", "Có thể xảy ra thường xuyên đến đâu? Làm hằng ngày hay mỗi năm một lần?")],
+        [L("중대성 (강도)", "Kalubhaan", "ความรุนแรง", "Mức độ nghiêm trọng"), L("일어나면 얼마나 크게 다치나? 긁힘인가, 손가락 절단인가, 사망인가?", "Gaano kalala kung mangyari? Galos, naputol na daliri, o kamatayan?", "ถ้าเกิดจะบาดเจ็บแค่ไหน แค่ถลอก นิ้วขาด หรือเสียชีวิต", "Nếu xảy ra thì nặng đến đâu? Trầy xước, đứt ngón tay hay tử vong?")]
+      ]),
+      P("자주 일어나고 크게 다치는 위험이 가장 위험합니다. 드물더라도 사망까지 갈 수 있는 위험(크레인 짐 떨어짐, 밀폐공간)은 높게 봅니다.",
+        "Pinakamapanganib ang madalas at malubha. Kahit bihira, mataas ang turing sa panganib na puwedeng ikamatay (bumagsak na karga ng crane, confined space).",
+        "อันตรายที่เกิดบ่อยและรุนแรงคืออันตรายที่สุด แม้นานครั้งแต่ถ้าถึงตายได้ (ของจากเครนตก ที่อับอากาศ) ก็ถือว่าสูง",
+        "Nguy hiểm nhất là cái hay xảy ra và gây thương tích nặng. Dù hiếm nhưng có thể gây chết người (vật cẩu rơi, không gian kín) thì vẫn coi là cao."),
+      H("3단계 판단법 (우리 회사 예)", "3-antas na paraan (halimbawa namin)", "วิธี 3 ระดับ (ตัวอย่างบริษัทเรา)", "Cách 3 mức (ví dụ ở công ty)"),
+      KV([
+        [L("상 (높음)", "Mataas", "สูง", "Cao"), L("바로 고칩니다. 고치기 전까지는 작업을 멈추거나 임시 조치를 합니다. 예) 절곡기 광선식 안전장치 고장", "Ayusin agad. Habang hindi pa naaayos, itigil ang trabaho o gumawa ng pansamantalang hakbang. Hal.) sira ang light guard ng press brake", "แก้ทันที ระหว่างยังไม่แก้ให้หยุดงานหรือทำมาตรการชั่วคราว เช่น ม่านแสงเครื่องพับเสีย", "Sửa ngay. Chưa sửa xong thì dừng việc hoặc có biện pháp tạm thời. VD: thiết bị an toàn quang học của máy chấn bị hỏng")],
+        [L("중 (보통)", "Katamtaman", "กลาง", "Trung bình"), L("계획을 세워 정한 날까지 고칩니다. 예) 통로에 쌓인 스크랩", "Magplano at ayusin bago ang takdang araw. Hal.) nakatambak na scrap sa daanan", "วางแผนและแก้ภายในวันที่กำหนด เช่น เศษโลหะกองบนทางเดิน", "Lập kế hoạch và sửa trước ngày định. VD: phế liệu chất trên lối đi")],
+        [L("하 (낮음)", "Mababa", "ต่ำ", "Thấp"), L("지금 관리 방법을 유지하고 계속 지켜봅니다. 예) 정리된 공구대", "Ituloy ang kasalukuyang pamamahala at patuloy na bantayan. Hal.) maayos na lalagyan ng tool", "รักษาวิธีจัดการเดิมและเฝ้าดูต่อไป เช่น ชั้นวางเครื่องมือที่เป็นระเบียบ", "Giữ cách quản lý hiện tại và tiếp tục theo dõi. VD: giá dụng cụ gọn gàng")]
+      ]),
+      H("쉽게 하는 다른 방법", "Iba pang madaling paraan", "วิธีง่าย ๆ อื่น ๆ", "Các cách đơn giản khác"),
+      { t: "ul", items: [
+        L("체크리스트법: 미리 만든 점검표에 '예/아니오'로 표시합니다.", "Checklist: markahan ng 'oo/hindi' ang inihandang listahan.", "วิธีเช็กลิสต์: ทำเครื่องหมาย 'ใช่/ไม่ใช่' ในแบบตรวจที่เตรียมไว้", "Phương pháp danh mục: đánh dấu 'có/không' vào bảng kiểm soạn sẵn."),
+        L("핵심요인 기술법: 네 가지 질문에 답합니다. ① 어떤 위험이 있나? ② 누가 어떻게 다칠 수 있나? ③ 지금은 어떻게 막고 있나? ④ 무엇을 더 해야 하나?", "Key factor method: sagutin ang 4 tanong. ① Anong panganib? ② Sino at paano masasaktan? ③ Paano ito pinipigilan ngayon? ④ Ano pa ang kailangan?", "วิธีเขียนปัจจัยหลัก: ตอบ 4 คำถาม ① มีอันตรายอะไร ② ใครจะบาดเจ็บอย่างไร ③ ตอนนี้ป้องกันอย่างไร ④ ต้องทำอะไรเพิ่ม", "Phương pháp yếu tố chính: trả lời 4 câu hỏi. ① Có mối nguy gì? ② Ai có thể bị thương, như thế nào? ③ Hiện đang ngăn bằng cách nào? ④ Cần làm thêm gì?"),
+        L("빈도·강도법: 가능성과 중대성에 점수를 매겨 곱합니다.", "Frequency × severity: bigyan ng puntos ang posibilidad at kalubhaan at i-multiply.", "วิธีความถี่ × ความรุนแรง: ให้คะแนนโอกาสและความรุนแรงแล้วคูณกัน", "Tần suất × mức độ: chấm điểm khả năng và mức nghiêm trọng rồi nhân lại.")
+      ]},
+      NOTE("법은 특정 방법을 강요하지 않습니다. 중요한 것은 숫자가 아니라, 위험을 빠뜨리지 않고 급한 것부터 고치는 것입니다.",
+        "Hindi itinatakda ng batas ang iisang paraan. Ang mahalaga ay walang malaktawang panganib at unahin ang apurahan.",
+        "กฎหมายไม่บังคับวิธีใดวิธีหนึ่ง สิ่งสำคัญไม่ใช่ตัวเลข แต่คือไม่มองข้ามอันตรายและแก้เรื่องเร่งด่วนก่อน",
+        "Luật không bắt buộc một phương pháp cụ thể. Quan trọng không phải con số mà là không bỏ sót nguy hiểm và sửa cái gấp trước."),
+      WARN("'늘 이렇게 해 왔는데 괜찮았다'는 위험이 낮다는 뜻이 아닙니다. 지금까지 운이 좋았을 뿐일 수 있습니다.",
+        "Ang 'Ganito na lagi at ayos naman' ay hindi nangangahulugang mababa ang panganib. Baka sinuwerte lang hanggang ngayon.",
+        "'ทำแบบนี้มาตลอดก็ไม่เป็นไร' ไม่ได้แปลว่าความเสี่ยงต่ำ อาจแค่โชคดีมาจนถึงตอนนี้",
+        "'Trước giờ vẫn làm thế mà không sao' không có nghĩa là rủi ro thấp. Có thể chỉ là may mắn đến giờ."),
+      SRC([GUIDE, BOOK])
+    ]},
+
+  // ---------- r-5 ----------
+  { id: "r-5", title: L("위험을 줄이는 순서", "Pagkakasunod ng pagbabawas ng panganib", "ลำดับการลดความเสี่ยง", "Thứ tự giảm rủi ro"),
+    blocks: [
+      LEAD("위험을 줄이는 방법에도 순서가 있습니다. 위로 갈수록 효과가 크고, 사람의 실수에 덜 기댑니다.",
+        "May pagkakasunod din ang paraan ng pagbabawas ng panganib. Habang pataas, mas mabisa at hindi gaanong umaasa sa pagkakamali ng tao.",
+        "วิธีลดความเสี่ยงก็มีลำดับ ยิ่งอยู่ข้างบนยิ่งได้ผลมาก และพึ่งความระมัดระวังของคนน้อยลง",
+        "Cách giảm rủi ro cũng có thứ tự. Càng ở trên càng hiệu quả và càng ít phụ thuộc vào sự cẩn thận của con người."),
+      { t: "ol", items: [
+        L("없애기·바꾸기 (본질적 대책): 위험한 작업을 없애거나 덜 위험한 것으로 바꿉니다. 예) 손으로 넣던 재료를 자동 이송으로, 유해한 세척제를 덜 유해한 것으로", "Alisin o palitan: alisin ang mapanganib na trabaho o palitan ng hindi gaanong mapanganib. Hal.) awtomatikong feeder sa halip na kamay, mas ligtas na panlinis", "กำจัดหรือเปลี่ยน (มาตรการพื้นฐาน): เลิกงานอันตรายหรือเปลี่ยนเป็นสิ่งที่อันตรายน้อยกว่า เช่น เปลี่ยนจากใช้มือป้อนเป็นป้อนอัตโนมัติ เปลี่ยนน้ำยาล้างเป็นชนิดอันตรายน้อยกว่า", "Loại bỏ, thay thế (biện pháp căn bản): bỏ việc nguy hiểm hoặc thay bằng cái ít nguy hiểm hơn. VD: thay đưa phôi bằng tay bằng cấp phôi tự động, thay dung môi độc bằng loại ít độc"),
+        L("설비로 막기 (공학적 대책): 사람이 실수해도 다치지 않게 기계로 막습니다. 예) 연동장치, 광선식 안전장치, 덮개, 국소배기장치", "Harangan gamit ang kagamitan: kahit magkamali ang tao, hindi masasaktan. Hal.) interlock, light guard, takip, local exhaust", "กันด้วยอุปกรณ์ (มาตรการทางวิศวกรรม): ให้คนพลาดก็ไม่บาดเจ็บ เช่น อินเตอร์ล็อก ม่านแสง ฝาครอบ ระบบดูดอากาศเฉพาะที่", "Chặn bằng thiết bị (biện pháp kỹ thuật): người có sơ suất cũng không bị thương. VD: khóa liên động, thiết bị quang học, nắp che, hút cục bộ"),
+        L("일하는 방법 정하기 (관리적 대책): 작업 순서, 표지, 교육, 2인 1조, 작업 허가. 예) 금형 교체 절차서, 전원 잠금", "Itakda ang paraan: pamamaraan, karatula, training, dalawahan, work permit. Hal.) procedure sa pagpapalit ng die, lockout", "กำหนดวิธีทำงาน (มาตรการทางการจัดการ): ลำดับงาน ป้าย อบรม ทำ 2 คน ใบอนุญาตทำงาน เช่น คู่มือเปลี่ยนแม่พิมพ์ ล็อกไฟ", "Quy định cách làm (biện pháp quản lý): trình tự, biển báo, đào tạo, 2 người, giấy phép làm việc. VD: quy trình thay khuôn, khóa nguồn"),
+        L("보호구 (마지막 방어선): 안전화, 보안경, 장갑, 귀마개, 방진마스크", "PPE (huling depensa): safety shoes, goggles, gloves, earplugs, dust mask", "อุปกรณ์ป้องกันส่วนบุคคล (ด่านสุดท้าย): รองเท้านิรภัย แว่นตา ถุงมือ ที่อุดหู หน้ากากกันฝุ่น", "Bảo hộ cá nhân (tuyến cuối): giày bảo hộ, kính, găng, nút tai, khẩu trang chống bụi")
+      ]},
+      P("보호구는 꼭 써야 하지만, 보호구만으로 위험을 막으려 하면 안 됩니다. 장갑을 껴도 절곡기 금형 사이에 손이 들어가면 다칩니다. 그래서 먼저 기계로 막고, 그다음 방법을 정하고, 마지막으로 보호구를 씁니다.",
+        "Kailangan ang PPE, pero hindi sapat ito para pigilan ang panganib. Kahit may gloves, masasaktan ka kapag pumasok ang kamay sa die ng press brake. Kaya unahin ang makina, sunod ang paraan, at huli ang PPE.",
+        "ต้องใช้อุปกรณ์ป้องกัน แต่จะพึ่งอุปกรณ์อย่างเดียวไม่ได้ ใส่ถุงมือแล้วมือเข้าไปในแม่พิมพ์เครื่องพับก็ยังบาดเจ็บ จึงต้องกันด้วยเครื่องก่อน แล้วกำหนดวิธี สุดท้ายจึงใช้อุปกรณ์ป้องกัน",
+        "Phải dùng đồ bảo hộ, nhưng không được chỉ dựa vào nó. Đeo găng mà tay lọt vào khuôn máy chấn vẫn bị thương. Vì vậy trước hết chặn bằng máy, sau đó quy định cách làm, cuối cùng mới dùng đồ bảo hộ."),
+      H("예시 · 프레스 손 끼임", "Halimbawa · Naipit ang kamay sa press", "ตัวอย่าง · มือถูกหนีบที่เครื่องปั๊ม", "Ví dụ · Kẹp tay ở máy dập"),
+      KV([
+        [L("없애기", "Alisin", "กำจัด", "Loại bỏ"), L("자동 이송 장치로 손을 넣을 일 자체를 없앱니다.", "Gumamit ng automatic feeder para wala nang dahilan na ipasok ang kamay.", "ใช้ระบบป้อนอัตโนมัติ ไม่ต้องยื่นมือเข้าไปเลย", "Dùng cấp phôi tự động để không còn phải đưa tay vào.")],
+        [L("설비", "Kagamitan", "อุปกรณ์", "Thiết bị"), L("광선식·양수조작식 안전장치", "Light guard o two-hand control", "ม่านแสงหรือระบบกดสองมือ", "Thiết bị quang học hoặc điều khiển hai tay")],
+        [L("방법", "Paraan", "วิธี", "Cách làm"), L("수공구 사용, 금형 교체 때 안전블록과 전원 잠금", "Gumamit ng hand tool; safety block at lockout sa pagpapalit ng die", "ใช้เครื่องมือมือ เปลี่ยนแม่พิมพ์ใช้บล็อกนิรภัยและล็อกไฟ", "Dùng dụng cụ cầm tay; khi thay khuôn dùng khối an toàn và khóa nguồn")],
+        [L("보호구", "PPE", "อุปกรณ์ป้องกัน", "Bảo hộ"), L("금형을 다룰 때 안전화. 손 끼임은 보호구로 막을 수 없습니다.", "Safety shoes sa paghawak ng die. Hindi kayang pigilan ng PPE ang pagkaipit ng kamay.", "รองเท้านิรภัยตอนจับแม่พิมพ์ อุปกรณ์ป้องกันกันมือถูกหนีบไม่ได้", "Giày bảo hộ khi cầm khuôn. Đồ bảo hộ không ngăn được kẹp tay.")]
+      ]),
+      NOTE("법에서 정한 기준(방호장치, 덮개 등)은 위험성 점수와 관계없이 반드시 지킵니다. 사망 같은 큰 사고가 날 수 있는 위험은 대책이 끝날 때까지 바로 임시 조치를 합니다.",
+        "Sundin ang pamantayan ng batas (safety device, takip, atbp.) anuman ang puntos ng panganib. Sa panganib na puwedeng ikamatay, gumawa agad ng pansamantalang hakbang hanggang matapos ang solusyon.",
+        "มาตรฐานตามกฎหมาย (อุปกรณ์ป้องกัน ฝาครอบ ฯลฯ) ต้องทำเสมอไม่ว่าคะแนนความเสี่ยงเท่าไร อันตรายที่อาจถึงตายต้องมีมาตรการชั่วคราวทันทีจนกว่าจะแก้เสร็จ",
+        "Tiêu chuẩn luật định (thiết bị bảo vệ, nắp che...) luôn phải tuân thủ bất kể điểm rủi ro. Nguy hiểm có thể gây chết người thì phải có biện pháp tạm thời ngay cho đến khi khắc phục xong."),
+      SRC([GUIDE, BOOK, "산업안전보건기준에 관한 규칙(방호장치·덮개 등)"])
+    ]},
+
+  // ---------- r-6 ----------
+  { id: "r-6", title: L("근로자 참여 — 내가 할 일", "Paglahok ng manggagawa — ang gagawin ko", "การมีส่วนร่วมของลูกจ้าง — สิ่งที่ฉันทำ", "Người lao động tham gia — việc tôi làm"),
+    blocks: [
+      LEAD("위험성평가의 주인공은 현장 작업자입니다. 2023년 지침 개정으로 근로자가 위험성평가의 모든 과정에 참여하게 되었습니다.",
+        "Ang bida sa risk assessment ay ang manggagawa sa site. Sa binagong patnubay noong 2023, kasali na ang manggagawa sa buong proseso.",
+        "ตัวเอกของการประเมินความเสี่ยงคือคนทำงานหน้างาน แนวทางที่แก้ไขปี 2023 ให้ลูกจ้างมีส่วนร่วมในทุกขั้นตอน",
+        "Nhân vật chính của đánh giá rủi ro là công nhân hiện trường. Theo hướng dẫn sửa đổi năm 2023, người lao động tham gia mọi bước."),
+      H("내가 참여하는 방법", "Paano ako lalahok", "วิธีที่ฉันมีส่วนร่วม", "Cách tôi tham gia"),
+      { t: "ol", items: [
+        L("위험 알리기: 다칠 뻔한 일, 이상한 소리, 고장 난 안전장치를 바로 반장에게 말합니다. 사진을 찍어 보내도 됩니다.", "Iulat ang panganib: muntikang aksidente, kakaibang tunog, sirang safety device—sabihin agad sa team leader. Puwedeng magpadala ng litrato.", "แจ้งอันตราย: เหตุเกือบบาดเจ็บ เสียงผิดปกติ อุปกรณ์นิรภัยเสีย บอกหัวหน้าทันที ถ่ายรูปส่งก็ได้", "Báo nguy hiểm: suýt bị thương, tiếng lạ, thiết bị an toàn hỏng—báo ngay tổ trưởng. Chụp ảnh gửi cũng được."),
+        L("회의에서 의견 내기: 위험성평가 회의나 TBM에서 '이 작업은 이게 위험하다'고 말합니다.", "Magsalita sa pulong: sa risk assessment meeting o TBM, sabihin 'Ito ang delikado sa trabahong ito.'", "ออกความเห็นในที่ประชุม: ในการประชุมประเมินความเสี่ยงหรือ TBM บอกว่า 'งานนี้อันตรายตรงนี้'", "Góp ý trong cuộc họp: ở buổi họp đánh giá rủi ro hoặc TBM, nói 'việc này nguy hiểm ở chỗ này'."),
+        L("결과 알기: 내 작업의 위험과 대책을 TBM, 게시판, 이 앱으로 확인합니다.", "Alamin ang resulta: tingnan ang panganib at hakbang sa trabaho mo sa TBM, bulletin board at app na ito.", "รู้ผล: ดูอันตรายและมาตรการของงานตัวเองผ่าน TBM บอร์ดประกาศ และแอปนี้", "Biết kết quả: xem nguy hiểm và biện pháp của việc mình qua TBM, bảng tin, ứng dụng này."),
+        L("대책 지키기: 정해진 작업 방법과 보호구를 지킵니다.", "Sundin ang hakbang: sundin ang itinakdang paraan at PPE.", "ทำตามมาตรการ: ทำตามวิธีที่กำหนดและใช้อุปกรณ์ป้องกัน", "Tuân thủ biện pháp: làm đúng cách đã quy định và dùng đồ bảo hộ."),
+        L("효과 확인: 고친 뒤에도 위험하면 다시 말합니다.", "Suriin ang epekto: kung delikado pa rin pagkatapos ayusin, sabihin ulit.", "ตรวจผล: แก้แล้วยังอันตรายให้บอกอีก", "Kiểm tra hiệu quả: sửa rồi vẫn nguy hiểm thì báo lại.")
+      ]},
+      H("위험을 알릴 때는 이렇게", "Paano mag-ulat ng panganib", "แจ้งอันตรายแบบนี้", "Báo nguy hiểm như thế này"),
+      KV([
+        [L("언제", "Kailan", "เมื่อไร", "Khi nào"), L("날짜와 시간", "Petsa at oras", "วันที่และเวลา", "Ngày và giờ")],
+        [L("어디서", "Saan", "ที่ไหน", "Ở đâu"), L("기계 이름이나 장소", "Pangalan ng makina o lugar", "ชื่อเครื่องหรือสถานที่", "Tên máy hoặc địa điểm")],
+        [L("무엇을 하다가", "Ginagawa ano", "ทำอะไรอยู่", "Đang làm gì"), L("하던 작업", "Trabahong ginagawa", "งานที่ทำอยู่", "Công việc đang làm")],
+        [L("무엇이 위험했나", "Ano ang delikado", "อะไรอันตราย", "Điều gì nguy hiểm"), L("일어난 일 또는 일어날 뻔한 일", "Nangyari o muntik mangyari", "สิ่งที่เกิดหรือเกือบเกิด", "Việc đã xảy ra hoặc suýt xảy ra")],
+        [L("어떻게 하면 좋을지", "Mungkahi", "ควรทำอย่างไร", "Nên làm gì"), L("생각이 있으면 함께 말합니다", "Sabihin kung may naiisip", "ถ้ามีความคิดก็บอกด้วย", "Nếu có ý kiến thì nói luôn")]
+      ]),
+      P("예) '어제 오후 3시, 2번 절곡기에서 긴 판재를 혼자 접다가 판재 끝이 얼굴 쪽으로 튀었습니다. 긴 판재는 2인 1조로 하면 좋겠습니다.'",
+        "Hal.) 'Kahapon, 3 p.m., sa press brake No. 2, mag-isa akong nagbaluktot ng mahabang sheet at tumalsik ang dulo papunta sa mukha ko. Mas mabuti kung dalawahan sa mahabang sheet.'",
+        "ตัวอย่าง: 'เมื่อวาน บ่าย 3 โมง ที่เครื่องพับเบอร์ 2 พับแผ่นยาวคนเดียว ปลายแผ่นดีดเข้าหาหน้า แผ่นยาวควรทำ 2 คน'",
+        "VD: 'Hôm qua 3 giờ chiều, ở máy chấn số 2, tôi chấn tấm dài một mình thì đầu tấm bật về phía mặt. Tấm dài nên làm 2 người.'"),
+      NOTE("위험을 알렸다고 불이익을 주는 것은 안 됩니다. 말해 준 사람 덕분에 다음 사람이 다치지 않습니다. 한국어가 서툴러도 괜찮습니다. 모국어, 사진, 손짓으로 알려 주세요.",
+        "Bawal parusahan ang nag-ulat ng panganib. Dahil sa kaniya, hindi masasaktan ang susunod. Ayos lang kahit hindi magaling sa Korean—gumamit ng sariling wika, litrato o kumpas.",
+        "ห้ามลงโทษคนที่แจ้งอันตราย เพราะเขาคนต่อไปจึงไม่บาดเจ็บ พูดเกาหลีไม่เก่งก็ไม่เป็นไร แจ้งด้วยภาษาของตัวเอง รูปภาพ หรือท่าทางได้",
+        "Không được gây bất lợi cho người báo nguy hiểm. Nhờ họ mà người sau không bị thương. Tiếng Hàn chưa giỏi cũng không sao—hãy báo bằng tiếng mẹ đẻ, ảnh hoặc cử chỉ."),
+      WARN("지금 당장 다칠 것 같은 급박한 위험이 있으면 작업을 멈추고 대피한 뒤 바로 알립니다. (산업안전보건법 제52조 작업중지권)",
+        "Kapag may agarang panganib na puwedeng makasakit ngayon din, itigil ang trabaho, lumikas, at iulat agad. (Artikulo 52, karapatang itigil ang trabaho)",
+        "ถ้ามีอันตรายเร่งด่วนที่อาจบาดเจ็บทันที ให้หยุดงาน อพยพ แล้วแจ้งทันที (มาตรา 52 สิทธิหยุดงาน)",
+        "Nếu có nguy hiểm cấp bách có thể bị thương ngay, hãy dừng việc, sơ tán rồi báo ngay. (Điều 52, quyền dừng việc)"),
+      { t: "chk", items: [
+        L("위험을 알릴 때 '언제·어디서·무엇을·무엇이 위험'을 말할 수 있다.", "Kaya kong sabihin ang 'kailan, saan, ano ang ginagawa, ano ang delikado'.", "แจ้งอันตรายได้ว่า 'เมื่อไร ที่ไหน ทำอะไร อะไรอันตราย'", "Tôi nói được 'khi nào, ở đâu, làm gì, điều gì nguy hiểm' khi báo."),
+        L("내 작업의 위험성평가 결과(위험과 대책)를 안다.", "Alam ko ang resulta ng assessment ng trabaho ko (panganib at hakbang).", "รู้ผลประเมินความเสี่ยงของงานตัวเอง (อันตรายและมาตรการ)", "Tôi biết kết quả đánh giá rủi ro của việc mình (nguy hiểm và biện pháp).")
+      ]},
+      SRC([LAW36, GUIDE, "산업안전보건법 제52조(근로자의 작업중지)"])
+    ]}
+  ];
+
+  window.NEW_PARTS.push({ id: "r", no: 6,
+    title: L("위험성평가", "Risk Assessment", "การประเมินความเสี่ยง", "Đánh giá rủi ro"),
+    sub: L("함께 찾고, 함께 줄입니다", "Sama-samang hanapin at bawasan", "ค้นหาด้วยกัน ลดด้วยกัน", "Cùng tìm, cùng giảm"),
+    lessons });
+
+  // 스스로 확인 O/X
+  const Q = (q, o, w) => [q, o, w];
+  const OX = {
+    "r-1": [Q(L("위험성평가는 관리자만 하면 되고 근로자는 참여하지 않아도 된다.", "Manager lang ang gagawa ng risk assessment; hindi kailangang sumali ang manggagawa.", "การประเมินความเสี่ยงให้ผู้จัดการทำก็พอ ลูกจ้างไม่ต้องมีส่วนร่วม", "Chỉ quản lý làm đánh giá rủi ro, người lao động không cần tham gia."), false,
+              L("법은 해당 작업 근로자를 참여시키도록 정하고 있습니다.", "Itinatakda ng batas na isali ang manggagawa.", "กฎหมายกำหนดให้ลูกจ้างที่ทำงานนั้นมีส่วนร่วม", "Luật quy định phải cho người lao động làm việc đó tham gia.")),
+            Q(L("위험성은 사고가 날 가능성과 다치는 정도를 함께 본 것이다.", "Ang panganib ay pinagsamang posibilidad at kalubhaan.", "ความเสี่ยงคือการดูโอกาสเกิดและความรุนแรงรวมกัน", "Rủi ro là xem cùng lúc khả năng xảy ra và mức thương tích."), true,
+              L("가능성과 중대성을 함께 봅니다.", "Tinitingnan ang dalawa.", "ดูทั้งโอกาสและความรุนแรง", "Xem cả khả năng và mức nghiêm trọng."))],
+    "r-2": [Q(L("새 절곡기를 들여오면 작업을 시작하기 전에 위험성평가를 한다.", "Kapag may bagong press brake, gagawa ng assessment bago magsimula.", "นำเครื่องพับใหม่เข้ามา ต้องประเมินก่อนเริ่มงาน", "Có máy chấn mới thì đánh giá trước khi bắt đầu làm."), true,
+              L("설비가 바뀌면 수시평가를 합니다.", "May-pagbabagong assessment kapag nagbago ang kagamitan.", "อุปกรณ์เปลี่ยนต้องประเมินเมื่อมีการเปลี่ยนแปลง", "Thiết bị thay đổi thì đánh giá khi có thay đổi.")),
+            Q(L("위험성평가는 회사 처음 시작할 때 한 번만 하면 된다.", "Isang beses lang sa simula ng kumpanya ang assessment.", "ประเมินครั้งเดียวตอนเริ่มกิจการก็พอ", "Chỉ cần đánh giá một lần khi mới mở công ty."), false,
+              L("정기(매년)·수시·상시평가로 계속합니다.", "Tuloy-tuloy: taunan, may pagbabago, at araw-araw.", "ทำต่อเนื่อง: ประจำปี เมื่อเปลี่ยนแปลง และต่อเนื่อง", "Làm liên tục: định kỳ hằng năm, khi thay đổi và thường xuyên."))],
+    "r-3": [Q(L("위험성평가 결과는 기록해서 3년 동안 보관한다.", "Itinatago nang 3 taon ang rekord ng assessment.", "บันทึกผลประเมินเก็บไว้ 3 ปี", "Kết quả đánh giá được ghi và lưu 3 năm."), true,
+              L("시행규칙 제37조에 따라 3년 보관합니다.", "Ayon sa Artikulo 37 ng Enforcement Rule.", "ตามกฎกระทรวงข้อ 37", "Theo Điều 37 Quy tắc thi hành.")),
+            Q(L("대책을 세웠으면 실제로 줄었는지 확인할 필요는 없다.", "Hindi na kailangang suriin kung bumaba ang panganib pagkatapos magplano.", "วางมาตรการแล้วไม่ต้องตรวจว่าลดลงจริงไหม", "Lập biện pháp rồi thì không cần kiểm tra rủi ro có giảm thật không."), false,
+              L("고친 뒤 작업자와 함께 효과를 확인합니다.", "Suriin ang epekto kasama ang manggagawa.", "ตรวจผลร่วมกับคนทำงานหลังแก้", "Kiểm tra hiệu quả cùng công nhân sau khi sửa."))],
+    "r-4": [Q(L("드물게 일어나도 사망까지 갈 수 있는 위험은 높게 본다.", "Mataas ang turing sa bihira pero puwedeng ikamatay.", "แม้นานครั้งแต่ถึงตายได้ ถือว่าสูง", "Hiếm nhưng có thể chết người thì coi là cao."), true,
+              L("중대성이 매우 크기 때문입니다.", "Dahil napakalubha.", "เพราะความรุนแรงสูงมาก", "Vì mức nghiêm trọng rất lớn.")),
+            Q(L("지금까지 사고가 없었다면 그 작업은 위험성이 낮다.", "Kung walang aksidente hanggang ngayon, mababa ang panganib.", "ถ้ายังไม่เคยเกิดอุบัติเหตุ แปลว่าความเสี่ยงต่ำ", "Chưa từng có tai nạn thì công việc đó rủi ro thấp."), false,
+              L("운이 좋았을 뿐일 수 있습니다.", "Baka sinuwerte lang.", "อาจแค่โชคดี", "Có thể chỉ là may mắn."))],
+    "r-5": [Q(L("보호구를 잘 쓰면 방호장치는 없어도 된다.", "Kung maayos ang PPE, hindi na kailangan ng safety device.", "ใส่อุปกรณ์ป้องกันดีแล้ว ไม่ต้องมีอุปกรณ์ป้องกันเครื่องจักร", "Dùng tốt đồ bảo hộ thì không cần thiết bị bảo vệ."), false,
+              L("보호구는 마지막 방어선입니다. 먼저 설비로 막습니다.", "Huling depensa ang PPE; unahin ang kagamitan.", "อุปกรณ์ป้องกันคือด่านสุดท้าย ต้องกันด้วยเครื่องก่อน", "Đồ bảo hộ là tuyến cuối, trước hết phải chặn bằng thiết bị.")),
+            Q(L("위험한 작업 자체를 없애는 것이 가장 효과가 크다.", "Pinakamabisa ang pag-alis mismo sa mapanganib na trabaho.", "การเลิกงานอันตรายเลยได้ผลมากที่สุด", "Loại bỏ chính công việc nguy hiểm là hiệu quả nhất."), true,
+              L("없애기·바꾸기가 1순위입니다.", "Unang priyoridad ang alisin o palitan.", "กำจัดหรือเปลี่ยนเป็นลำดับแรก", "Loại bỏ, thay thế là ưu tiên số 1."))],
+    "r-6": [Q(L("위험을 알린 근로자에게 불이익을 주면 안 된다.", "Bawal parusahan ang nag-ulat ng panganib.", "ห้ามลงโทษลูกจ้างที่แจ้งอันตราย", "Không được gây bất lợi cho người báo nguy hiểm."), true,
+              L("알려 준 사람 덕분에 다음 사고를 막습니다.", "Dahil sa kaniya, napipigilan ang susunod na aksidente.", "เพราะเขาจึงป้องกันอุบัติเหตุครั้งต่อไปได้", "Nhờ họ mà ngăn được tai nạn sau.")),
+            Q(L("한국어를 잘 못하면 위험을 알릴 수 없다.", "Hindi makakapag-ulat kung hindi magaling sa Korean.", "พูดเกาหลีไม่เก่งก็แจ้งอันตรายไม่ได้", "Không giỏi tiếng Hàn thì không báo nguy hiểm được."), false,
+              L("모국어, 사진, 손짓으로 알려도 됩니다.", "Puwede sa sariling wika, litrato o kumpas.", "แจ้งด้วยภาษาตัวเอง รูปภาพ หรือท่าทางได้", "Báo bằng tiếng mẹ đẻ, ảnh hoặc cử chỉ đều được."))]
+  };
+
+  // 2분 분량 보강
+  const EX = {
+    "r-2": [{ t: "def", k: L("예시 · 새 파이버 레이저를 들여올 때 (수시평가)", "Halimbawa · Bagong fiber laser (assessment kapag may pagbabago)", "ตัวอย่าง · นำเลเซอร์ไฟเบอร์ใหม่เข้ามา (ประเมินเมื่อมีการเปลี่ยนแปลง)", "Ví dụ · Đưa máy laser fiber mới vào (đánh giá khi có thay đổi)"),
+      list: [
+        L("설치하기 전에 반장·작업자·설비 담당이 모여 위험성평가 회의를 합니다.", "Bago i-install, magpupulong ang team leader, manggagawa at maintenance.", "ก่อนติดตั้ง หัวหน้า คนทำงาน และฝ่ายเครื่องจักรประชุมประเมินความเสี่ยง", "Trước khi lắp, tổ trưởng, công nhân và phụ trách thiết bị họp đánh giá rủi ro."),
+        L("확인할 위험: 레이저 빛, 흄·분진, 화재, 판재 싣고 내리기, 전기", "Mga titingnan: laser, fume at alikabok, sunog, pagkarga at pagbaba ng sheet, kuryente", "อันตรายที่ต้องดู: แสงเลเซอร์ ฟูมและฝุ่น ไฟไหม้ การขนแผ่นขึ้นลง ไฟฟ้า", "Nguy hiểm cần xem: tia laser, khói bụi, cháy, xếp dỡ tấm, điện"),
+        L("대책 예: 덮개·연동장치 작동 확인, 집진기 연결, 소화기 위치 정하기", "Hal. na hakbang: suriin ang takip at interlock, ikabit ang dust collector, itakda ang lugar ng extinguisher", "มาตรการ เช่น ตรวจฝาครอบและอินเตอร์ล็อก ต่อเครื่องดูดฝุ่น กำหนดที่วางถังดับเพลิง", "Biện pháp VD: kiểm tra nắp che và khóa liên động, nối máy hút bụi, định vị trí bình chữa cháy"),
+        L("작업자 교육을 마친 뒤에 가동을 시작합니다.", "Magsisimula lang pagkatapos ng training ng manggagawa.", "เริ่มเดินเครื่องหลังอบรมคนทำงานแล้ว", "Chỉ vận hành sau khi đào tạo công nhân xong.")
+      ]}],
+    "r-4": [{ t: "def", k: L("예시 · 핵심요인 기술법으로 본 '절곡기로 긴 판재 접기'", "Halimbawa · Key factor method: pagbaluktot ng mahabang sheet", "ตัวอย่าง · วิธีปัจจัยหลัก: พับแผ่นยาวด้วยเครื่องพับ", "Ví dụ · Phương pháp yếu tố chính: chấn tấm dài"),
+      list: [
+        L("① 어떤 위험? 판재 끝이 빠르게 들림, 금형 사이 손 끼임", "① Anong panganib? Mabilis na pag-angat ng dulo, pagkaipit sa die", "① อันตรายอะไร: ปลายแผ่นยกขึ้นเร็ว มือถูกหนีบในแม่พิมพ์", "① Nguy hiểm gì? Đầu tấm bật lên nhanh, kẹp tay giữa khuôn"),
+        L("② 누가 어떻게? 작업자가 얼굴을 맞거나 손가락을 다침", "② Sino at paano? Tatamaan sa mukha o masusugatan ang daliri", "② ใครเป็นอย่างไร: คนทำงานโดนหน้าหรือนิ้วบาดเจ็บ", "② Ai, thế nào? Công nhân bị đập mặt hoặc thương ngón tay"),
+        L("③ 지금은? 광선식 안전장치 사용", "③ Ngayon? May light guard", "③ ตอนนี้: ใช้ม่านแสง", "③ Hiện tại? Có thiết bị an toàn quang học"),
+        L("④ 더 할 일? 2인 1조, 판재 받침대 설치, 페달 덮개", "④ Ano pa? Dalawahan, suporta ng sheet, takip ng pedal", "④ ทำอะไรเพิ่ม: ทำ 2 คน ติดที่รองแผ่น ฝาครอบแป้นเหยียบ", "④ Làm thêm gì? Làm 2 người, lắp giá đỡ tấm, nắp che bàn đạp")
+      ]}],
+    "r-5": [{ t: "def", k: L("예시 · 용접 흄", "Halimbawa · Welding fume", "ตัวอย่าง · ฟูมเชื่อม", "Ví dụ · Khói hàn"),
+      list: [
+        L("없애기·바꾸기: 흄이 적게 나는 용접 방법·재료로 바꾸기", "Alisin o palitan: paraan o materyales na mas kaunti ang fume", "กำจัดหรือเปลี่ยน: เปลี่ยนวิธีหรือวัสดุที่เกิดฟูมน้อย", "Loại bỏ, thay thế: đổi cách hàn, vật liệu ít khói"),
+        L("설비: 국소배기장치(흄 흡입기)를 용접 부위 가까이", "Kagamitan: local exhaust (fume extractor) malapit sa hinang", "อุปกรณ์: เครื่องดูดฟูมเฉพาะที่ไว้ใกล้จุดเชื่อม", "Thiết bị: hút cục bộ (máy hút khói) đặt gần chỗ hàn"),
+        L("방법: 흄을 마시지 않도록 자세 바꾸기, 환기, 작업 시간 관리", "Paraan: ibahin ang posisyon para hindi malanghap, bentilasyon, oras ng trabaho", "วิธี: เปลี่ยนท่าไม่ให้สูดฟูม ระบายอากาศ จัดเวลาทำงาน", "Cách làm: đổi tư thế để không hít khói, thông gió, quản lý thời gian làm"),
+        L("보호구: 용접용 방진마스크", "PPE: mask para sa welding", "อุปกรณ์ป้องกัน: หน้ากากกันฝุ่นสำหรับงานเชื่อม", "Bảo hộ: khẩu trang chống bụi dùng cho hàn")
+      ]}],
+    "r-6": [H("알린 뒤에는 이렇게 됩니다", "Ito ang mangyayari pagkatapos mag-ulat", "หลังแจ้งแล้วจะเป็นแบบนี้", "Sau khi báo sẽ như thế này"),
+      { t: "ol", items: [
+        L("반장이 기록하고 위험성평가 표에 추가합니다.", "Itatala ito ng team leader sa talaan ng assessment.", "หัวหน้าบันทึกและเพิ่มลงตารางประเมินความเสี่ยง", "Tổ trưởng ghi lại và thêm vào bảng đánh giá rủi ro."),
+        L("얼마나 위험한지 판단하고, 대책과 담당자·기한을 정합니다.", "Titimbangin ang panganib at itatakda ang hakbang, taong responsable at deadline.", "ตัดสินว่าอันตรายแค่ไหน กำหนดมาตรการ ผู้รับผิดชอบ และกำหนดเวลา", "Đánh giá mức nguy hiểm, định biện pháp, người phụ trách và thời hạn."),
+        L("고친 결과를 TBM으로 모두에게 알립니다.", "Ipapaalam sa lahat sa TBM ang resulta.", "แจ้งผลการแก้ไขให้ทุกคนรู้ใน TBM", "Báo kết quả sửa chữa cho mọi người ở TBM."),
+        L("알려 준 사람에게도 어떻게 고쳤는지 알려 줍니다.", "Sasabihan din ang nag-ulat kung paano ito inayos.", "บอกคนที่แจ้งด้วยว่าแก้อย่างไร", "Cũng báo cho người đã báo biết đã sửa thế nào.")
+      ]}]
+  };
+  for (const l of lessons) if (EX[l.id]) { const i = l.blocks.findIndex(b => b.t === "ox" || b.t === "src"); l.blocks.splice(i, 0, ...EX[l.id]); }
+  for (const l of lessons) { const i = l.blocks.findIndex(b => b.t === "src"); l.blocks.splice(i < 0 ? l.blocks.length : i, 0, { t: "ox", items: OX[l.id] }); }
+})();
+
+// PART 6 위험성평가 보강 — 2026년 개정 산업안전보건법(2026.6.1 시행)·지침 전부개정(고용노동부고시 제2026-73호, 2026.11.4) 반영
+// 6단원 → 12단원 (9·10주차). 기존 단원은 고치고 새 단원 6개를 더함.
+(() => {
+  const P6 = window.NEW_PARTS.find(p => p.id === "r"); if (!P6) return;
+  const old = Object.fromEntries(P6.lessons.map(l => [l.id, l]));
+  const H = (ko, tl, th, vi, tone) => ({ t: "h", x: L(ko, tl, th, vi), tone });
+  const P = (ko, tl, th, vi) => ({ t: "p", x: L(ko, tl, th, vi) });
+  const LEAD = (ko, tl, th, vi) => ({ t: "lead", x: L(ko, tl, th, vi) });
+  const NOTE = (ko, tl, th, vi) => ({ t: "note", x: L(ko, tl, th, vi) });
+  const WARN = (ko, tl, th, vi) => ({ t: "warn", x: L(ko, tl, th, vi) });
+  const KV = rows => ({ t: "kv", rows });
+  const SRC = items => ({ t: "src", items });
+  const LAW = "산업안전보건법 제36조(위험성평가의 실시) — 2026년 6월 1일 개정 시행";
+  const G26 = "고용노동부고시 제2026-73호 「사업장 위험성평가에 관한 지침」 전부개정(2026.11.4)";
+  const NEWS = "아시아경제 2026.11.4 「위험성평가 형식적 운영 막는다…미실시 사업주 최대 1000만원 과태료」";
+  const COL = "서울경제 「2026년 개정된 산업안전보건법의 주요 내용은」(김동현 변호사 칼럼)";
+  const RULE37 = "산업안전보건법 시행규칙 제37조(위험성평가 실시내용 및 결과의 기록·보존, 3년)";
+  const BOOK = "고용노동부 「새로운 위험성평가 안내서」(2023)";
+  const OLDG = "고용노동부고시 「사업장 위험성평가에 관한 지침」(2023년 5월 개정)";
+  const fixSrc = (l, add) => { const s = l.blocks.find(b => b.t === "src"); if (s) s.items = [...new Set(s.items.filter(x => x !== OLDG).concat(add))]; };
+  const findB = (l, pred) => l.blocks.findIndex(pred);
+  const koStarts = (b, s) => b && b.x && b.x.ko && b.x.ko.startsWith(s);
+  const OXB = items => ({ t: "ox", items });
+  const Q = (q, o, w) => [q, o, w];
+
+  // ---------- 기존 r-1 고치기 ----------
+  {
+    const l = old["r-1"]; const i = findB(l, b => koStarts(b, "산업안전보건법 제36조는"));
+    if (i >= 0) l.blocks[i] = P("산업안전보건법 제36조는 사업주가 위험성평가를 하고, 근로자를 참여시키고, 결과를 알리고, 기록을 남기도록 정하고 있습니다. 2026년 6월 1일 개정법부터는 이를 지키지 않으면 과태료가 부과됩니다(다음 단원).",
+      "Ayon sa Artikulo 36 ng OSH Act, dapat gumawa ng risk assessment ang employer, isali ang manggagawa, ipaalam ang resulta at itala ito. Mula sa binagong batas noong Hunyo 1, 2026, may multa kapag hindi sinunod (susunod na aralin).",
+      "พ.ร.บ.ความปลอดภัยฯ มาตรา 36 กำหนดให้นายจ้างประเมินความเสี่ยง ให้ลูกจ้างมีส่วนร่วม แจ้งผล และเก็บบันทึก ตั้งแต่กฎหมายแก้ไขวันที่ 1 มิ.ย. 2026 ถ้าไม่ทำจะถูกปรับ (บทถัดไป)",
+      "Điều 36 Luật ATVSLĐ quy định chủ sử dụng phải đánh giá rủi ro, cho người lao động tham gia, thông báo kết quả và lưu hồ sơ. Từ luật sửa đổi ngày 1/6/2026, không thực hiện sẽ bị phạt tiền (bài sau).");
+    fixSrc(l, [LAW, G26]);
+  }
+
+  // ---------- 기존 r-2 (언제) 고치기 ----------
+  {
+    const l = old["r-2"]; const k = findB(l, b => b.t === "kv");
+    l.blocks[k] = KV([
+      [L("최초평가", "Unang assessment", "การประเมินครั้งแรก", "Đánh giá lần đầu"), L("처음 작업을 시작하기 전에 마칩니다. (예전에는 '사업 시작 후 1개월 안에 착수'였습니다)", "Tapusin bago simulan ang unang trabaho. (Dati: simulan sa loob ng 1 buwan)", "ทำให้เสร็จก่อนเริ่มงานครั้งแรก (เดิม: เริ่มภายใน 1 เดือนหลังเปิดกิจการ)", "Hoàn thành trước khi bắt đầu công việc đầu tiên. (Trước đây: bắt đầu trong 1 tháng)")],
+      [L("수시평가", "Kapag may pagbabago", "การประเมินเมื่อมีการเปลี่ยนแปลง", "Đánh giá khi có thay đổi"), L("설비·작업 방법이 바뀌거나 사고가 났을 때, 그 작업을 시작하기 전에 마칩니다.", "Kapag nagbago ang kagamitan o paraan, o may aksidente—tapusin bago simulan ang trabahong iyon.", "เมื่ออุปกรณ์หรือวิธีทำงานเปลี่ยน หรือเกิดอุบัติเหตุ ต้องทำให้เสร็จก่อนเริ่มงานนั้น", "Khi thiết bị, cách làm thay đổi hoặc có tai nạn—hoàn thành trước khi bắt đầu công việc đó.")],
+      [L("정기평가", "Regular", "การประเมินประจำปี", "Đánh giá định kỳ"), L("매년 1회 이상, 지난 결과를 다시 보고 바뀐 것을 반영합니다.", "Kahit isang beses bawat taon; suriin muli ang dating resulta.", "อย่างน้อยปีละ 1 ครั้ง ทบทวนผลเดิมและปรับตามที่เปลี่ยน", "Ít nhất mỗi năm một lần, xem lại kết quả cũ và cập nhật.")],
+      [L("평소 관리", "Araw-araw", "การดูแลประจำวัน", "Quản lý hằng ngày"), L("아차사고 확인, 현장 점검, TBM으로 평소에도 위험을 찾고 알립니다.", "Hanapin at ipaalam ang panganib sa pamamagitan ng muntikang aksidente, inspeksyon at TBM.", "หาและแจ้งอันตรายเป็นประจำผ่านเหตุเกือบเกิด การตรวจหน้างาน และ TBM", "Thường xuyên tìm và báo nguy hiểm qua sự cố suýt xảy ra, kiểm tra hiện trường, TBM.")]
+    ]);
+    const hi = findB(l, b => b.t === "h" && b.x.ko.startsWith("상시평가")); const pi = findB(l, b => koStarts(b, "2023년에 바뀐"));
+    if (hi >= 0) l.blocks[hi] = H("평가 일정은 미리 알립니다", "Ipinapaalam nang maaga ang iskedyul", "แจ้งกำหนดการประเมินล่วงหน้า", "Thông báo trước lịch đánh giá");
+    if (pi >= 0) l.blocks[pi] = P("새 지침은 평가 일정을 근로자에게 미리 알리도록 했습니다. '위험요인을 고친 뒤에 일을 시작한다'는 원칙에 따라, 최초·수시평가는 모두 작업 시작 전에 끝내야 합니다. 매일 TBM과 매주 수요일 교육은 평소에 위험을 찾고 알리는 시간입니다.",
+      "Ayon sa bagong patnubay, ipaalam nang maaga sa manggagawa ang iskedyul. Dahil sa prinsipyong 'ayusin muna ang panganib bago magtrabaho', dapat tapos ang una at may-pagbabagong assessment bago magsimula. Ang araw-araw na TBM at aralin tuwing Miyerkoles ay oras para hanapin at ipaalam ang panganib.",
+      "แนวทางใหม่ให้แจ้งกำหนดการประเมินแก่ลูกจ้างล่วงหน้า ตามหลัก 'แก้อันตรายก่อนแล้วจึงเริ่มงาน' การประเมินครั้งแรกและเมื่อมีการเปลี่ยนแปลงต้องเสร็จก่อนเริ่มงาน TBM ทุกวันและบทเรียนวันพุธคือเวลาหาและแจ้งอันตรายเป็นประจำ",
+      "Hướng dẫn mới yêu cầu báo trước lịch đánh giá cho người lao động. Theo nguyên tắc 'sửa nguy hiểm xong mới bắt đầu làm', đánh giá lần đầu và khi thay đổi đều phải xong trước khi làm. TBM hằng ngày và bài học thứ Tư là lúc thường xuyên tìm và báo nguy hiểm.");
+    fixSrc(l, [LAW, G26, NEWS]);
+  }
+
+  // ---------- 기존 r-3 (5단계) 고치기 ----------
+  {
+    const l = old["r-3"]; const o = l.blocks.find(b => b.t === "ol");
+    if (o) o.items[0] = L("사전준비: 누가, 어떤 작업을, 어떤 기준으로 평가할지 정하고 일정을 근로자에게 미리 알립니다.", "Paghahanda: itakda kung sino, anong trabaho at pamantayan, at ipaalam nang maaga ang iskedyul.", "เตรียมการ: กำหนดว่าใคร ประเมินงานอะไร ด้วยเกณฑ์อะไร และแจ้งกำหนดการแก่ลูกจ้างล่วงหน้า", "Chuẩn bị: định ai, đánh giá việc gì, theo tiêu chí nào, và báo trước lịch cho người lao động.");
+    if (o) o.items[4] = L("기록·공유: 결과를 기록해 3년 동안 보관하고, 근로자에게 알립니다. 새로 온 사람과 작업이 바뀐 사람에게는 일을 시작하기 전에 알립니다.", "Itala at ibahagi: itago nang 3 taon at ipaalam. Sa bago o nalipat na manggagawa, ipaalam bago magsimula.", "บันทึกและแบ่งปัน: เก็บไว้ 3 ปีและแจ้งลูกจ้าง คนใหม่หรือคนที่เปลี่ยนงานต้องแจ้งก่อนเริ่มงาน", "Ghi chép và chia sẻ: lưu 3 năm và thông báo. Người mới hoặc đổi việc phải được báo trước khi làm.");
+    fixSrc(l, [LAW, G26]);
+  }
+
+  // ---------- 기존 r-6 (참여) 고치기 ----------
+  {
+    const l = old["r-6"]; const li = findB(l, b => b.t === "lead");
+    l.blocks[li] = LEAD("위험성평가의 주인공은 현장 작업자입니다. 2026년 개정법은 근로자 참여를 의무로 정했고, 참여시키지 않으면 회사에 과태료가 부과됩니다.",
+      "Ang bida sa risk assessment ay ang manggagawa. Ginawang obligasyon ng binagong batas noong 2026 ang paglahok ng manggagawa, at may multa ang kumpanya kapag hindi isinali.",
+      "ตัวเอกของการประเมินคือคนทำงานหน้างาน กฎหมายแก้ไขปี 2026 กำหนดให้ลูกจ้างมีส่วนร่วมเป็นหน้าที่ ถ้าไม่ให้มีส่วนร่วม บริษัทจะถูกปรับ",
+      "Nhân vật chính của đánh giá rủi ro là công nhân. Luật sửa đổi 2026 quy định người lao động tham gia là nghĩa vụ; không cho tham gia công ty bị phạt.");
+    const o = l.blocks.find(b => b.t === "ol");
+    if (o) o.items.unshift(L("일정 확인: 회사가 미리 알려 주는 평가 일정을 보고 순회점검·설문·면담에 참여합니다.", "Alamin ang iskedyul: sumali sa inspeksyon, survey o panayam ayon sa ipinaalam na iskedyul.", "ดูกำหนดการ: ดูกำหนดการที่บริษัทแจ้ง แล้วร่วมเดินตรวจ ตอบแบบสอบถาม หรือให้สัมภาษณ์", "Xem lịch: theo lịch công ty báo trước, tham gia đi kiểm tra, khảo sát, phỏng vấn."));
+    const ni = findB(l, b => b.t === "note");
+    l.blocks.splice(ni, 0, NOTE("근로자대표가 위험성평가 참여를 요구하면, 회사는 참여 일정·방법·범위를 협의해 참여시켜야 합니다.",
+      "Kapag hiniling ng kinatawan ng manggagawa na sumali, dapat makipag-usap ang kumpanya tungkol sa iskedyul, paraan at saklaw at isali sila.",
+      "ถ้าผู้แทนลูกจ้างขอมีส่วนร่วม บริษัทต้องหารือกำหนดการ วิธี และขอบเขต แล้วให้มีส่วนร่วม",
+      "Khi đại diện người lao động yêu cầu tham gia, công ty phải thỏa thuận lịch, cách thức, phạm vi và cho tham gia."));
+    fixSrc(l, [G26, NEWS]);
+  }
+  fixSrc(old["r-4"], [G26]); fixSrc(old["r-5"], [G26]);
+
+  // ========== 새 단원 ==========
+  const nChange = { id: "n-change", title: L("2026년, 위험성평가가 이렇게 바뀌었습니다", "Mga pagbabago sa risk assessment noong 2026", "การประเมินความเสี่ยงเปลี่ยนไปในปี 2026", "Năm 2026, đánh giá rủi ro đã thay đổi"),
+    blocks: [
+      LEAD("2026년에 위험성평가 제도가 크게 바뀌었습니다. 이제 '하면 좋은 것'이 아니라, 하지 않거나 제대로 하지 않으면 과태료를 내는 법적 의무입니다.",
+        "Malaki ang pagbabago noong 2026. Hindi na ito 'mabuting gawin' lang—obligasyon na ito ng batas at may multa kapag hindi o mali ang paggawa.",
+        "ปี 2026 ระบบการประเมินความเสี่ยงเปลี่ยนไปมาก ไม่ใช่แค่ 'ทำแล้วดี' อีกต่อไป แต่เป็นหน้าที่ตามกฎหมาย ถ้าไม่ทำหรือทำไม่ถูกจะถูกปรับ",
+        "Năm 2026 chế độ đánh giá rủi ro thay đổi lớn. Giờ không còn là 'làm thì tốt' mà là nghĩa vụ pháp lý, không làm hoặc làm sai sẽ bị phạt."),
+      KV([
+        [L("법 개정", "Batas", "การแก้กฎหมาย", "Sửa luật"), L("산업안전보건법 개정, 2026년 6월 1일 시행. 위험성평가 실시·근로자 참여·결과 공유·기록이 분명한 의무가 되었습니다.", "Binagong OSH Act, epektibo Hunyo 1, 2026. Obligasyon na ang pagsasagawa, paglahok, pagbabahagi at pagtatala.", "แก้ไข พ.ร.บ.ความปลอดภัยฯ มีผล 1 มิ.ย. 2026 การประเมิน การมีส่วนร่วม การแจ้งผล และการบันทึกเป็นหน้าที่ชัดเจน", "Luật ATVSLĐ sửa đổi, hiệu lực 1/6/2026. Thực hiện, cho tham gia, chia sẻ kết quả và lưu hồ sơ trở thành nghĩa vụ rõ ràng.")],
+        [L("새 지침", "Bagong patnubay", "แนวทางใหม่", "Hướng dẫn mới"), L("2026년 11월 4일, 고용노동부가 「사업장 위험성평가에 관한 지침」을 전부 개정했습니다.", "Noong Nobyembre 4, 2026, binago nang buo ng Ministry of Labor ang patnubay.", "4 พ.ย. 2026 กระทรวงแรงงานแก้ไขแนวทางการประเมินความเสี่ยงทั้งฉบับ", "Ngày 4/11/2026, Bộ Lao động sửa đổi toàn bộ hướng dẫn đánh giá rủi ro.")],
+        [L("과태료 적용", "Kailan ang multa", "เริ่มปรับเมื่อไร", "Áp dụng phạt"), L("상시근로자 50명 이상: 2027년 1월 1일부터 / 50명 미만: 2028년 1월 1일부터", "50 o higit na manggagawa: mula Enero 1, 2027 / mas mababa sa 50: mula Enero 1, 2028", "ลูกจ้าง 50 คนขึ้นไป: ตั้งแต่ 1 ม.ค. 2027 / ต่ำกว่า 50 คน: ตั้งแต่ 1 ม.ค. 2028", "Từ 50 lao động: từ 1/1/2027 / dưới 50: từ 1/1/2028")]
+      ]),
+      H("과태료 (최대 금액)", "Multa (pinakamataas)", "ค่าปรับ (สูงสุด)", "Mức phạt (tối đa)"),
+      KV([
+        [L("평가를 하지 않음", "Hindi ginawa", "ไม่ประเมิน", "Không đánh giá"), L("1,000만 원", "10 milyong won", "10 ล้านวอน", "10 triệu won")],
+        [L("근로자를 참여시키지 않음 (근로자대표 요구 거부 포함)", "Hindi isinali ang manggagawa (kasama ang pagtanggi sa kinatawan)", "ไม่ให้ลูกจ้างมีส่วนร่วม (รวมปฏิเสธคำขอผู้แทนลูกจ้าง)", "Không cho người lao động tham gia (kể cả từ chối đại diện)"), L("500만 원", "5 milyong won", "5 ล้านวอน", "5 triệu won")],
+        [L("일정·결과를 알리지 않음", "Hindi ipinaalam ang iskedyul at resulta", "ไม่แจ้งกำหนดการและผล", "Không báo lịch và kết quả"), L("500만 원", "5 milyong won", "5 ล้านวอน", "5 triệu won")],
+        [L("기록하지 않거나 3년 보관하지 않음", "Hindi itinala o hindi itinago nang 3 taon", "ไม่บันทึกหรือไม่เก็บ 3 ปี", "Không ghi hoặc không lưu 3 năm"), L("300만 원", "3 milyong won", "3 ล้านวอน", "3 triệu won")]
+      ]),
+      P("금액은 위반 횟수에 따라 올라갑니다. 예를 들어 평가를 하지 않으면 1차 500만 원, 2차 700만 원, 3차 1,000만 원입니다.",
+        "Tumataas ang halaga ayon sa dami ng paglabag. Hal. kapag hindi ginawa: 1st 5M, 2nd 7M, 3rd 10M won.",
+        "จำนวนเงินเพิ่มตามจำนวนครั้งที่ฝ่าฝืน เช่น ไม่ประเมิน ครั้งที่ 1: 5 ล้าน ครั้งที่ 2: 7 ล้าน ครั้งที่ 3: 10 ล้านวอน",
+        "Số tiền tăng theo số lần vi phạm. VD không đánh giá: lần 1 là 5 triệu, lần 2 là 7 triệu, lần 3 là 10 triệu won."),
+      H("근로자에게 달라지는 점", "Ano ang nagbago para sa manggagawa", "สิ่งที่เปลี่ยนสำหรับลูกจ้าง", "Điều thay đổi với người lao động"),
+      { t: "ul", items: [
+        L("평가 일정을 미리 알려 줍니다.", "Ipinapaalam nang maaga ang iskedyul.", "แจ้งกำหนดการประเมินล่วงหน้า", "Được báo trước lịch đánh giá."),
+        L("근로자가 함께 평가합니다(순회점검, 설문, 면담 등).", "Kasali ang manggagawa (inspeksyon, survey, panayam).", "ลูกจ้างร่วมประเมิน (เดินตรวจ แบบสอบถาม สัมภาษณ์)", "Người lao động cùng đánh giá (đi kiểm tra, khảo sát, phỏng vấn)."),
+        L("새로 들어온 사람, 하는 일이 바뀐 사람은 일을 시작하기 전에 그 작업의 평가 결과를 안내받습니다.", "Ang bago o nalipat ng trabaho ay sasabihan ng resulta bago magsimula.", "คนใหม่หรือคนที่เปลี่ยนงาน จะได้รับแจ้งผลประเมินของงานนั้นก่อนเริ่มงาน", "Người mới hoặc đổi việc được hướng dẫn kết quả đánh giá trước khi bắt đầu."),
+        L("위험요인을 먼저 고친 뒤에 일을 시작한다는 원칙이 강해졌습니다.", "Pinalakas ang prinsipyong ayusin muna ang panganib bago magtrabaho.", "เน้นหลัก 'แก้อันตรายก่อนแล้วจึงเริ่มงาน' มากขึ้น", "Nguyên tắc 'sửa nguy hiểm trước rồi mới làm' được tăng cường.")
+      ]},
+      NOTE("과태료가 목적은 아닙니다. 정부도 처벌보다 현장이 스스로 하도록 하는 데 중점을 둔다고 밝혔습니다. 핵심은 서류가 아니라 실제로 위험을 줄이는 것입니다.",
+        "Hindi multa ang layunin. Sinabi ng gobyerno na mas nakatuon sila sa kusang pagsunod kaysa parusa. Ang mahalaga ay talagang mabawasan ang panganib, hindi papeles.",
+        "ค่าปรับไม่ใช่เป้าหมาย รัฐบาลบอกว่าเน้นให้หน้างานทำเองมากกว่าการลงโทษ หัวใจคือการลดอันตรายจริง ไม่ใช่เอกสาร",
+        "Phạt tiền không phải mục đích. Chính phủ cho biết chú trọng để cơ sở tự thực hiện hơn là xử phạt. Cốt lõi là giảm nguy hiểm thật, không phải giấy tờ."),
+      OXB([Q(L("2026년 개정법에 따라 위험성평가를 하지 않으면 과태료가 부과될 수 있다.", "Ayon sa binagong batas noong 2026, puwedeng magmulta kapag hindi gumawa ng assessment.", "ตามกฎหมายแก้ไขปี 2026 ถ้าไม่ประเมินอาจถูกปรับ", "Theo luật sửa đổi 2026, không đánh giá có thể bị phạt."), true,
+            L("최대 1,000만 원입니다(50명 이상 사업장은 2027년부터).", "Hanggang 10 milyong won (50 pataas: mula 2027).", "สูงสุด 10 ล้านวอน (50 คนขึ้นไป: ตั้งแต่ 2027)", "Tối đa 10 triệu won (từ 50 người: từ 2027).")),
+          Q(L("새로 입사한 사람은 일을 해 보면서 위험을 스스로 알아 가면 된다.", "Ang bagong pasok ay matututo na lang habang nagtatrabaho.", "คนเข้าใหม่ค่อย ๆ เรียนรู้อันตรายเองระหว่างทำงานก็ได้", "Người mới vào cứ vừa làm vừa tự biết nguy hiểm là được."), false,
+            L("일을 시작하기 전에 그 작업의 평가 결과를 안내받아야 합니다.", "Dapat sabihan ng resulta bago magsimula.", "ต้องได้รับแจ้งผลประเมินก่อนเริ่มงาน", "Phải được hướng dẫn kết quả trước khi bắt đầu."))]),
+      SRC([LAW, G26, NEWS, COL])
+    ]};
+
+  const nFind = { id: "n-find", title: L("위험요인 빠짐없이 찾기", "Paghahanap ng lahat ng panganib", "หาอันตรายให้ครบ", "Tìm đủ mọi mối nguy"),
+    blocks: [
+      LEAD("위험은 눈에 잘 띄지 않습니다. 매일 보던 것일수록 더 그렇습니다. 정해진 방법으로 빠짐없이 찾아야 합니다.",
+        "Hindi madaling makita ang panganib, lalo na ang nakikita araw-araw. Kailangang hanapin nang buo gamit ang paraan.",
+        "อันตรายมองเห็นยาก ยิ่งของที่เห็นทุกวันยิ่งมองไม่เห็น ต้องหาให้ครบด้วยวิธีที่กำหนด",
+        "Nguy hiểm không dễ thấy, nhất là thứ nhìn mỗi ngày. Phải tìm đầy đủ theo phương pháp."),
+      H("방법 1. 작업을 단계로 나누기", "Paraan 1. Hatiin sa mga hakbang", "วิธีที่ 1 แบ่งงานเป็นขั้น", "Cách 1. Chia công việc thành bước"),
+      P("예) 절곡 작업: ① 판재 가져오기 ② 금형 확인·세팅 ③ 판재 넣고 맞추기 ④ 페달 밟아 접기 ⑤ 꺼내서 쌓기. 단계마다 '여기서 어떻게 다칠 수 있나?'를 묻습니다.",
+        "Hal.) Pagbaluktot: ① kunin ang sheet ② suriin at ikabit ang die ③ ilagay at ihanay ④ apakan ang pedal ⑤ alisin at isalansan. Itanong sa bawat hakbang: 'Paano ako masasaktan dito?'",
+        "เช่น งานพับ: ① ยกแผ่นมา ② ตรวจและติดตั้งแม่พิมพ์ ③ ใส่แผ่นและจัดตำแหน่ง ④ เหยียบแป้นพับ ⑤ เอาออกและวางซ้อน ถามทุกขั้นว่า 'ตรงนี้บาดเจ็บได้อย่างไร'",
+        "VD chấn: ① mang tấm tới ② kiểm tra, lắp khuôn ③ đặt và căn tấm ④ đạp bàn đạp chấn ⑤ lấy ra, xếp. Mỗi bước hỏi 'ở đây có thể bị thương thế nào?'"),
+      H("방법 2. 여섯 가지 눈으로 보기", "Paraan 2. Tingnan sa anim na anggulo", "วิธีที่ 2 มองด้วย 6 มุม", "Cách 2. Nhìn theo sáu góc"),
+      KV([
+        [L("기계", "Makina", "เครื่องจักร", "Máy"), L("끼임, 말림, 튐", "Naipit, napulupot, tumalsik", "หนีบ ม้วน กระเด็น", "Kẹp, cuốn, văng")],
+        [L("물체", "Bagay", "วัตถุ", "Vật"), L("떨어짐, 베임, 깔림", "Nahulog, nahiwa, nadaganan", "ตกใส่ บาด ทับ", "Rơi, cắt, đè")],
+        [L("사람·동작", "Tao at kilos", "คนและท่าทาง", "Người, động tác"), L("넘어짐, 허리 부담, 무리한 자세", "Nadulas, sakit sa likod, maling postura", "ลื่นล้ม ภาระหลัง ท่าฝืน", "Ngã, quá tải lưng, tư thế gượng")],
+        [L("환경", "Kapaligiran", "สภาพแวดล้อม", "Môi trường"), L("소음, 흄·분진, 더위, 어두운 조명", "Ingay, fume at alikabok, init, madilim", "เสียง ฟูมและฝุ่น ความร้อน แสงไม่พอ", "Ồn, khói bụi, nóng, thiếu sáng")],
+        [L("전기·화재", "Kuryente at sunog", "ไฟฟ้าและไฟไหม้", "Điện và cháy"), L("감전, 불티, 가스 누설", "Kuryente, spark, tagas ng gas", "ไฟดูด สะเก็ดไฟ แก๊สรั่ว", "Điện giật, tia lửa, rò khí")],
+        [L("관리", "Pamamahala", "การจัดการ", "Quản lý"), L("교육 부족, 표지 없음, 정리정돈 불량", "Kulang sa training, walang karatula, magulo", "อบรมไม่พอ ไม่มีป้าย ไม่เป็นระเบียบ", "Thiếu đào tạo, không biển báo, bừa bộn")]
+      ]),
+      H("방법 3. 일하는 사람에게 묻기", "Paraan 3. Tanungin ang gumagawa", "วิธีที่ 3 ถามคนทำงาน", "Cách 3. Hỏi người làm việc"),
+      P("순회점검 때 작업자에게 직접 묻고, 설문이나 면담으로 의견을 받습니다. '요즘 불편하거나 아찔했던 적 있어요?'라는 질문 하나가 서류보다 많은 위험을 찾아냅니다.",
+        "Sa inspeksyon, direktang tanungin ang manggagawa at kumuha ng opinyon sa survey o panayam. Ang tanong na 'May hindi ka ba komportable o muntik nang mangyari?' ay nakakahanap ng mas maraming panganib kaysa papeles.",
+        "ระหว่างเดินตรวจให้ถามคนทำงานโดยตรง และรับความเห็นผ่านแบบสอบถามหรือสัมภาษณ์ คำถามเดียว 'ช่วงนี้มีอะไรไม่สะดวกหรือหวาดเสียวไหม' หาอันตรายได้มากกว่าเอกสาร",
+        "Khi đi kiểm tra, hỏi trực tiếp công nhân, lấy ý kiến qua khảo sát, phỏng vấn. Một câu 'Gần đây có gì bất tiện hay suýt nguy hiểm không?' tìm ra nhiều nguy hiểm hơn giấy tờ."),
+      { t: "hunt" },
+      NOTE("그림 연습이 끝나면 실제 내 작업장도 같은 눈으로 둘러보세요. 찾은 것은 반장에게 알려 주세요.",
+        "Pagkatapos ng pagsasanay, tingnan ang sariling lugar ng trabaho sa parehong paraan. Sabihin sa team leader ang nakita.",
+        "ฝึกจากภาพเสร็จแล้ว ลองมองที่ทำงานจริงของเราแบบเดียวกัน เจออะไรแจ้งหัวหน้า",
+        "Luyện xong với hình, hãy nhìn nơi làm việc thật của mình theo cách đó. Thấy gì báo tổ trưởng."),
+      OXB([Q(L("매일 하던 작업이라도 단계별로 나눠 보면 놓친 위험을 찾을 수 있다.", "Kahit araw-araw na trabaho, makakakita ng hindi napansing panganib kapag hinati sa mga hakbang.", "แม้งานที่ทำทุกวัน ถ้าแบ่งเป็นขั้นก็เจออันตรายที่มองข้ามได้", "Dù việc làm hằng ngày, chia thành bước vẫn tìm ra nguy hiểm bị bỏ sót."), true,
+            L("익숙할수록 위험이 잘 안 보입니다.", "Kung mas sanay, mas hindi nakikita ang panganib.", "ยิ่งคุ้นยิ่งมองไม่เห็นอันตราย", "Càng quen càng khó thấy nguy hiểm.")),
+          Q(L("위험요인은 관리자가 서류로 찾으면 충분하다.", "Sapat na ang papeles ng manager sa paghahanap ng panganib.", "ผู้จัดการหาอันตรายจากเอกสารก็พอ", "Quản lý tìm mối nguy trên giấy là đủ."), false,
+            L("일하는 사람에게 묻는 것이 가장 정확합니다.", "Pinakatumpak ang magtanong sa gumagawa.", "ถามคนทำงานแม่นยำที่สุด", "Hỏi người làm là chính xác nhất."))]),
+      SRC([G26, BOOK, COL])
+    ]};
+
+  const nJudge = { id: "n-judge", title: L("판단 연습: 상·중·하", "Pagsasanay: mataas, katamtaman, mababa", "ฝึกตัดสิน: สูง กลาง ต่ำ", "Luyện đánh giá: cao, TB, thấp"),
+    blocks: [
+      LEAD("앞에서 배운 상·중·하 판단을 직접 해 봅니다. 상황을 읽고, 얼마나 자주 일어날 수 있는지와 얼마나 크게 다칠지를 함께 생각하세요.",
+        "Subukan ang pagtimbang na natutunan. Basahin ang sitwasyon at isipin ang dalas at kalubhaan.",
+        "ลองตัดสิน สูง กลาง ต่ำ ด้วยตัวเอง อ่านสถานการณ์แล้วคิดทั้งโอกาสเกิดและความรุนแรง",
+        "Tự làm đánh giá cao, trung bình, thấp. Đọc tình huống rồi nghĩ cả khả năng xảy ra và mức thương tích."),
+      { t: "judge" },
+      H("판단할 때 흔한 실수", "Karaniwang pagkakamali", "ข้อผิดพลาดที่พบบ่อย", "Sai lầm thường gặp"),
+      { t: "ul", items: [
+        L("'지금까지 사고가 없었다' → 운이 좋았을 수 있습니다.", "'Walang aksidente hanggang ngayon' → baka sinuwerte lang.", "'ยังไม่เคยเกิดอุบัติเหตุ' → อาจแค่โชคดี", "'Đến giờ chưa có tai nạn' → có thể chỉ là may."),
+        L("'보호구를 쓰니까 괜찮다' → 보호구는 마지막 방어선입니다.", "'May PPE kaya ayos' → huling depensa lang ang PPE.", "'ใส่อุปกรณ์ป้องกันแล้วไม่เป็นไร' → อุปกรณ์คือด่านสุดท้าย", "'Có đồ bảo hộ nên ổn' → đồ bảo hộ là tuyến cuối."),
+        L("'가끔 하는 작업이다' → 드물어도 사망할 수 있으면 높게 봅니다.", "'Bihira lang' → mataas kung puwedeng ikamatay.", "'นาน ๆ ทำที' → ถ้าถึงตายได้ถือว่าสูง", "'Thỉnh thoảng mới làm' → có thể chết người thì coi là cao."),
+        L("'숙련자라 괜찮다' → 사고는 숙련자에게도 납니다.", "'Bihasa siya' → naaaksidente rin ang bihasa.", "'คนชำนาญไม่เป็นไร' → คนชำนาญก็เกิดอุบัติเหตุได้", "'Người thạo việc nên ổn' → người thạo cũng gặp tai nạn.")
+      ]},
+      NOTE("판단이 갈리면 혼자 정하지 말고 반장·동료와 함께 이야기해서 정합니다. 그 이야기 자체가 근로자 참여입니다.",
+        "Kapag magkakaiba ang opinyon, pag-usapan kasama ang team leader at katrabaho. Ang usapang iyon mismo ay paglahok ng manggagawa.",
+        "ถ้าความเห็นต่างกัน อย่าตัดสินคนเดียว ให้คุยกับหัวหน้าและเพื่อน การคุยนั้นก็คือการมีส่วนร่วมของลูกจ้าง",
+        "Nếu ý kiến khác nhau, đừng tự quyết mà bàn với tổ trưởng, đồng nghiệp. Chính việc bàn bạc đó là sự tham gia của người lao động."),
+      OXB([Q(L("매일 쓰는 기계의 안전장치가 고장 났다면 '상'으로 보고 바로 멈춘다.", "Kapag sira ang safety device ng araw-araw na makina, 'mataas' ito at itigil agad.", "อุปกรณ์นิรภัยของเครื่องที่ใช้ทุกวันเสีย ถือว่า 'สูง' และหยุดทันที", "Thiết bị an toàn của máy dùng hằng ngày hỏng thì coi là 'cao' và dừng ngay."), true,
+            L("자주 일어나고 크게 다칠 수 있습니다.", "Madalas at malubha.", "เกิดบ่อยและรุนแรง", "Hay xảy ra và nặng.")),
+          Q(L("판단이 어려우면 혼자 정하는 것이 빠르고 좋다.", "Kapag mahirap, mas mabuting magpasya mag-isa.", "ถ้าตัดสินยาก ตัดสินคนเดียวเร็วและดีกว่า", "Khó đánh giá thì tự quyết cho nhanh."), false,
+            L("함께 이야기해서 정합니다.", "Pag-usapan nang sama-sama.", "คุยกันแล้วตัดสินร่วมกัน", "Cùng bàn rồi quyết định."))]),
+      SRC([G26, BOOK])
+    ]};
+
+  const ROW = (ko, tl, th, vi) => { const sp = x => x.split(" | "); const a = [ko, tl, th, vi].map(sp); return { w: L(a[0][0], a[1][0], a[2][0], a[3][0]), lv: { "상": 3, "중": 2, "하": 1 }[a[0][1]] || 2, f: L(a[0][2], a[1][2], a[2][2], a[3][2]) }; };
+  const nEx1 = { id: "n-ex1", title: L("공정별 예시 ① 레이저·절곡·프레스", "Halimbawa ① laser, press brake, press", "ตัวอย่างตามกระบวนการ ① เลเซอร์ เครื่องพับ เครื่องปั๊ม", "Ví dụ theo công đoạn ① laser, chấn, dập"),
+    blocks: [
+      LEAD("우리 공장의 주요 공정을 위험성평가 표처럼 정리했습니다. 실제 회사 평가 결과는 반장과 게시판에서 확인하세요. 여기서는 '어떻게 생각하는지'를 배웁니다.",
+        "Inayos namin ang pangunahing proseso na parang talaan ng assessment. Tingnan ang tunay na resulta sa team leader at bulletin board. Dito, matututunan ang 'paano mag-isip'.",
+        "สรุปกระบวนการหลักของโรงงานเหมือนตารางประเมินความเสี่ยง ผลจริงของบริษัทดูได้จากหัวหน้าและบอร์ด ที่นี่เราเรียน 'วิธีคิด'",
+        "Sắp xếp các công đoạn chính như bảng đánh giá rủi ro. Kết quả thật của công ty xem ở tổ trưởng và bảng tin. Ở đây học 'cách suy nghĩ'."),
+      { t: "rt", k: L("레이저 절단", "Laser cutting", "ตัดเลเซอร์", "Cắt laser"), rows: [
+        ROW("판재 싣고 내리기 — 베임·발 찍힘·허리 | 중 | 진공 리프터, 베임방지 장갑, 무거운 판재는 2인 1조", "Pagkarga at pagbaba ng sheet — hiwa, paa, likod | Katamtaman | vacuum lifter, cut-resistant gloves, dalawahan sa mabigat", "ขนแผ่นขึ้นลง — บาด เท้าถูกทับ หลัง | กลาง | เครื่องยกสุญญากาศ ถุงมือกันบาด แผ่นหนักทำ 2 คน", "Xếp dỡ tấm — cắt, dập chân, lưng | TB | máy hút nâng, găng chống cắt, tấm nặng làm 2 người"),
+        ROW("가공 중 화재 — 불티·산소 | 상 | 산소 밸브 위치 숙지, 소화기 비치, 집진기 필터 청소, 가공 중 자리 비우지 않기", "Sunog habang nagka-cut — spark, oxygen | Mataas | alamin ang oxygen valve, extinguisher, linisin ang filter, huwag iwanan", "ไฟไหม้ระหว่างตัด — สะเก็ดไฟ ออกซิเจน | สูง | รู้ตำแหน่งวาล์วออกซิเจน มีถังดับเพลิง ล้างไส้กรอง ไม่ทิ้งเครื่อง", "Cháy khi cắt — tia lửa, oxy | Cao | biết vị trí van oxy, có bình chữa cháy, vệ sinh lọc bụi, không rời máy"),
+        ROW("문 열고 들여다보기 — 레이저 빛 | 상 | 연동장치 유지, 우회·개조 금지", "Pagsilip na bukas ang pinto — laser | Mataas | panatilihin ang interlock, bawal i-bypass", "เปิดประตูมอง — แสงเลเซอร์ | สูง | รักษาอินเตอร์ล็อก ห้ามบายพาสหรือดัดแปลง", "Mở cửa nhìn vào — tia laser | Cao | giữ khóa liên động, cấm vô hiệu hóa")
+      ]},
+      { t: "rt", k: L("절곡 (프레스 브레이크)", "Pagbaluktot (press brake)", "งานพับ (เครื่องพับ)", "Chấn (máy chấn)"), rows: [
+        ROW("금형 사이 손 — 끼임·절단 | 상 | 광선식 안전장치 상시 작동, 뮤팅 구간에 손 넣지 않기", "Kamay sa die — naipit, naputol | Mataas | laging gumagana ang light guard, huwag ipasok ang kamay sa muting", "มือในแม่พิมพ์ — หนีบ ขาด | สูง | ม่านแสงทำงานตลอด ห้ามยื่นมือช่วงมิวติ้ง", "Tay trong khuôn — kẹp, đứt | Cao | thiết bị quang học luôn bật, không đưa tay vào lúc muting"),
+        ROW("긴 판재 끝 튐 — 얼굴·몸 맞음 | 중 | 2인 1조, 판재 받침대, 들리는 방향 밖에 서기", "Talsik ng dulo ng mahabang sheet — mukha, katawan | Katamtaman | dalawahan, suporta, tumayo sa labas ng direksyon", "ปลายแผ่นยาวดีด — โดนหน้า ตัว | กลาง | ทำ 2 คน ที่รองแผ่น ยืนนอกทิศที่แผ่นยก", "Đầu tấm dài bật — trúng mặt, người | TB | làm 2 người, giá đỡ, đứng ngoài hướng bật"),
+        ROW("금형 교체 중 램 하강 — 끼임 | 상 | 안전블록, 전원 잠금·표지", "Bumaba ang ram habang nagpapalit ng die — naipit | Mataas | safety block, lockout at tag", "แรมเลื่อนลงระหว่างเปลี่ยนแม่พิมพ์ — หนีบ | สูง | บล็อกนิรภัย ล็อกไฟและป้าย", "Đầu chày hạ khi thay khuôn — kẹp | Cao | khối an toàn, khóa nguồn, treo thẻ")
+      ]},
+      { t: "rt", k: L("프레스", "Press", "เครื่องปั๊ม", "Máy dập"), rows: [
+        ROW("재료 넣고 빼기 — 손 끼임 | 상 | 양수조작식·광전자식 방호장치, 수공구 사용", "Paglalagay at pag-alis ng materyales — naipit | Mataas | two-hand control o light guard, hand tool", "ใส่และเอาชิ้นงานออก — มือถูกหนีบ | สูง | ระบบสองมือหรือม่านแสง ใช้เครื่องมือมือ", "Đưa và lấy phôi — kẹp tay | Cao | điều khiển hai tay hoặc quang học, dụng cụ cầm tay"),
+        ROW("큰 소음 — 난청 | 중 | 귀마개 착용 확인, 소음 측정, 방음 커버", "Malakas na ingay — pagkabingi | Katamtaman | earplugs, pagsukat ng ingay, takip na pang-ingay", "เสียงดัง — หูตึง | กลาง | ตรวจการใส่ที่อุดหู วัดเสียง ฝาครอบกันเสียง", "Ồn lớn — điếc | TB | kiểm tra đeo nút tai, đo ồn, vỏ cách âm"),
+        ROW("금형 옮기기 — 떨어짐·허리 | 중 | 크레인·대차 사용, 안전화", "Paglipat ng die — nahulog, likod | Katamtaman | crane o kariton, safety shoes", "ย้ายแม่พิมพ์ — ตก หลัง | กลาง | ใช้เครนหรือรถเข็น รองเท้านิรภัย", "Chuyển khuôn — rơi, lưng | TB | dùng cẩu hoặc xe đẩy, giày bảo hộ")
+      ]},
+      NOTE("색 표시: 빨강 = 상, 노랑 = 중, 초록 = 하. 위험성이 '상'인 것은 대책이 끝날 때까지 작업을 멈추거나 임시 조치를 합니다.",
+        "Kulay: pula = mataas, dilaw = katamtaman, berde = mababa. Kapag 'mataas', itigil o gumawa ng pansamantalang hakbang hanggang matapos.",
+        "สี: แดง = สูง เหลือง = กลาง เขียว = ต่ำ ถ้าระดับ 'สูง' ให้หยุดงานหรือทำมาตรการชั่วคราวจนแก้เสร็จ",
+        "Màu: đỏ = cao, vàng = TB, xanh = thấp. Mức 'cao' thì dừng hoặc có biện pháp tạm cho đến khi xong."),
+      OXB([Q(L("레이저 가공 중에는 잠깐 자리를 비워도 연동장치가 있으니 괜찮다.", "Ayos lang umalis sandali habang nagka-cut dahil may interlock.", "ระหว่างตัดเลเซอร์ ออกไปแป๊บเดียวก็ได้เพราะมีอินเตอร์ล็อก", "Khi cắt laser rời máy một lúc cũng được vì có khóa liên động."), false,
+            L("화재는 가공 중에 납니다. 자리를 비우지 않습니다.", "Nangyayari ang sunog habang nagka-cut. Huwag umalis.", "ไฟไหม้เกิดระหว่างตัด อย่าทิ้งเครื่อง", "Cháy xảy ra khi đang cắt. Không rời máy.")),
+          Q(L("금형 교체 중 램 하강 위험은 '상'이므로 안전블록과 전원 잠금을 한다.", "Mataas ang panganib ng pagbaba ng ram, kaya safety block at lockout.", "แรมเลื่อนลงระหว่างเปลี่ยนแม่พิมพ์เป็นระดับ 'สูง' จึงใช้บล็อกนิรภัยและล็อกไฟ", "Nguy cơ đầu chày hạ khi thay khuôn là 'cao' nên dùng khối an toàn và khóa nguồn."), true,
+            L("사망까지 갈 수 있는 끼임입니다.", "Puwedeng ikamatay.", "อาจถึงตาย", "Có thể gây chết người."))]),
+      SRC([G26, BOOK, "산업안전보건기준에 관한 규칙(프레스·레이저·방호장치)"])
+    ]};
+
+  const nEx2 = { id: "n-ex2", title: L("공정별 예시 ② 용접·그라인더·크레인·지게차", "Halimbawa ② welding, grinder, crane, forklift", "ตัวอย่างตามกระบวนการ ② เชื่อม เจียร เครน รถยก", "Ví dụ theo công đoạn ② hàn, mài, cẩu, xe nâng"),
+    blocks: [
+      LEAD("판금 공장에서 사망사고가 많이 나는 작업들입니다. '상'으로 판단되는 위험이 많다는 점에 주목하세요.",
+        "Ito ang mga trabahong madalas pagmulan ng nakamamatay na aksidente. Pansinin na marami ang 'mataas'.",
+        "เป็นงานที่เกิดอุบัติเหตุถึงตายบ่อยในโรงงานโลหะแผ่น สังเกตว่ามีระดับ 'สูง' หลายข้อ",
+        "Đây là các công việc hay xảy ra tai nạn chết người ở xưởng gia công tấm. Lưu ý có nhiều mức 'cao'."),
+      { t: "rt", k: L("용접", "Welding", "งานเชื่อม", "Hàn"), rows: [
+        ROW("흄 — 호흡기 질환 | 중 | 국소배기장치를 가까이, 용접용 방진마스크", "Fume — sakit sa baga | Katamtaman | local exhaust malapit, mask para sa welding", "ฟูม — โรคทางเดินหายใจ | กลาง | เครื่องดูดใกล้จุดเชื่อม หน้ากากกันฝุ่นงานเชื่อม", "Khói hàn — bệnh hô hấp | TB | hút cục bộ đặt gần, khẩu trang hàn"),
+        ROW("불티 — 화재 | 상 | 가연물 치우기, 방화포, 소화기, 작업 후 30분 확인", "Spark — sunog | Mataas | alisin ang madaling masunog, fire blanket, extinguisher, tingnan 30 min", "สะเก็ดไฟ — ไฟไหม้ | สูง | เก็บของติดไฟ ผ้ากันไฟ ถังดับเพลิง ตรวจ 30 นาทีหลังงาน", "Tia lửa — cháy | Cao | dọn vật dễ cháy, bạt chống cháy, bình chữa cháy, kiểm tra 30 phút"),
+        ROW("젖은 장갑·케이블 손상 — 감전 | 중 | 마른 장갑, 케이블 점검, 접지", "Basang gloves, sirang kable — kuryente | Katamtaman | tuyong gloves, suriin ang kable, grounding", "ถุงมือเปียก สายชำรุด — ไฟดูด | กลาง | ถุงมือแห้ง ตรวจสาย ต่อสายดิน", "Găng ướt, cáp hỏng — điện giật | TB | găng khô, kiểm tra cáp, nối đất")
+      ]},
+      { t: "rt", k: L("그라인더", "Grinder", "เครื่องเจียร", "Máy mài"), rows: [
+        ROW("숫돌 파손 — 파편 | 상 | 덮개, 맞는 숫돌, 시운전(작업 전 1분·교체 후 3분), 보안경·보안면", "Basag na wheel — piraso | Mataas | takip, tamang wheel, test run (1 min, 3 min pagkapalit), goggles at face shield", "หินแตก — เศษ | สูง | ฝาครอบ หินที่ถูกรุ่น ทดลองเดินเครื่อง (ก่อนงาน 1 นาที เปลี่ยนแล้ว 3 นาที) แว่นตาและหน้ากาก", "Đá vỡ — mảnh văng | Cao | nắp che, đá đúng loại, chạy thử (1 phút, thay đá 3 phút), kính và mặt nạ"),
+        ROW("면장갑 말림 — 손 | 중 | 회전체 작업 시 면장갑 금지, 손잡이 두 손", "Pulupot ng cotton gloves — kamay | Katamtaman | bawal ang cotton gloves, dalawang kamay", "ถุงมือผ้าถูกม้วน — มือ | กลาง | ห้ามถุงมือผ้ากับส่วนหมุน จับด้ามสองมือ", "Găng vải bị cuốn — tay | TB | cấm găng vải với phần quay, cầm hai tay")
+      ]},
+      { t: "rt", k: L("천정크레인", "Overhead crane", "เครนเหนือศีรษะ", "Cẩu trục"), rows: [
+        ROW("짐 떨어짐 — 깔림 | 상 | 인양물 아래 출입 금지, 두 줄걸이, 신호수", "Bumagsak na karga — nadaganan | Mataas | bawal sa ilalim, dalawang sling, signal person", "ของตก — ทับ | สูง | ห้ามเข้าใต้ของ สลิง 2 เส้น ผู้ให้สัญญาณ", "Vật rơi — đè | Cao | cấm vào dưới vật, treo hai dây, người ra hiệu"),
+        ROW("손상된 와이어로프 — 끊어짐 | 상 | 작업 전 점검, 손상 시 즉시 교체", "Sirang wire rope — mapuputol | Mataas | suriin bago gamitin, palitan agad kung sira", "ลวดสลิงชำรุด — ขาด | สูง | ตรวจก่อนใช้ เสียให้เปลี่ยนทันที", "Cáp hỏng — đứt | Cao | kiểm tra trước khi dùng, hỏng thì thay ngay")
+      ]},
+      { t: "rt", k: L("지게차", "Forklift", "รถยก", "Xe nâng"), rows: [
+        ROW("보행자 충돌 — 치임 | 상 | 보행자 통로 분리, 시야 가리면 후진·유도자, 경광등·후방 경보", "Banggaan sa tao | Mataas | hiwalay na daanan, umatras o gabay, ilaw at alarma", "ชนคนเดินเท้า | สูง | แยกทางเดิน บังทางให้ถอยหรือมีผู้นำทาง ไฟเตือนและเสียงถอย", "Va chạm người đi bộ | Cao | tách lối đi, bị che thì lùi hoặc có người dẫn, đèn và còi lùi"),
+        ROW("짐 떨어짐 — 맞음 | 중 | 포크 낮게 주행, 결박, 적재 한도 준수", "Bumagsak na karga — tinamaan | Katamtaman | mababang forks, itali, sundin ang limit", "ของตก — โดนกระแทก | กลาง | ขับงาต่ำ มัดของ ไม่เกินพิกัด", "Hàng rơi — bị đập | TB | chạy càng thấp, chằng buộc, đúng tải trọng")
+      ]},
+      NOTE("이 표는 예시입니다. 같은 작업이라도 우리 현장의 설비·인원·통로 상태에 따라 위험성이 달라집니다. 그래서 현장 작업자가 함께 평가해야 합니다.",
+        "Halimbawa lang ito. Nagbabago ang antas ayon sa kagamitan, tao at daanan. Kaya kailangang kasali ang manggagawa.",
+        "ตารางนี้เป็นตัวอย่าง งานเดียวกันความเสี่ยงต่างกันตามเครื่อง คน และทางเดินของหน้างานเรา จึงต้องให้คนทำงานร่วมประเมิน",
+        "Bảng này là ví dụ. Cùng công việc nhưng rủi ro khác nhau theo thiết bị, người, lối đi ở hiện trường. Vì vậy công nhân phải cùng đánh giá."),
+      OXB([Q(L("크레인 와이어로프에 끊어진 가닥이 보이면 일단 쓰고 나중에 교체한다.", "Gamitin muna ang wire rope na may putol na hibla at palitan mamaya.", "ลวดสลิงมีเส้นขาด ใช้ไปก่อนแล้วค่อยเปลี่ยน", "Cáp có sợi đứt thì cứ dùng, thay sau."), false,
+            L("즉시 사용을 멈추고 교체합니다.", "Itigil agad at palitan.", "หยุดใช้ทันทีและเปลี่ยน", "Ngừng ngay và thay.")),
+          Q(L("같은 작업이라도 현장 상황에 따라 위험성이 달라질 수 있다.", "Kahit pareho ang trabaho, puwedeng magbago ang antas ayon sa lugar.", "งานเดียวกัน ความเสี่ยงอาจต่างกันตามสภาพหน้างาน", "Cùng công việc, rủi ro có thể khác theo hiện trường."), true,
+            L("그래서 현장 작업자가 함께 평가합니다.", "Kaya kasali ang manggagawa.", "จึงให้คนทำงานร่วมประเมิน", "Vì vậy công nhân cùng đánh giá."))]),
+      SRC([G26, BOOK, "산업안전보건기준에 관한 규칙(크레인·지게차·용접·연삭기)"])
+    ]};
+
+  const nShare = { id: "n-share", title: L("평가 결과, 나는 알고 일하나요?", "Alam mo ba ang resulta bago magtrabaho?", "รู้ผลประเมินก่อนทำงานหรือยัง", "Bạn đã biết kết quả đánh giá trước khi làm?"),
+    blocks: [
+      LEAD("위험성평가는 결과를 아는 사람이 지킬 때 효과가 있습니다. 그래서 법은 결과를 근로자에게 알리도록 정했고, 알리지 않으면 과태료가 있습니다.",
+        "Mabisa lang ang assessment kapag alam at sinusunod ng manggagawa ang resulta. Kaya itinakda ng batas na ipaalam ito, at may multa kapag hindi.",
+        "การประเมินได้ผลเมื่อคนที่รู้ผลปฏิบัติตาม กฎหมายจึงกำหนดให้แจ้งผลแก่ลูกจ้าง ถ้าไม่แจ้งจะถูกปรับ",
+        "Đánh giá rủi ro chỉ hiệu quả khi người biết kết quả tuân thủ. Vì vậy luật quy định phải báo kết quả cho người lao động, không báo bị phạt."),
+      H("꼭 알아야 할 네 가지", "Apat na dapat malaman", "4 อย่างที่ต้องรู้", "Bốn điều phải biết"),
+      { t: "ol", items: [
+        L("내 작업의 유해·위험요인", "Mga panganib sa trabaho ko", "อันตรายในงานของฉัน", "Mối nguy trong công việc của tôi"),
+        L("그 위험이 얼마나 큰지 (상·중·하)", "Gaano ito kalaki (mataas, katamtaman, mababa)", "อันตรายนั้นมากแค่ไหน (สูง กลาง ต่ำ)", "Mức nguy hiểm (cao, TB, thấp)"),
+        L("회사가 정한 대책과 지금 진행 상황", "Ang hakbang ng kumpanya at kalagayan nito", "มาตรการที่บริษัทกำหนดและความคืบหน้า", "Biện pháp công ty đặt ra và tiến độ"),
+        L("작업할 때 내가 지킬 주의사항", "Mga pag-iingat na dapat kong sundin", "ข้อควรระวังที่ฉันต้องทำตาม", "Lưu ý tôi phải tuân thủ khi làm")
+      ]},
+      H("어떻게 알려 주나요?", "Paano ipinapaalam?", "แจ้งอย่างไร", "Được báo bằng cách nào?"),
+      { t: "ul", items: [
+        L("안전보건교육 (이 앱 교육 포함)", "Safety training (kasama ang app na ito)", "การอบรมความปลอดภัย (รวมแอปนี้)", "Đào tạo an toàn (gồm ứng dụng này)"),
+        L("설명회, 작업 전 안전점검회의(TBM)", "Paliwanag, TBM bago magtrabaho", "การชี้แจง การประชุมก่อนเริ่มงาน (TBM)", "Buổi giải thích, họp an toàn trước giờ làm (TBM)"),
+        L("작업장 게시판", "Bulletin board sa trabaho", "บอร์ดประกาศในที่ทำงาน", "Bảng tin tại xưởng"),
+        L("서면이나 문자 등 전자 통지", "Sulat o text/elektronikong abiso", "หนังสือหรือข้อความอิเล็กทรอนิกส์", "Văn bản hoặc tin nhắn, thông báo điện tử")
+      ]},
+      P("중대재해로 이어질 수 있는 위험(끼임, 떨어짐, 깔림 등)은 TBM 같은 자리에서 늘 다시 알려 근로자가 잊지 않게 해야 합니다.",
+        "Ang panganib na puwedeng humantong sa malubhang aksidente (naipit, nahulog, nadaganan) ay dapat paulit-ulit na ipaalala sa TBM.",
+        "อันตรายที่อาจนำไปสู่อุบัติเหตุร้ายแรง (หนีบ ตก ทับ) ต้องย้ำเตือนเสมอในที่อย่าง TBM ไม่ให้ลืม",
+        "Nguy hiểm có thể dẫn đến tai nạn nghiêm trọng (kẹp, ngã, đè) phải được nhắc lại thường xuyên ở TBM để không quên."),
+      H("새로 왔거나 작업이 바뀌었다면", "Kung bago ka o nalipat ng trabaho", "ถ้าเพิ่งมาหรือเปลี่ยนงาน", "Nếu mới đến hoặc đổi việc"),
+      P("새로 입사했거나 다른 공정으로 옮긴 사람은 일을 시작하기 전에 그 작업의 위험성평가 결과를 안내받아야 합니다. 안내를 받지 못했다면 일을 시작하기 전에 반장에게 요청하세요.",
+        "Ang bagong pasok o nalipat sa ibang proseso ay dapat sabihan ng resulta bago magsimula. Kung hindi pa, hilingin sa team leader bago magtrabaho.",
+        "คนเข้าใหม่หรือย้ายไปกระบวนการอื่น ต้องได้รับแจ้งผลประเมินของงานนั้นก่อนเริ่มงาน ถ้ายังไม่ได้รับ ให้ขอจากหัวหน้าก่อนเริ่มงาน",
+        "Người mới vào hoặc chuyển sang công đoạn khác phải được hướng dẫn kết quả đánh giá trước khi làm. Chưa được hướng dẫn thì hãy đề nghị tổ trưởng trước khi bắt đầu."),
+      NOTE("외국인 근로자는 이해할 수 있는 말로 안내받아야 효과가 있습니다. 모르는 말이 있으면 다시 설명해 달라고 하세요. 이 앱의 4개 언어 교육도 그 역할을 합니다.",
+        "Mabisa lang kapag naintindihan ng dayuhang manggagawa ang wika. Humiling ng muling paliwanag kung may hindi naintindihan. Nakakatulong din ang 4 na wika ng app na ito.",
+        "แรงงานต่างชาติต้องได้รับแจ้งเป็นภาษาที่เข้าใจจึงจะได้ผล ถ้าไม่เข้าใจให้ขอคำอธิบายอีกครั้ง การอบรม 4 ภาษาของแอปนี้ก็ช่วยได้",
+        "Lao động nước ngoài phải được hướng dẫn bằng ngôn ngữ hiểu được mới hiệu quả. Không hiểu thì đề nghị giải thích lại. Bài học 4 ngôn ngữ trong ứng dụng này cũng giúp việc đó."),
+      WARN("결과를 모르고 일을 시작하지 마세요. 모르면 묻는 것이 권리입니다.",
+        "Huwag magsimula nang hindi alam ang resulta. Karapatan mong magtanong.",
+        "อย่าเริ่มงานโดยไม่รู้ผลประเมิน การถามเมื่อไม่รู้เป็นสิทธิ์ของเรา",
+        "Đừng bắt đầu làm khi chưa biết kết quả. Hỏi khi không biết là quyền của bạn."),
+      { t: "chk", items: [
+        L("내 작업의 위험요인과 대책을 말할 수 있다.", "Kaya kong sabihin ang panganib at hakbang sa trabaho ko.", "บอกอันตรายและมาตรการของงานตัวเองได้", "Tôi nói được mối nguy và biện pháp của việc mình."),
+        L("작업이 바뀌면 시작하기 전에 결과를 확인한다.", "Kapag nagbago ang trabaho, sinusuri ko muna ang resulta.", "เมื่อเปลี่ยนงาน ฉันตรวจผลก่อนเริ่ม", "Khi đổi việc, tôi xem kết quả trước khi làm.")
+      ]},
+      OXB([Q(L("다른 공정으로 옮기면, 일을 시작하기 전에 그 작업의 평가 결과를 안내받는다.", "Kapag nalipat, sasabihan ng resulta bago magsimula.", "ย้ายกระบวนการ ต้องได้รับแจ้งผลก่อนเริ่มงาน", "Chuyển công đoạn thì được hướng dẫn kết quả trước khi làm."), true,
+            L("새 지침에서 분명히 정했습니다.", "Malinaw ito sa bagong patnubay.", "แนวทางใหม่กำหนดชัดเจน", "Hướng dẫn mới quy định rõ.")),
+          Q(L("평가 결과는 관리자만 알면 되고 작업자는 몰라도 된다.", "Manager lang ang kailangang makaalam ng resulta.", "ผลประเมินให้ผู้จัดการรู้ก็พอ คนทำงานไม่ต้องรู้", "Kết quả chỉ quản lý biết là đủ, công nhân không cần."), false,
+            L("근로자에게 알리지 않으면 과태료 대상입니다.", "May multa kapag hindi ipinaalam.", "ถ้าไม่แจ้งลูกจ้างจะถูกปรับ", "Không báo cho người lao động sẽ bị phạt."))]),
+      SRC([LAW, G26, NEWS, COL])
+    ]};
+
+  // 순서·번호: 9주차 6개, 10주차 6개
+  const order = [old["r-1"], nChange, old["r-2"], old["r-3"], nFind, old["r-4"], nJudge, old["r-5"], nEx1, nEx2, nShare, old["r-6"]];
+  order.forEach((l, i) => { l.id = "r-" + (i + 1); });
+  P6.lessons = order;
+})();
+
 // 이름 등록 · 학습 기록 전송(구글 시트) · 이수 확인
 const UI2 = {
   nameTitle: L("이름 등록", "Irehistro ang pangalan", "ลงทะเบียนชื่อ", "Đăng ký tên"),
@@ -5512,11 +6125,216 @@ const MOTION = (() => {
     }
   });
 
+
+  // ===== 위험성평가 5단계 순환 =====
+  const RS = [
+    [T4("준비", "Handa", "เตรียม", "Chuẩn bị"), T4("사전준비", "Paghahanda", "เตรียมการ", "Chuẩn bị"),
+     T4("누가, 어떤 작업을 평가할지 정합니다. 반장과 그 작업을 하는 작업자가 함께합니다.", "Itakda kung sino at anong trabaho ang susuriin. Kasama ang team leader at ang mismong manggagawa.", "กำหนดว่าใครประเมินงานอะไร หัวหน้ากับคนที่ทำงานนั้นทำด้วยกัน", "Xác định ai đánh giá công việc nào. Tổ trưởng cùng người làm việc đó tham gia.")],
+    [T4("찾기", "Hanapin", "ค้นหา", "Tìm"), T4("위험요인 찾기", "Hanapin ang panganib", "หาอันตราย", "Tìm mối nguy"),
+     T4("현장을 둘러보고, 작업자에게 묻고, 아차사고 기록을 봅니다. 숨은 위험까지 찾습니다.", "Maglibot, magtanong, at tingnan ang rekord ng muntikang aksidente. Hanapin pati ang nakatagong panganib.", "เดินดูหน้างาน ถามคนทำงาน ดูบันทึกเหตุเกือบเกิด หาอันตรายที่ซ่อนอยู่ด้วย", "Đi xem hiện trường, hỏi công nhân, xem hồ sơ sự cố suýt xảy ra. Tìm cả nguy hiểm ẩn.")],
+    [T4("판단", "Timbangin", "ตัดสิน", "Đánh giá"), T4("얼마나 위험한지 판단", "Timbangin ang panganib", "ตัดสินว่าอันตรายแค่ไหน", "Đánh giá mức nguy hiểm"),
+     T4("가능성과 중대성을 함께 보고 상·중·하로 나눕니다. '상'은 바로 고칩니다.", "Tingnan ang posibilidad at kalubhaan, hatiin sa mataas, katamtaman, mababa. Ayusin agad ang mataas.", "ดูโอกาสและความรุนแรง แบ่งเป็นสูง กลาง ต่ำ ระดับสูงแก้ทันที", "Xem khả năng và mức nghiêm trọng, chia cao, trung bình, thấp. Mức cao sửa ngay.")],
+    [T4("줄이기", "Bawasan", "ลด", "Giảm"), T4("대책 세우고 고치기", "Magplano at ayusin", "วางมาตรการและแก้ไข", "Lập biện pháp và sửa"),
+     T4("없애기 → 설비 → 방법 → 보호구 순서로 대책을 정하고, 누가 언제까지 고칠지 정해 실제로 고칩니다.", "Ayon sa pagkakasunod: alisin → kagamitan → paraan → PPE. Itakda kung sino at kailan, at talagang ayusin.", "ตามลำดับ กำจัด → อุปกรณ์ → วิธี → อุปกรณ์ป้องกัน กำหนดคนและกำหนดเวลา แล้วแก้จริง", "Theo thứ tự loại bỏ → thiết bị → cách làm → bảo hộ. Định ai sửa, đến khi nào, và sửa thật.")],
+    [T4("공유", "Ibahagi", "แบ่งปัน", "Chia sẻ"), T4("기록하고 모두에게 알리기", "Itala at ipaalam", "บันทึกและแจ้งทุกคน", "Ghi chép và báo cho mọi người"),
+     T4("결과를 3년 동안 보관하고, TBM과 이 앱으로 모두에게 알립니다. 그리고 다시 1단계로 돌아갑니다.", "Itago nang 3 taon at ipaalam sa TBM at app. Pagkatapos, balik sa hakbang 1.", "เก็บผล 3 ปี แจ้งทุกคนผ่าน TBM และแอปนี้ แล้วกลับไปขั้นที่ 1", "Lưu kết quả 3 năm, báo mọi người qua TBM và ứng dụng. Rồi quay lại bước 1.")]
+  ];
+  const RP = i => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; return [160 + 70 * Math.cos(a), 100 + 70 * Math.sin(a)]; };
+  LIB.risk = {
+    steps: RS.map(r => [r[1], r[2]]),
+    svg: T => `<rect width="320" height="200" fill="${C.wall}"/>
+      <circle cx="160" cy="100" r="70" fill="none" stroke="#C5CDD4" stroke-width="6"/>
+      <path class="arc" fill="none" stroke="${C.vest}" stroke-width="6" stroke-linecap="round"/>
+      ${RS.map((r, i) => { const [x, y] = RP(i); return `<g class="nd nd${i}"><circle cx="${x}" cy="${y}" r="17" fill="#fff" stroke="${C.ink}" stroke-width="2.5"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="900" fill="${C.ink}">${i + 1}</text>
+        <text x="${i === 0 ? x + 23 : x + (x > 170 ? 22 : x < 150 ? -22 : 0)}" y="${i === 0 ? y + 5 : y + (y > 140 ? 32 : 4)}" text-anchor="${i === 0 || x > 170 ? "start" : x < 150 ? "end" : "middle"}" font-family="sans-serif" font-size="11" font-weight="800" fill="${C.ink}">${T(r[0])}</text></g>`; }).join("")}
+      <g class="ic ic0"><rect x="146" y="84" width="28" height="34" rx="3" fill="#fff" stroke="${C.ink}" stroke-width="2"/><rect x="153" y="80" width="14" height="7" rx="2" fill="${C.ink}"/><path d="M152 96h16M152 104h16M152 112h10" stroke="${C.ink}" stroke-width="2"/></g>
+      <g class="ic ic1"><circle cx="156" cy="96" r="13" fill="#fff" stroke="${C.ink}" stroke-width="3"/><path d="M165 105l11 11" stroke="${C.ink}" stroke-width="5" stroke-linecap="round"/><text x="156" y="102" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="900" fill="${C.red}">!</text></g>
+      <g class="ic ic2"><path d="M136 110a24 24 0 0 1 16-22" stroke="#2E9D5B" stroke-width="8" fill="none"/><path d="M152 88a24 24 0 0 1 16 0" stroke="${C.vest}" stroke-width="8" fill="none"/><path d="M168 88a24 24 0 0 1 16 22" stroke="${C.red}" stroke-width="8" fill="none"/><path class="needle" d="M160 110L160 92" stroke="${C.ink}" stroke-width="3" stroke-linecap="round"/><circle cx="160" cy="110" r="4" fill="${C.ink}"/></g>
+      <g class="ic ic3"><path d="M160 80l18 7v12c0 12-8 19-18 23-10-4-18-11-18-23V87z" fill="#2E9D5B"/><path d="M152 101l6 6 11-12" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
+      <g class="ic ic4">${[[-14, 0], [0, -6], [14, 0]].map(([dx, dy]) => `<circle cx="${160 + dx}" cy="${96 + dy}" r="6" fill="${C.skin}" stroke="${C.ink}" stroke-width="1.2"/><path d="M${152 + dx} ${114 + dy}a8 8 0 0 1 16 0z" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.2"/>`).join("")}</g>`,
+    run(svg, step, still) {
+      const q = s => svg.querySelectorAll(s);
+      const set = t => {
+        const k = Math.min(1, t / 900);
+        q(".ic").forEach(e => e.setAttribute("opacity", 0)); q(".ic" + step).forEach(e => e.setAttribute("opacity", Math.min(1, t / 400)));
+        RS.forEach((_, i) => q(".nd" + i + " circle").forEach(c => { c.setAttribute("fill", i === step ? C.vest : i < step ? "#E9F5EE" : "#fff"); c.setAttribute("r", i === step ? 19 + Math.sin(t / 250) * 1.5 : 17); }));
+        const a0 = -Math.PI / 2, a1 = a0 + (step + k) * 2 * Math.PI / 5;
+        const [x0, y0] = [160, 30], x1 = 160 + 70 * Math.cos(a1), y1 = 100 + 70 * Math.sin(a1);
+        q(".arc").forEach(e => e.setAttribute("d", step + k >= 5 ? "M160 30A70 70 0 1 1 159.9 30" : `M${x0} ${y0}A70 70 0 ${(step + k) > 2.5 ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`));
+        q(".needle").forEach(e => e.setAttribute("transform", `rotate(${(-70 + 125 * Math.min(1, t / 1500)).toFixed(1)} 160 110)`));
+      };
+      if (still) { set(2000); return () => {}; }
+      let alive = true; const t0 = performance.now();
+      (function f(n) { if (!alive || !svg.isConnected) return; set(n - t0); requestAnimationFrame(f); })(t0);
+      return () => { alive = false; };
+    }
+  };
   window.MOTION_LIB2 = Object.assign(window.MOTION_LIB2 || {}, LIB);
 
   // 단원 연결: 정지 그림 대신 움직이는 그림
   const MAP = { "w-0": "w0", "w-1": "loto", "w-laser": "laser", "w-2": "press", "w-weld": "weld", "w-crane": "crane", "w-fork": "fork", "w-crush": "crush", "w-cut": "cut", "w-3": "rot", "w-lift": "lift", "w-6": "ladder", "w-7": "elec", "w-8": "fire", "w-confined": "conf" };
   for (const p of window.NEW_PARTS || []) for (const l of p.lessons) if (MAP[l.id] && !l.blocks.some(b => b.t === "motion")) { l.blocks.unshift({ t: "motion", k: MAP[l.id] }); l.scene = null; }
+})();
+
+// 연습: 그림에서 위험 찾기 { t: "hunt" }, 위험성 판단 연습 { t: "judge" }
+const PRACTICE = (() => {
+  const UIX = {
+    huntTitle: L("그림에서 위험 찾기", "Hanapin ang panganib sa larawan", "หาอันตรายในภาพ", "Tìm nguy hiểm trong hình"),
+    huntHow: L("작업장 그림에서 위험한 곳을 손가락으로 눌러 보세요. 모두 6곳입니다.", "Pindutin ang mga mapanganib na lugar sa larawan. May 6 lahat.", "แตะจุดที่อันตรายในภาพโรงงาน มีทั้งหมด 6 จุด", "Chạm vào chỗ nguy hiểm trong hình xưởng. Có tất cả 6 chỗ."),
+    found: L("찾음", "Nahanap", "เจอแล้ว", "Đã tìm"),
+    showAll: L("정답 모두 보기", "Ipakita lahat", "ดูเฉลยทั้งหมด", "Xem tất cả đáp án"),
+    reset: L("다시 하기", "Ulitin", "เริ่มใหม่", "Làm lại"),
+    miss: L("여기는 괜찮아요. 다른 곳을 찾아보세요.", "Ayos dito. Maghanap pa.", "ตรงนี้ไม่เป็นไร ลองหาที่อื่น", "Chỗ này ổn. Tìm chỗ khác nhé."),
+    done: L("6곳을 모두 찾았습니다! 내 작업장에도 이런 곳이 있는지 둘러보세요.", "Nahanap mo lahat ng 6! Tingnan kung may ganito sa lugar mo.", "เจอครบ 6 จุดแล้ว! ลองดูว่าที่ทำงานเรามีแบบนี้ไหม", "Đã tìm đủ 6 chỗ! Hãy xem nơi làm việc của bạn có chỗ như vậy không."),
+    level: L("위험성", "Antas", "ระดับ", "Mức"),
+    fix: L("대책", "Hakbang", "มาตรการ", "Biện pháp"),
+    judgeTitle: L("얼마나 위험할까? 판단 연습", "Gaano kapanganib? Pagsasanay", "อันตรายแค่ไหน? ฝึกตัดสิน", "Nguy hiểm đến đâu? Luyện đánh giá"),
+    judgeHow: L("각 상황을 읽고 상·중·하 중 하나를 고르세요. 정답은 우리 회사 예시 기준입니다.", "Basahin ang bawat sitwasyon at piliin ang mataas, katamtaman o mababa. Halimbawang pamantayan ng aming kumpanya ang sagot.", "อ่านแต่ละสถานการณ์แล้วเลือก สูง กลาง หรือ ต่ำ เฉลยเป็นเกณฑ์ตัวอย่างของบริษัทเรา", "Đọc từng tình huống rồi chọn cao, trung bình hoặc thấp. Đáp án theo tiêu chí ví dụ của công ty."),
+    hi: L("상", "Mataas", "สูง", "Cao"), mid: L("중", "Katamtaman", "กลาง", "TB"), lo: L("하", "Mababa", "ต่ำ", "Thấp"),
+    right: L("맞았습니다", "Tama", "ถูกต้อง", "Đúng rồi"), wrong: L("정답은", "Ang sagot ay", "คำตอบคือ", "Đáp án là"),
+    score: L("맞힌 문제", "Tamang sagot", "ตอบถูก", "Số câu đúng")
+  };
+  const LV = { 3: UIX.hi, 2: UIX.mid, 1: UIX.lo };
+  const LVC = { 3: "#D64545", 2: "#E0A100", 1: "#2E9D5B" };
+
+  // ----- 위험 찾기 장면 -----
+  const HUNT = [
+    { x: 36, y: 108, r: 22, lv: 3,
+      t: L("덮개를 뗀 그라인더", "Grinder na walang takip", "เครื่องเจียรที่ถอดฝาครอบ", "Máy mài bị tháo nắp che"),
+      w: L("숫돌이 깨지면 파편이 얼굴로 날아옵니다.", "Kapag nabasag ang wheel, tatalsik sa mukha ang piraso.", "ถ้าหินแตก เศษจะพุ่งเข้าหน้า", "Đá vỡ thì mảnh văng vào mặt."),
+      f: L("덮개를 다시 달고, 보안경·보안면을 씁니다.", "Ibalik ang takip; magsuot ng goggles at face shield.", "ติดฝาครอบคืน สวมแว่นตาและหน้ากาก", "Lắp lại nắp che, đeo kính và mặt nạ.") },
+    { x: 150, y: 80, r: 32, lv: 3,
+      t: L("매단 짐 아래로 지나가는 사람", "Taong dumadaan sa ilalim ng karga", "คนเดินใต้ของที่แขวน", "Người đi dưới vật đang treo"),
+      w: L("짐이 떨어지면 사망사고가 됩니다.", "Kapag bumagsak ang karga, nakamamatay ito.", "ถ้าของตก อาจถึงตาย", "Vật rơi xuống sẽ gây tử vong."),
+      f: L("인양 구역을 표시하고 출입을 막습니다. 신호수를 둡니다.", "Markahan at harangan ang lugar; maglagay ng signal person.", "ทำเครื่องหมายและกั้นเขตยก มีผู้ให้สัญญาณ", "Đánh dấu, rào khu vực nâng; có người ra hiệu.") },
+    { x: 104, y: 182, r: 20, lv: 2,
+      t: L("바닥에 흘린 기름", "Langis sa sahig", "น้ำมันหกบนพื้น", "Dầu đổ trên sàn"),
+      w: L("미끄러져 넘어지면 기계나 판재에 부딪힙니다.", "Puwedeng madulas at tumama sa makina o sheet.", "ลื่นล้มแล้วกระแทกเครื่องหรือแผ่นโลหะ", "Trượt ngã rồi va vào máy hoặc tấm."),
+      f: L("바로 닦고, 새는 곳을 고칩니다. 흡착포를 가까이 둡니다.", "Punasan agad at ayusin ang tagas. Maglagay ng absorbent pad sa malapit.", "เช็ดทันทีและซ่อมจุดรั่ว วางผ้าซับน้ำมันไว้ใกล้ ๆ", "Lau ngay, sửa chỗ rò; để giẻ thấm dầu gần đó.") },
+    { x: 206, y: 180, r: 20, lv: 2,
+      t: L("통로에 놓인 스크랩", "Scrap sa daanan", "เศษโลหะบนทางเดิน", "Phế liệu trên lối đi"),
+      w: L("걸려 넘어지거나 날카로운 모서리에 베입니다.", "Puwedeng matisod o mahiwa sa matulis na gilid.", "สะดุดล้มหรือถูกขอบคมบาด", "Vấp ngã hoặc bị mép sắc cắt."),
+      f: L("스크랩 통에 바로 넣고, 통로 선 안을 비워 둡니다.", "Ilagay agad sa lalagyan ng scrap; panatilihing malinis ang daanan.", "ใส่ถังเศษทันที และเว้นทางเดินให้โล่ง", "Bỏ ngay vào thùng phế liệu, giữ lối đi trống.") },
+    { x: 266, y: 126, r: 22, lv: 2,
+      t: L("상자에 가려진 소화기", "Extinguisher na natatakpan ng kahon", "ถังดับเพลิงถูกกล่องบัง", "Bình chữa cháy bị thùng che"),
+      w: L("불이 나면 바로 꺼낼 수 없습니다.", "Hindi agad makukuha kapag may sunog.", "ถ้าไฟไหม้จะหยิบไม่ทัน", "Khi cháy không lấy ra kịp."),
+      f: L("소화기 앞은 비워 두고, 위치 표지를 붙입니다.", "Huwag harangan ang harap ng extinguisher; lagyan ng karatula.", "เว้นหน้าถังดับเพลิงให้ว่าง ติดป้ายบอกตำแหน่ง", "Để trống phía trước bình, dán biển chỉ vị trí.") },
+    { x: 303, y: 140, r: 18, lv: 3,
+      t: L("피복이 벗겨진 전선", "Kable na natanggal ang balot", "สายไฟที่ฉนวนลอก", "Dây điện bị tróc vỏ"),
+      w: L("만지거나 물기가 닿으면 감전됩니다.", "Makukuryente kapag nahawakan o nabasa.", "ถ้าจับหรือโดนน้ำจะถูกไฟดูด", "Chạm vào hoặc dính nước sẽ bị điện giật."),
+      f: L("사용을 멈추고 전기 담당자에게 알려 교체합니다.", "Itigil ang paggamit at ipaalam sa electrician para palitan.", "หยุดใช้ แจ้งช่างไฟให้เปลี่ยน", "Ngừng dùng, báo thợ điện để thay.") }
+  ];
+  const huntSvg = () => `${bg()}
+    <rect x="10" y="116" width="70" height="8" fill="${C.steelD}"/><path d="M16 124v36M74 124v36" stroke="${C.steelD}" stroke-width="5"/>
+    <circle cx="36" cy="108" r="9" fill="#B49A7E" stroke="#6B5A48" stroke-width="2"/><rect x="40" y="103" width="22" height="9" rx="3" fill="#2E6FA8"/>
+    ${[0, 1, 2, 3].map(i => `<circle cx="${30 - i * 6}" cy="${101 - i * 3}" r="1.6" fill="#FFB020"/>`).join("")}
+    ${worker(84, 160, { flip: true, arm: "reach" })}
+    <rect x="0" y="10" width="320" height="7" fill="${C.steelD}"/><rect x="138" y="17" width="24" height="9" fill="${C.vest}" stroke="${C.ink}" stroke-width="1.2"/>
+    <path d="M150 26V40M150 40L136 48M150 40L164 48" stroke="${C.ink}" stroke-width="1.8" fill="none"/><rect x="128" y="48" width="44" height="13" fill="${C.steelL}" stroke="${C.steelD}" stroke-width="2"/>
+    ${worker(152, 160, { arm: "down" })}
+    <ellipse cx="104" cy="182" rx="18" ry="4.5" fill="#2B2F33" opacity=".75"/><ellipse cx="99" cy="180.5" rx="6" ry="1.4" fill="#fff" opacity=".35"/>
+    <path d="M196 182l12-5 4 4-13 4zM206 186l14-3 1 4-14 2zM199 177l8-3 3 3-9 2z" fill="#9AA4AD" stroke="${C.ink}" stroke-width=".8"/>
+    <path d="M186 192h40" stroke="${C.vest}" stroke-width="2" stroke-dasharray="6 4"/>
+    <rect x="260" y="106" width="12" height="26" rx="5" fill="${C.red}" stroke="${C.ink}" stroke-width="1"/>
+    ${boxes(246, 160, [[0, 42, 28], [4, 34, 22]])}
+    <rect x="298" y="92" width="14" height="16" rx="2" fill="#E9ECEF" stroke="${C.ink}" stroke-width="1"/>
+    <path d="M305 108C302 124 306 132 303 146S300 168 306 176" stroke="${C.ink}" stroke-width="3" fill="none"/>
+    <path d="M301 136l4 2M301 142l4 -2" stroke="#C87533" stroke-width="2"/><path d="M308 138l5-3-2 5 5-2" stroke="#FFD23F" stroke-width="1.6" fill="none"/>
+    <g class="hmarks"></g>`;
+
+  // ----- 판단 연습 문항 -----
+  const JUDGE = [
+    { a: 3, q: L("절곡기 광선식 안전장치가 고장 났는데, 일이 밀려서 그대로 작업한다.", "Sira ang light guard ng press brake pero itinutuloy ang trabaho dahil marami.", "ม่านแสงเครื่องพับเสีย แต่งานเยอะเลยทำต่อ", "Thiết bị quang học máy chấn hỏng nhưng vì nhiều việc vẫn tiếp tục làm."),
+      w: L("손가락 절단까지 갈 수 있고 매일 하는 작업입니다. 고칠 때까지 바로 멈춥니다.", "Puwedeng maputol ang daliri at araw-araw ito. Itigil hanggang maayos.", "อาจถึงนิ้วขาดและเป็นงานทุกวัน หยุดทันทีจนกว่าจะซ่อมเสร็จ", "Có thể đứt ngón tay và làm hằng ngày. Dừng ngay cho đến khi sửa xong.") },
+    { a: 2, q: L("작업 통로 한쪽에 판재 스크랩이 조금씩 쌓인다. 퇴근 전에 치운다.", "Unti-unting naiipon ang scrap sa gilid ng daanan; nililinis bago umuwi.", "เศษแผ่นโลหะค่อย ๆ กองข้างทางเดิน เก็บก่อนเลิกงาน", "Phế liệu tấm dần chất một bên lối đi, dọn trước khi về."),
+      w: L("넘어짐·베임 가능성이 있습니다. 스크랩 통 위치를 바꾸는 등 계획을 세워 개선합니다.", "May panganib na matisod o mahiwa. Magplano, hal. ilipat ang lalagyan ng scrap.", "อาจสะดุดหรือถูกบาด วางแผนปรับปรุง เช่น ย้ายที่ตั้งถังเศษ", "Có thể vấp ngã, bị cắt. Lập kế hoạch cải thiện, VD đổi vị trí thùng phế liệu.") },
+    { a: 1, q: L("공구는 공구대 제자리에 정리되어 있고, 매일 점검표로 확인한다.", "Nakaayos ang tools sa lalagyan at sinusuri araw-araw gamit ang checklist.", "เครื่องมือจัดเก็บเข้าที่ และตรวจด้วยแบบตรวจทุกวัน", "Dụng cụ xếp đúng chỗ trên giá, kiểm tra bằng bảng kiểm mỗi ngày."),
+      w: L("지금 관리가 잘 되고 있습니다. 같은 방법을 유지합니다.", "Maayos ang pamamahala ngayon. Ituloy lang.", "จัดการได้ดีอยู่แล้ว รักษาวิธีเดิม", "Đang quản lý tốt. Giữ nguyên cách làm.") },
+    { a: 3, q: L("탱크 안에서 용접을 하는데, 산소 농도를 재지 않았고 환기도 없다.", "Nagwe-weld sa loob ng tangke nang walang sukat ng oxygen at walang bentilasyon.", "เชื่อมในถังโดยไม่วัดออกซิเจนและไม่มีการระบายอากาศ", "Hàn bên trong bồn mà không đo oxy, không thông gió."),
+      w: L("질식으로 사망할 수 있습니다. 측정·환기·허가 없이는 들어가지 않습니다.", "Puwedeng mamatay sa kawalan ng hangin. Huwag pumasok nang walang sukat, bentilasyon at permit.", "อาจขาดอากาศถึงตาย ห้ามเข้าถ้าไม่วัด ไม่ระบายอากาศ ไม่มีใบอนุญาต", "Có thể chết ngạt. Không vào nếu chưa đo, chưa thông gió, chưa có phép.") },
+    { a: 2, q: L("프레스 옆이 매우 시끄럽다. 귀마개는 지급했지만 몇 명은 잘 끼지 않는다.", "Napakaingay sa tabi ng press. May earplugs pero hindi lahat nagsusuot.", "ข้างเครื่องปั๊มเสียงดังมาก แจกที่อุดหูแล้วแต่บางคนไม่ใส่", "Cạnh máy dập rất ồn. Đã phát nút tai nhưng vài người không đeo."),
+      w: L("오래 지나면 난청이 생깁니다. 착용 교육과 확인, 소음 줄이기를 계획합니다.", "Nagdudulot ng pagkabingi sa katagalan. Magplano ng training, pagsusuri at pagbawas ng ingay.", "นานไปจะหูตึง วางแผนอบรม ตรวจการสวม และลดเสียง", "Lâu dài sẽ bị điếc. Lập kế hoạch đào tạo, kiểm tra việc đeo và giảm ồn.") },
+    { a: 3, q: L("크레인 줄걸이 와이어로프에 끊어진 가닥이 여러 개 보인다.", "May ilang putol na hibla sa wire rope ng crane.", "ลวดสลิงของเครนมีเส้นขาดหลายเส้น", "Cáp nâng của cẩu có nhiều sợi bị đứt."),
+      w: L("짐이 떨어지면 사망사고입니다. 바로 사용을 멈추고 교체합니다.", "Nakamamatay kapag bumagsak ang karga. Itigil agad at palitan.", "ถ้าของตกอาจถึงตาย หยุดใช้ทันทีและเปลี่ยน", "Vật rơi là tai nạn chết người. Ngừng dùng ngay và thay.") }
+  ];
+
+  let lang = "ko";
+  const T = o => (o && (o[lang] || o.ko)) || "";
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  function mountHunt(box, print) {
+    const found = new Set(print ? HUNT.map((_, i) => i) : []);
+    box.innerHTML = `<h4>🔍 ${T(UIX.huntTitle)}</h4><p class="px-how">${T(UIX.huntHow)}</p>
+      <svg class="scene" viewBox="0 0 320 200" role="img" aria-label="${esc(T(UIX.huntTitle))}">${huntSvg()}</svg>
+      <div class="px-bar"><b class="px-cnt"></b><span class="px-msg" aria-live="polite"></span></div>
+      <ol class="px-list"></ol>
+      <div class="px-btns noprint"><button type="button" class="px-all">${T(UIX.showAll)}</button><button type="button" class="px-reset">${T(UIX.reset)}</button></div>`;
+    const svg = box.querySelector("svg"), marks = box.querySelector(".hmarks");
+    const paint = () => {
+      marks.innerHTML = [...found].map(i => { const h = HUNT[i]; return `<circle cx="${h.x}" cy="${h.y}" r="${h.r}" fill="none" stroke="${LVC[h.lv]}" stroke-width="3"/><circle cx="${h.x + h.r * .7}" cy="${h.y - h.r * .7}" r="7" fill="${LVC[h.lv]}"/><text x="${h.x + h.r * .7}" y="${h.y - h.r * .7 + 3.5}" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#fff">${i + 1}</text>`; }).join("");
+      box.querySelector(".px-cnt").textContent = `${found.size} / ${HUNT.length} ${T(UIX.found)}`;
+      box.querySelector(".px-list").innerHTML = HUNT.map((h, i) => found.has(i) ? `<li value="${i + 1}"><b>${T(h.t)}</b> <span class="px-lv" style="background:${LVC[h.lv]}">${T(UIX.level)} ${T(LV[h.lv])}</span><br>${T(h.w)}<br><em>${T(UIX.fix)}:</em> ${T(h.f)}</li>` : "").join("");
+      if (found.size === HUNT.length && !print) box.querySelector(".px-msg").textContent = T(UIX.done);
+    };
+    svg.addEventListener("click", e => {
+      const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+      const q = p.matrixTransform(svg.getScreenCTM().inverse());
+      const i = HUNT.findIndex(h => Math.hypot(h.x - q.x, h.y - q.y) <= h.r + 4);
+      const msg = box.querySelector(".px-msg");
+      if (i < 0) { msg.textContent = T(UIX.miss); return; }
+      msg.textContent = ""; found.add(i); paint();
+    });
+    box.querySelector(".px-all").onclick = () => { HUNT.forEach((_, i) => found.add(i)); paint(); };
+    box.querySelector(".px-reset").onclick = () => { found.clear(); box.querySelector(".px-msg").textContent = ""; paint(); };
+    paint();
+  }
+
+  function mountJudge(box, print) {
+    const pick = {};
+    box.innerHTML = `<h4>⚖ ${T(UIX.judgeTitle)}</h4><p class="px-how">${T(UIX.judgeHow)}</p><ol class="px-q"></ol><p class="px-score"></p>`;
+    const paint = () => {
+      box.querySelector(".px-q").innerHTML = JUDGE.map((j, i) => {
+        const p = print ? j.a : pick[i];
+        return `<li><p>${T(j.q)}</p><div class="px-opts">${[3, 2, 1].map(v => `<button type="button" data-i="${i}" data-v="${v}" class="${p === v ? (v === j.a ? "ok" : "ng") : p && v === j.a ? "ans" : ""}" style="--c:${LVC[v]}">${T(LV[v])}</button>`).join("")}</div>
+          ${p ? `<p class="px-why ${p === j.a ? "ok" : "ng"}"><b>${p === j.a ? "⭕ " + T(UIX.right) : "❌ " + T(UIX.wrong) + " " + T(LV[j.a])}</b> — ${T(j.w)}</p>` : ""}</li>`;
+      }).join("");
+      const n = Object.keys(pick).length, ok = Object.entries(pick).filter(([i, v]) => JUDGE[i].a === v).length;
+      box.querySelector(".px-score").textContent = n && !print ? `${T(UIX.score)}: ${ok} / ${n}` + (n < JUDGE.length ? ` (${n} / ${JUDGE.length})` : "") : "";
+    };
+    box.addEventListener("click", e => { const b = e.target.closest("button[data-v]"); if (!b || print) return; const i = +b.dataset.i; if (pick[i]) return; pick[i] = +b.dataset.v; paint(); });
+    paint();
+  }
+
+  function rt(b, T2) {
+    return `<div class="rt"><strong>${T2(b.k)}</strong><ul>${b.rows.map(r => `<li><span class="rt-lv" style="background:${LVC[r.lv]}">${T2(LV[r.lv])}</span><b>${T2(r.w)}</b><p>→ ${T2(r.f)}</p></li>`).join("")}</ul></div>`;
+  }
+  function mount(root, l, opt) {
+    lang = l; opt = opt || {};
+    root.querySelectorAll(".px[data-px]").forEach(box => {
+      if (box.dataset.ready) return; box.dataset.ready = "1";
+      (box.dataset.px === "hunt" ? mountHunt : mountJudge)(box, !!opt.print);
+    });
+  }
+
+  document.head.insertAdjacentHTML("beforeend", `<style>
+  .px{margin:8px 0 18px;padding:14px;border-radius:14px;background:var(--surface);border:2px solid #F5B800}
+  .px h4{margin:0 0 4px;font-size:1.05rem}.px .px-how{margin:0 0 10px;font-size:.93rem;opacity:.85}
+  .px svg{display:block;width:100%;height:auto;border-radius:10px;cursor:pointer;touch-action:manipulation}
+  .px-bar{display:flex;gap:10px;align-items:baseline;margin:8px 0 4px;flex-wrap:wrap}.px-cnt{font-size:1rem}.px-msg{font-size:.9rem;color:var(--ink-2)}
+  .px-list{margin:6px 0 0;padding-left:22px;display:grid;gap:8px;font-size:.93rem;line-height:1.5}
+  .px-lv{display:inline-block;color:#fff;font-size:.75rem;font-weight:800;padding:1px 8px;border-radius:999px;margin-left:4px}
+  .px-btns{display:flex;gap:8px;margin-top:10px}.px-btns button,.px-opts button{border:0;border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--sunk);color:var(--ink)}
+  .px-q{padding-left:22px;margin:0;display:grid;gap:14px}.px-q>li>p{margin:0 0 8px;line-height:1.5}
+  .px-opts{display:flex;gap:8px}.px-opts button{flex:1;border:2px solid var(--c);background:transparent}
+  .px-opts button.ok{background:var(--c);color:#fff}.px-opts button.ng{background:#0001;text-decoration:line-through;opacity:.7}.px-opts button.ans{background:var(--c);color:#fff;opacity:.85}
+  .px-why{margin:8px 0 0;font-size:.92rem;line-height:1.5}.px-why.ok b{color:#2E9D5B}.px-why.ng b{color:#D64545}
+  .px-score{font-weight:800;margin:12px 0 0}
+  .rt{margin:10px 0;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}.rt>strong{display:block;font-size:1.02rem;margin-bottom:6px}
+  .rt ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.rt li{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:start}
+  .rt-lv{grid-row:span 2;color:#fff;font-weight:900;font-size:.8rem;border-radius:8px;padding:4px 8px;min-width:34px;text-align:center}.rt li b{line-height:1.45}.rt li p{margin:0;line-height:1.5;font-size:.93rem}
+  @media print{.rt{break-inside:avoid}.px{break-inside:avoid;border-color:#000}}
+  </style>`);
+  return { mount, rt };
 })();
 
 </script>
@@ -5608,6 +6426,8 @@ const MOTION = (() => {
       case "ox": return `<section class="oxbox"><h4>✍ ${T(UI5.oxTitle)}</h4>${b.items.map(([q, o, why], k) =>
         `<details class="oxq"><summary><b>Q${k + 1}</b><span>${T(q)}</span><em>${T(UI5.oxTap)}</em></summary><p class="${o ? "o" : "x"}"><b>${o ? "⭕ O" : "❌ X"}</b> ${T(why)}</p></details>`).join("")}</section>`;
       case "motion": return `<div class="motion" data-motion="${esc(b.k)}"></div>`;
+      case "rt": return PRACTICE.rt(b, T);
+      case "hunt": case "judge": return `<div class="px" data-px="${b.t}"></div>`;
       case "call": return `<div class="call" role="note"><b>119</b><strong>${T(UI.callText)}</strong><span>${T(UI.callSub)}</span></div>`;
     }
     return "";
@@ -5861,7 +6681,7 @@ const MOTION = (() => {
     const again = () => { const y = scrollY; printView(sel.id); scrollTo(0, y); };
     document.getElementById("pweek").onchange = e => go("print/" + e.target.value);
     document.getElementById("pgo").onclick = () => window.print();
-    MOTION.mount(app, lang, { print: true });
+    MOTION.mount(app, lang, { print: true }); PRACTICE.mount(app, lang, { print: true });
     app.querySelectorAll("[data-pl]").forEach(b => b.onclick = () => { const r = langsEl.querySelector(`button[data-l="${b.dataset.pl}"]`); if (r) r.click(); });
     const setSkip = ids => { const all = store.get("pskip", {}); all[sel.id] = ids; store.set("pskip", all); again(); };
     app.querySelectorAll("[data-pid]").forEach(c => c.onchange = () => setSkip([...app.querySelectorAll("[data-pid]")].filter(x => !x.checked).map(x => x.dataset.pid)));
@@ -5879,7 +6699,7 @@ const MOTION = (() => {
     const cl = ALL.find(x => x.lesson.id === h);
     TRACK.setCurrent(cl ? h : h === "quiz" ? "quiz" : null, cl ? cl.lesson.title.ko : "퀴즈");
     if (!h) home(); else if (h === "print" || h.startsWith("print/")) printView(h.split("/")[1]); else if (h === "quiz") quiz(); else if (h === "cert") cert(); else if (h === "install") install(); else lesson(h);
-    MOTION.mount(app, lang, { print: h.startsWith("print") });
+    MOTION.mount(app, lang, { print: h.startsWith("print") }); PRACTICE.mount(app, lang, { print: h.startsWith("print") });
   }
   render();
 })();
