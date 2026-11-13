@@ -1,0 +1,36 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 34
+    namespace 'com.ykeng.pda'
+
+    defaultConfig {
+        applicationId "com.ykeng.pda"
+        minSdk 21
+        targetSdk 34
+        versionCode 3
+        versionName "1.2"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // 휴대폰 카메라 바코드 스캔 (ZXing)
+    // minSdk 21 지원을 위해 zxing core 3.3.0 사용 (라이브러리 README 'Older SDK versions' Option 1)
+    implementation('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'androidx.core:core:1.9.0'
+}
